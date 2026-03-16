@@ -2934,7 +2934,7 @@ const G={
     deployedCreature:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
   ai:{hp:30,hand:[],deck:[],dice:[],rerolled:false,isPlayer:false,
     deployedCreature:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
-  turn:0,phase:'',selectedDice:[],maxDuels:2,duelsLeft:0,firstTurn:true,aiFirstTurn:true,
+  turn:0,phase:'',selectedDice:[],maxDuels:1,duelsLeft:0,firstTurn:true,aiFirstTurn:true,
 
   start(){
     // Reset
@@ -3019,7 +3019,7 @@ const G={
     // Clear per-turn flags
     if(this.p.effectsSilenced){log('封印效果解除(玩家)','effect');this.p.effectsSilenced=false}
     if(this.ai.effectsSilenced){log('封印效果解除(机械领主)','effect');this.ai.effectsSilenced=false}
-    this.selectedDice=[];this.maxDuels=2;this.duelsLeft=0;
+    this.selectedDice=[];this.maxDuels=1;this.duelsLeft=0;
     this.destroyedThisTurn=[];this.pDmgDealtThisTurn=0;
     this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;this._overloadActive=false;
     delete this.p.dmgCap;delete this.ai.dmgCap;
@@ -3102,7 +3102,8 @@ const G={
     log(`骰子: ${this.p.dice.join(', ')}`);
     this.phase='roll';
     setPhase('掷骰阶段');
-    enableBtn('btn-reroll',true);
+    const rerollLabel=(this.p.extraRerolls>0)?`全部重掷 (${1+this.p.extraRerolls}次)`:'全部重掷';
+    enableBtn('btn-reroll',true,rerollLabel);
     enableBtn('btn-confirm',true,'进入部署');
     enableBtn('btn-skip',false);
     render();
@@ -3188,6 +3189,8 @@ const G={
 
   enterDeployPhase(){
       this.phase='deploy';
+      // Clear any unused extra rerolls from this turn
+      this.p.extraRerolls=0;
       setPhase('部署阶段');
       // Boss mechanic: reroll player's highest die
       if(this.adventureMode&&this.adventureBattleType==='boss'&&this.p.dice.length>0){
@@ -3597,6 +3600,13 @@ const G={
     if(!c)return;
     const val=getCreatureValue(c);
     let dmg=Math.max(1,val);
+    // Response spells for defender (e.g. metal_shield, emergency_repair)
+    const defSide=defender===this.p?'player':'ai';
+    defender.deployedSpells.forEach((s,i)=>{if(s.timing==='response'){
+      const ctx={defBonus:0,swapValues:false,mySpellDice:s.assignedDice,owner:defender,enemy:attacker};
+      const spellEl=findDeployedCardEl(defSide,'spell',i);
+      pulseEffect(spellEl);triggerCardEffectAnim(spellEl,s.name+' 发动!',s.id);
+      s.effect(ctx)}});
     if(defender.shield>0){const r=Math.min(defender.shield,dmg);dmg-=r;defender.shield-=r;dmg=Math.max(1,dmg)}
     // Damage cap (金属护盾)
     if(typeof defender.dmgCap==='number'){dmg=Math.min(dmg,defender.dmgCap);delete defender.dmgCap}
@@ -3614,6 +3624,18 @@ const G={
     this.triggerHandDuelEffects(attacker);
     if(effectCtx.bonusDmg>0){defender.hp-=effectCtx.bonusDmg;if(effectCtx.directHpMax){defender.maxHp=(defender.maxHp||30)-effectCtx.bonusDmg;if(defender.maxHp<1)defender.maxHp=1}log(`额外${effectCtx.bonusDmg}伤害!`,'effect')}
     if(effectCtx.directHpMax){defender.maxHp=(defender.maxHp||30)-dmg;if(defender.maxHp<1)defender.maxHp=1;log(`刺客效果:上限降至${defender.maxHp}!`,'effect')}
+    // duel_end spells for both sides
+    [attacker,defender].forEach(pl=>{
+      const side=pl===this.p?'player':'ai';
+      const enemy=pl===attacker?defender:attacker;
+      pl.deployedSpells.forEach((s,i)=>{
+        if(s.timing==='duel_end'){
+          const spellEl=findDeployedCardEl(side,'spell',i);
+          pulseEffect(spellEl);triggerCardEffectAnim(spellEl,s.name+' 发动!',s.id);
+          s.effect({mySpellDice:s.assignedDice,owner:pl,enemy,myCreature:pl.deployedCreature});
+        }
+      });
+    });
     render();
   },
 
