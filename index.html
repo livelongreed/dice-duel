@@ -1832,8 +1832,11 @@ const ALL_CARDS=[
   effect(ctx){const n=(ctx.mySpellDice||[]).filter(d=>d%2===0).length;if(n>0){ctx.owner.hp=Math.min(ctx.owner.maxHp||30,ctx.owner.hp+n*2);log(`偶数吸收:回复${n*2}HP`,'effect')}}},
 {id:'dice_copy',type:'spell',name:'骰子复制',emoji:'🪞',base:0,slots:0,
   effectDesc:'对拼时:随机复制我方1个槽内骰子到空槽',timing:'duel_start',
-  effect(ctx){const mc=ctx.myCreature;if(mc&&mc.assignedDice.length>0&&mc.assignedDice.length<mc.slots){
-    const v=mc.assignedDice[Math.floor(Math.random()*mc.assignedDice.length)];mc.assignedDice.push(v);log(`骰子复制:复制${v}点骰子到空槽`,'effect')}}},
+  effect(ctx){const mc=ctx.myCreature;if(!mc||!mc.assignedDice||mc.assignedDice.length===0)return;
+    const totalSlots=mc.slots+(mc.overloadSlot||0)+(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('overload_slot')?1:0);
+    if(mc.assignedDice.length<totalSlots){
+    const v=mc.assignedDice[Math.floor(Math.random()*mc.assignedDice.length)];mc.assignedDice.push(v);log(`骰子复制:复制${v}点骰子到空槽`,'effect')}
+    else{log('骰子复制:无空槽位','effect')}}},
 {id:'foresight',type:'spell',name:'预知未来',emoji:'👁️',base:0,slots:1,
   effectDesc:'看牌库顶N张(N=槽内骰子值),选1张',timing:'deploy',
   effect(ctx){const dv=(ctx.mySpellDice&&ctx.mySpellDice[0])||1;const n=Math.min(dv,ctx.owner.deck.length);
@@ -1900,9 +1903,8 @@ const ALL_CARDS=[
   effectDesc:'对拼开始:复制对手生物骰子总点数作为你生物的额外加值',timing:'duel_start',
   effect(ctx){const enemy=ctx.enemy;if(!enemy.deployedCreature||!ctx.myCreature)return;
     const enemyDiceSum=(enemy.deployedCreature.assignedDice||[]).reduce((a,b)=>a+b,0);
-    if(enemyDiceSum>0&&ctx.myCreature.assignedDice.length<(ctx.myCreature.slots+(ctx.myCreature.overloadSlot||0))){
-      ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+enemyDiceSum;log(`镜像空间:复制对手${enemyDiceSum}点骰子值!`,'effect')}
-    else if(enemyDiceSum>0){log('镜像空间:无空槽位,无效果','effect')}else{log('镜像空间:对手无骰子','effect')}}},
+    if(enemyDiceSum>0){ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+enemyDiceSum;log(`镜像空间:复制对手${enemyDiceSum}点骰子值!`,'effect')}
+    else{log('镜像空间:对手无骰子','effect')}}},
 ];
 
 const COMMON_CARDS=['shadow_rat','swift_bird','steam_sentinel','gear_hound','chimney_golem','magnet_puppet','boiler_spider','slime','even_absorb','overload_pulse','steam_burst','emergency_repair','metal_shield'];
@@ -3020,6 +3022,7 @@ const G={
     this.selectedDice=[];this.maxDuels=2;this.duelsLeft=0;
     this.destroyedThisTurn=[];this.pDmgDealtThisTurn=0;
     this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;this._overloadActive=false;
+    delete this.p.dmgCap;delete this.ai.dmgCap;
     log(`— 第 ${this.turn} 回合 —`,'phase');
     showTurnBanner(this.turn);
 
@@ -3107,12 +3110,13 @@ const G={
   },
 
   reroll(){
-    if(this.phase!=='roll'||this.p.rerolled)return;
-    this.p.rerolled=true;
-    const bankedCount=(this.p.bankedDice||[]).length;
+    if(this.phase!=='roll')return;
+    const hasExtra=(this.p.extraRerolls||0)>0;
+    if(this.p.rerolled&&!hasExtra)return;
+    if(!this.p.rerolled){this.p.rerolled=true}else{this.p.extraRerolls--}
     this.p.dice=rollDice(this.p.dice.length);
-    log(`重掷: ${this.p.dice.join(', ')}`);
-    enableBtn('btn-reroll',false);
+    log(`重掷: ${this.p.dice.join(', ')}${hasExtra?` (额外重掷剩余${this.p.extraRerolls||0}次)`:''}`);
+    if(this.p.rerolled&&!(this.p.extraRerolls>0))enableBtn('btn-reroll',false);
     this.selectedDice=[];
     render();
     setTimeout(animateDiceRoll,50);
@@ -3368,12 +3372,17 @@ const G={
     this.triggerDuelStartEffects(this.ai,extraCtx);
     render();
 
-    this.maxDuels=2+extraCtx.extraDuels;
+    this.maxDuels=1+extraCtx.extraDuels;
     this.duelsLeft=this.maxDuels;
 
     if(this.p.deployedCreature&&this.ai.deployedCreature){
-      // Auto duel
-      await this.resolveDuel(extraCtx);
+      // Duel loop (base 1 + extra from time_warp etc.)
+      for(let duelRound=0;duelRound<this.maxDuels;duelRound++){
+        if(duelRound>0){log(`— 追加对拼 第${duelRound+1}次 —`,'phase');render();await delay(600)}
+        await this.resolveDuel(extraCtx);
+        this.duelsLeft--;
+        if(this.checkGameOver())return;
+      }
     } else if(this.p.deployedCreature&&!this.ai.deployedCreature){
       // Player creature attacks directly
       await this.directAttack(this.p,this.ai);
@@ -3560,6 +3569,7 @@ const G={
     } else {
       log('平局! 双方不受伤害','combat');
       markDuelResult('tie');
+      delete this.p.dmgCap;delete this.ai.dmgCap;
     }
     /* duel_end timing: fires for BOTH sides regardless of who won */
     [this.p,this.ai].forEach(pl=>{
