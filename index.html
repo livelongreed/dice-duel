@@ -1726,7 +1726,7 @@ function hideOverlay(){$('overlay').classList.add('hidden')}
 // ============================================================
 const ALL_CARDS=[
 // --- CREATURES (26) ---
-{id:'shadow_rat',type:'creature',name:'阴影老鼠',emoji:'🐀',base:3,slots:1,
+{id:'shadow_rat',type:'creature',name:'阴影老鼠',emoji:'🐀',base:3,slots:2,
   effectDesc:'胜出:对手下回合骰子-1,我方骰子+1',timing:'win',
   effect(ctx){ctx.enemy.bonusDiceNext=(ctx.enemy.bonusDiceNext||0)-1;ctx.owner.bonusDiceNext=(ctx.owner.bonusDiceNext||0)+1;log('阴影老鼠:对手骰子-1,我方+1!','effect')}},
 {id:'tyrant_rex',type:'creature',name:'暴君霸王龙',emoji:'🦖',base:5,slots:4,
