@@ -1281,6 +1281,34 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   100%{transform:translateY(105vh) translateX(var(--drift2)) scale(0.3);opacity:0}
 }
 .screen-particles .sp.down{animation-name:spFloatDown}
+/* ========== NEWS MATRIX ========== */
+.news-matrix{position:absolute;top:80px;right:24px;z-index:6;width:280px;pointer-events:none}
+.news-card{background:rgba(255,255,255,0.95);color:#0a0a0a;border-radius:0;padding:0;
+  pointer-events:auto;position:relative;overflow:hidden;
+  opacity:0;transform:translateX(40px);transition:opacity 0.5s cubic-bezier(.22,1,.36,1),transform 0.5s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 2px 20px rgba(0,0,0,0.15)}
+.news-card.visible{opacity:1;transform:translateX(0)}
+.news-card.hiding{opacity:0;transform:translateX(40px)}
+.news-card-inner{padding:14px 16px 12px}
+.news-tag{display:inline-block;font-size:8px;font-weight:800;letter-spacing:3px;text-transform:uppercase;
+  color:#fff;background:#0a0a0a;padding:3px 8px;margin-bottom:8px;font-family:'Share Tech Mono',monospace}
+.news-headline{font-size:11px;font-weight:700;color:#0a0a0a;margin-bottom:5px;line-height:1.5;
+  font-family:'ZCOOL KuaiLe','Fredoka',sans-serif}
+.news-body{font-size:10px;color:#333;line-height:1.6;font-family:'ZCOOL KuaiLe',sans-serif}
+.news-body strong{color:#0a0a0a;font-weight:700}
+.news-meta{display:flex;justify-content:space-between;align-items:center;padding:6px 16px;
+  border-top:1px solid rgba(0,0,0,0.06);font-family:'Share Tech Mono',monospace}
+.news-meta .nm-src{font-size:7px;letter-spacing:2px;color:#999;text-transform:uppercase;font-weight:700}
+.news-meta .nm-time{font-size:8px;color:#bbb;letter-spacing:1px}
+.news-accent{position:absolute;top:0;left:0;width:3px;height:100%;background:#0a0a0a}
+.news-card::after{content:'';position:absolute;top:0;right:0;width:100%;height:3px;
+  background:linear-gradient(90deg,#0a0a0a 0%,#0a0a0a 30%,transparent 30%)}
+@media(max-width:768px){
+  .news-matrix{top:48px;right:12px;width:200px}
+  .news-headline{font-size:10px}
+  .news-body{font-size:9px}
+  .news-card-inner{padding:10px 12px 8px}
+}
 </style>
 </head>
 <body>
@@ -1309,6 +1337,10 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   <div class="zzz-menu-label">
     <div class="zzz-label-en">MAIN MENU</div>
     <div class="zzz-label-num">01</div>
+  </div>
+  <!-- News Matrix -->
+  <div class="news-matrix" id="news-matrix">
+    <div class="news-card" id="news-card"></div>
   </div>
   <!-- Main content area -->
   <div class="zzz-menu-main">
@@ -2191,6 +2223,7 @@ function showScreen(id,isBack){
     if(id==='screen-map')Adventure.renderMap();
     if(id==='screen-wiki')Wiki.showTab(Wiki.currentTab);
     if(id==='screen-story')Story.init();
+    if(id==='screen-menu'){NewsMatrix.resume()}else{NewsMatrix.stop()}
     slide.classList.remove(inCls);
     void slide.offsetWidth;
     slide.classList.add(outCls);
@@ -5057,6 +5090,74 @@ const _chromaObserver=new MutationObserver(()=>{
   }
 });
 _chromaObserver.observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+/* ===== NEWS MATRIX ===== */
+const NewsMatrix=(()=>{
+const data=[
+{tag:'TECH',hl:'量子通信"意识中继器"通过伦理审查',body:'"星轨社"CEO<strong>三条铃音</strong>宣布，"意识低延迟中继器"可将泰拉内意识延迟降至0.001秒——"虚拟与现实的感觉边界将进一步消融"。'},
+{tag:'TECH',hl:'"Project Eidolon"泄露引发伦理风暴',body:'天才程序员<strong>九条莲</strong>主导的AI项目曝光：可根据用户泰拉浏览记录，生成包含已故亲人数字形象的定制化内容。'},
+{tag:'SOCIETY',hl:'"现实感稀释"纠纷同比增300%',body:'警视厅数据显示，民事纠纷多涉及财产赠与虚拟伴侣或数据兽。社会学家<strong>五木悠</strong>警告："情感资本主义已进入虚拟边疆。"'},
+{tag:'POLITICS',hl:'《泰拉数据权益基本法》草案提交',body:'"数字公民党"新人议员<strong>黑泽凛</strong>主张：用户在泰拉内创造的数据兽及数字资产应享有部分人格权与财产权。'},
+{tag:'POLITICS',hl:'日美"根服务器本地化"谈判僵局',body:'美方要求全球数据流可被监管，日方以"文化特性与隐私"为由拒绝，地球终端数据主权博弈升温。'},
+{tag:'ECONOMY',hl:'Meta-御苑拍得涩谷十年虚拟开发权',body:'虚拟地产巨头股价飙升，计划在泰拉"东京单元"涩谷十字路口建设"跨次元商业综合体"。'},
+{tag:'ECONOMY',hl:'高岛屋成立"虚拟买手部"',body:'老牌百货聘请知名VTuber<strong>翡翠铃</strong>为首席购物向导，在泰拉内为用户提供沉浸式购物体验。'},
+{tag:'CULTURE',hl:'国宝《鸟兽戏画》在泰拉内"活化"',body:'国立博物馆将文物扫描后生成可互动、具有简单AI的数字化角色，游客可与之嬉戏。'},
+{tag:'CULTURE',hl:'能乐×全息投影：感知"鬼面"情绪',body:'<strong>观世流宗家</strong>与全息团队合作，在泰拉"静寂之庭"举办能乐演出，观众可佩戴感官设备体验情绪波动。'},
+{tag:'GAME',hl:'《祓：东京单元》首周销量破纪录',body:'Fromxxxtware新作中，玩家需在扭曲的泰拉东京"祓除"由社会负面情绪化生的强大数据兽。'},
+{tag:'GAME',hl:'风间瞬退役转投VR竞技《泰拉冲突》',body:'该游戏直接调用地球终端部分底层数据流，比赛环境每场随机生成，全新竞技形态。'},
+{tag:'VTUBER',hl:'顶流VTuber直播中意外"掉皮"',body:'真实动捕演员<strong>白石菜摘</strong>面容意外显现3秒，引发关于中之人权益与虚拟形象所有权的滔天讨论。'},
+{tag:'VTUBER',hl:'全球首个"集体中之人"VTuber诞生',body:'事务所"Avatarism"推出<strong>千面</strong>，声音与性格由五名创作者实时融合生成，身份成谜。'},
+{tag:'MUSIC',hl:'虚拟乐队ZETA十万座席售罄',body:'泰拉"富士摇滚音乐节"虚拟会场中，现实乐器数据与虚拟角色表演实时同步。'},
+{tag:'IDOL',hl:'xx坂46首次开放"数字分身"成员席位',body:'第50期生招募中，入选者将以动捕形象参与虚拟公演及泰拉内综艺。'},
+{tag:'IDOL',hl:'偶像人设被曝"情感模拟训练"塑造',body:'小型团体成员<strong>小泉光</strong>的"清纯努力"人设，由专业团队在泰拉中分析粉丝偏好后打造，粉丝群体分裂。'},
+{tag:'UNDERGROUND',hl:'秋叶原地偶"Circuit Breaker"走红',body:'表演时佩戴简陋神经接口，将观众实时情绪波动转化为舞台灯光与音乐变奏，风格激进。'},
+{tag:'UNDERGROUND',hl:'纪录片《地下之光，数据之影》上映',body:'跟踪拍摄多名地下偶像在现实与泰拉"虚拟握手会"中的人格切换与心理压力。'},
+{tag:'SHOWBIZ',hl:'影帝佐藤健息影一年研究"沉浸表演"',body:'投身利用地球终端技术的表演方法研究，称希望探索"百分百成为角色"的可能性。'},
+{tag:'SHOWBIZ',hl:'Taylor Swift东京巨蛋×泰拉同步演出',body:'两个世界的观众可通过特定歌曲进行实时互动合唱，"全息分身"特别场门票瞬间售罄。'},
+{tag:'FOOD',hl:'米其林三星"传"推出"五感怀石"',body:'主厨<strong>山本征治</strong>设计：每一道菜对应泰拉中一段精心设计的风景或记忆流，味觉与虚拟体验绑定。'},
+{tag:'FOOD',hl:'"情绪料理"餐厅风靡东京',body:'通过分析顾客当日泰拉情感流数据，后厨AI匹配食材与调味，号称能"用食物平衡你的数字灵魂"。'},
+{tag:'TRAVEL',hl:'日本旅局推"虚实双生"旅游路线',body:'白日浅草寺观光，夜晚在泰拉"百鬼夜行浅草"活动中与数字化妖怪角色互动。'},
+{tag:'TRAVEL',hl:'JTB破产重组，景观数据库易主',body:'核心资产"全球景观数据库"被"泰拉旅业"收购，用于构建超高清虚拟旅行体验。'},
+{tag:'MILITARY',hl:'防卫省公开"次世代情报支援系统"',body:'士兵可通过轻型终端接入战术级泰拉子网络，共享战场感知与模拟推演。'},
+{tag:'MILITARY',hl:'"数字空间防卫队"成立',body:'自卫队招募顶尖黑客与泰拉架构师，防护关键基础设施免受"认知层面攻击"。'},
+{tag:'ANIME',hl:'xx社《地球终端编年史》革新制作流程',body:'原画师在虚拟空间直接绘制，部分中割由AI根据作监的"情绪笔触"自动生成。'},
+{tag:'ANIME',hl:'集英社推出泰拉特供版漫画',body:'《周刊少年Jump+》读者支付额外费用可进入"名场面沉浸体验"，化身角色短暂体验经典情节。'},
+{tag:'MEDICAL',hl:'泰拉映射技术治愈PTSD患者',body:'东京大学医学部成功进行"创伤记忆具象化与温和重构治疗"，患者症状显著缓解。'},
+{tag:'MEDICAL',hl:'"数字临终关怀"服务争议中需求旺盛',body:'为绝症患者在泰拉场景中构建数字分身，与亲友进行告别。'},
+{tag:'LITERATURE',hl:'直木奖作家新作成现象级话题',body:'<strong>平野启一郎</strong>《数据之河，血肉之岸》探讨人际关系在现实与泰拉之间的撕裂与重构。'},
+{tag:'LITERATURE',hl:'讲谈社推出"互动小说"平台',body:'读者在泰拉中的选择将真实影响故事走向，并生成专属的阅读记忆流。'},
+{tag:'COMEDY',hl:'"霜降明星"AI脱口秀效果爆炸',body:'虚拟形象根据观众实时笑声数据，即时调整段子节奏与内容。'},
+{tag:'COMEDY',hl:'传统落语登陆泰拉"虚拟寄席"',body:'<strong>立川谈志</strong>一门年轻弟子利用虚拟形象夸张化肢体动作，吸引年轻观众，引发传统艺术革新讨论。'}
+];
+let timer=null,idx=-1,card=null;
+function pickRandom(){let n;do{n=Math.floor(Math.random()*data.length)}while(n===idx&&data.length>1);idx=n;return data[idx]}
+function render(d){
+  const h=Math.floor(Math.random()*24),m=Math.floor(Math.random()*60);
+  const ts=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  card.innerHTML=`<div class="news-accent"></div><div class="news-card-inner"><div class="news-tag">${d.tag}</div><div class="news-headline">${d.hl}</div><div class="news-body">${d.body}</div></div><div class="news-meta"><span class="nm-src">TOKYO NEWS MATRIX 2042</span><span class="nm-time">${ts}</span></div>`;
+}
+function show(){
+  if(!card)return;
+  const d=pickRandom();render(d);
+  card.classList.remove('hiding');
+  void card.offsetWidth;
+  card.classList.add('visible');
+  timer=setTimeout(hide,8000);
+}
+function hide(){
+  if(!card)return;
+  card.classList.remove('visible');card.classList.add('hiding');
+  timer=setTimeout(()=>{card.classList.remove('hiding');timer=setTimeout(show,2000+Math.random()*4000)},600);
+}
+function init(){
+  card=document.getElementById('news-card');
+  if(!card)return;
+  setTimeout(show,3000+Math.random()*3000);
+}
+function stop(){clearTimeout(timer);if(card){card.classList.remove('visible');card.classList.add('hiding')}}
+function resume(){stop();setTimeout(show,2000+Math.random()*3000)}
+return{init,stop,resume};
+})();
+NewsMatrix.init();
 
 </script>
 </body>
