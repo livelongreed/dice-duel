@@ -101,7 +101,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .zzz-menu-top{flex:1;display:flex;align-items:center;padding-left:88px;padding-right:24px;padding-top:20px;padding-bottom:100px}
 .zzz-menu-center{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
 .zzz-menu-title-block{margin-bottom:16px}
-.zzz-menu-title-block .title{font-size:48px;text-align:left}
+.zzz-menu-title-block .title{font-size:36px;text-align:left}
 .zzz-menu-title-block .subtitle{text-align:left}
 /* Diagonal staggered buttons */
 .zzz-menu-btns{display:flex;flex-direction:column;gap:0;width:100%;max-width:360px}
@@ -148,11 +148,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 #screen-menu::after,#screen-levels::after,#screen-adventure::after{bottom:0;right:0}
 @keyframes gearSpin{to{transform:rotate(360deg)}}
 .menu-wrap{text-align:center;position:relative;z-index:2}
-.title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:56px;letter-spacing:8px;
-  background:linear-gradient(180deg,#ffffff 0%,#ff6b9d 40%,#ff3e7a 60%,#ff6b9d 80%,#ffffff 100%);
+.title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:40px;letter-spacing:6px;
+  background:linear-gradient(180deg,#ffffff 0%,#d0d0d0 40%,#999999 60%,#d0d0d0 80%,#ffffff 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(255,62,122,0.3))}
-.subtitle{font-family:'Share Tech Mono';font-size:16px;color:#ff6b9d;letter-spacing:8px;margin-top:4px}
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 12px rgba(0,0,0,0.15))}
+.subtitle{font-family:'Share Tech Mono';font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:8px;margin-top:4px}
 .divider{width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,62,122,0.4),transparent);margin:20px auto}
 .divider-sm{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);margin:6px 0}
 .menu-btn{display:block;width:260px;margin:10px auto;padding:14px 20px 14px 28px;font-family:'Baloo 2','Fredoka',sans-serif;font-size:15px;
@@ -877,7 +877,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-levels .zzz-levels-main{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2;padding-right:48px}
 #screen-levels .zzz-levels-top{flex:1;display:flex;align-items:center;padding:20px 24px 80px 32px}
 #screen-levels .zzz-levels-content{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%}
-#screen-levels .zzz-levels-content .title{font-size:36px;text-align:left;margin-bottom:8px}
+#screen-levels .zzz-levels-content .title{font-size:28px;text-align:left;margin-bottom:8px}
 #screen-levels .zzz-levels-content .subtitle{text-align:left;color:#a3e635;letter-spacing:6px}
 #screen-levels .zzz-levels-btns{display:flex;flex-direction:column;gap:6px;max-width:400px;width:100%}
 #screen-levels .zzz-levels-btns .lv-row{display:flex;justify-content:flex-start}
@@ -895,7 +895,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-adventure .zzz-adv-main{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2;padding-top:48px;padding-left:48px}
 #screen-adventure .zzz-adv-top{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px 80px}
 #screen-adventure .zzz-adv-content{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:440px;width:100%}
-#screen-adventure .zzz-adv-content .title{font-size:36px;margin-bottom:4px}
+#screen-adventure .zzz-adv-content .title{font-size:28px;margin-bottom:4px}
 /* Battle screen accent enhancements */
 #right-panel{position:relative}
 .battle-info-widget{margin-top:auto;padding:10px 8px;background:rgba(255,255,255,0.04);
@@ -909,7 +909,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #battle-zone::before,#battle-zone::after{width:2px;height:60%;border-radius:1px}
 /* ========== MOBILE ========== */
 @media(max-width:768px){
-  .title{font-size:34px;letter-spacing:4px}
+  .title{font-size:26px;letter-spacing:3px}
   .subtitle{font-size:11px;letter-spacing:4px}
   .menu-btn{width:200px;padding:10px;font-size:13px}
   .settings-wrap{width:95%;max-width:360px}
@@ -981,7 +981,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .zzz-strip-dots span{width:4px;height:4px}
   .zzz-strip-settings{width:30px;height:30px;font-size:14px}
   .zzz-menu-top{padding-left:56px;padding-right:12px}
-  .zzz-menu-title-block .title{font-size:32px;letter-spacing:4px}
+  .zzz-menu-title-block .title{font-size:26px;letter-spacing:3px}
   .zzz-menu-title-block .subtitle{font-size:11px;letter-spacing:4px}
   .zzz-menu-btns{max-width:280px}
   .zzz-menu-btns .zbtn-row:nth-child(1){margin-left:0}
@@ -1019,7 +1019,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .zzz-top-strip .st-icon{font-size:14px}
   #screen-levels .zzz-levels-main{padding-right:36px}
   #screen-levels .zzz-levels-top{padding:16px 16px 72px 20px}
-  #screen-levels .zzz-levels-content .title{font-size:28px;letter-spacing:4px}
+  #screen-levels .zzz-levels-content .title{font-size:22px;letter-spacing:3px}
   #screen-levels .zzz-screen-info{right:36px}
   .zzz-screen-info .zzz-widget-card{padding:10px 14px;min-width:auto}
   .zzz-screen-info .si-big{font-size:22px}
@@ -1441,7 +1441,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   <div class="zzz-adv-main">
     <div class="zzz-adv-top">
       <div class="zzz-adv-content">
-        <h2 class="title" style="font-size:36px">选择地图</h2>
+        <h2 class="title" style="font-size:28px">选择地图</h2>
         <p class="subtitle" style="color:#9f7aea">MAP SELECT</p>
         <div class="divider" style="margin:10px auto;background:linear-gradient(90deg,transparent,rgba(122,90,205,0.4),transparent)"></div>
         <div class="adventure-map-card" onclick="Adventure.selectMap('rusty_plains')" style="border-color:#7a5acd">
@@ -1556,7 +1556,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   </div>
   <div class="zzz-screen-main">
     <div class="menu-wrap" style="max-width:700px;width:95%;max-height:80vh;overflow-y:auto">
-      <h2 class="title" style="font-size:30px">百科</h2>
+      <h2 class="title" style="font-size:24px">百科</h2>
       <div style="display:flex;gap:10px;justify-content:center;margin-bottom:12px">
         <button class="menu-btn sm" id="wiki-tab-cards" onclick="Wiki.showTab('cards')" style="flex:1">卡牌图鉴</button>
         <button class="menu-btn sm" id="wiki-tab-relics" onclick="Wiki.showTab('relics')" style="flex:1">遗物图鉴</button>
@@ -1591,7 +1591,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   </div>
   <div class="zzz-screen-main">
     <div class="menu-wrap" style="max-width:700px;width:95%;max-height:80vh;overflow-y:auto">
-      <h2 class="title" style="font-size:30px">剧情</h2>
+      <h2 class="title" style="font-size:24px">剧情</h2>
       <div id="story-content"></div>
       <div class="divider"></div>
       <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
@@ -1752,7 +1752,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   </div>
   <div class="zzz-screen-main">
     <div class="shop-wrap">
-      <h2 class="title" style="font-size:36px">商店</h2>
+      <h2 class="title" style="font-size:28px">商店</h2>
       <div class="divider"></div>
       <div class="shop-merchant">
         <div class="merchant-art">🧙‍♂️</div>
