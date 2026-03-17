@@ -1087,8 +1087,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   background:transparent}
 #screen-map .screen-bg{animation-duration:26s;opacity:0.5;
   left:48px;right:0;top:0;bottom:60px;width:auto;
-  background-size:cover;background-position:center center}
-#screen-map .screen-bg::before{background:rgba(0,0,0,0.45)}
+  background-size:contain;background-position:center center}
 #screen-map .map-bg-layer{position:absolute;inset:0;z-index:0;pointer-events:none;
   background:radial-gradient(ellipse at 20% 50%,rgba(255,62,122,0.04) 0%,transparent 50%),
   radial-gradient(ellipse at 80% 30%,rgba(100,60,220,0.04) 0%,transparent 50%),
@@ -1238,17 +1237,17 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .relic-icon:hover{background:rgba(255,107,157,0.25);transform:scale(1.15)}
 .relic-item .item-desc.relic-desc{font-size:11px;color:var(--text-dim);display:block;margin-top:2px;line-height:1.3}
 /* ========== SCREEN BACKGROUND IMAGES ========== */
-/* Show more image content: auto 75% height → 25% uncovered, right-aligned to show right side */
+/* Show full image content: contain shows entire image, background-color fills uncovered area */
 .screen-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0;
-  background-size:auto 75%;background-position:right center;background-repeat:no-repeat;pointer-events:none;
+  background-size:contain;background-position:center center;background-repeat:no-repeat;pointer-events:none;
   background-color:#1a1a2e;
   animation:bgBreathe 20s ease-in-out infinite alternate;will-change:transform}
 @keyframes bgBreathe{0%{transform:scale(1)}100%{transform:scale(1.05)}}
-/* Desktop: wider viewport can show more, use cover */
-@media (min-width:769px){.screen-bg{background-size:cover;background-position:70% center}}
-/* Inner: dark overlay + edge vignette gradients */
+/* Desktop: contain to show full image */
+@media (min-width:769px){.screen-bg{background-size:contain;background-position:center center}}
+/* Inner: edge vignette gradients only (no gray overlay) */
 .screen-bg::before{content:'';position:absolute;inset:0;z-index:1;
-  background:rgba(0,0,0,0.35);pointer-events:none}
+  background:transparent;pointer-events:none}
 .screen-bg::after{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
   background:
     linear-gradient(to bottom,rgba(26,26,46,0.7) 0%,transparent 15%),
@@ -1261,8 +1260,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-levels .screen-bg{animation-duration:20s;animation-direction:alternate-reverse}
 #screen-adventure .screen-bg{animation-duration:22s}
 #screen-game .screen-bg{animation-duration:30s}
-#screen-game .screen-bg::before{background:rgba(0,0,0,0.5)}
-#screen-adventure .screen-bg::before{background:rgba(0,0,0,0.45)}
+#screen-adventure .screen-bg{animation-duration:22s}
 /* Screen particles overlay */
 .screen-particles{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 .screen-particles .sp{position:absolute;border-radius:50%;pointer-events:none;opacity:0;
