@@ -140,8 +140,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .zzz-bottom-accent .ba-text{color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
   font-family:'Baloo 2','Fredoka',sans-serif}
 .zzz-bottom-accent .ba-icon{font-size:20px}
-/* Menu */
-#screen-menu,#screen-levels,#screen-adventure{background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18);overflow:hidden}
+/* === Unified screen decorations === */
+/* All major screens get the gradient bg + overflow hidden */
+#screen-menu,#screen-levels,#screen-adventure,#screen-wiki,#screen-story,#screen-deck,#screen-shop,#screen-settings{background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18);overflow:hidden}
 #screen-menu::before,#screen-menu::after,#screen-levels::before,#screen-levels::after,#screen-adventure::before,#screen-adventure::after{content:'';position:absolute;font-size:0;z-index:0;pointer-events:none}
 #screen-menu::before,#screen-levels::before,#screen-adventure::before{top:0;left:0}
 #screen-menu::after,#screen-levels::after,#screen-adventure::after{bottom:0;right:0}
@@ -168,7 +169,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .menu-btn.sm{width:auto;padding:7px 16px 7px 20px;font-size:12px;display:inline-block;margin:4px;border-radius:20px}
 .menu-btn.primary{background:linear-gradient(135deg,#2a1028,#3a1838);box-shadow:0 2px 8px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,62,122,0.15)}
 /* Deck Builder */
-#screen-deck{display:none;background:var(--bg);overflow:hidden}
 #screen-deck.active{display:flex;flex-direction:column}
 .deck-builder{width:100%;height:100%;padding:12px;display:flex;flex-direction:column;position:relative;z-index:2}
 .deck-header{display:flex;align-items:center;gap:16px;padding-bottom:8px;border-bottom:1px solid var(--gold-dim)}
@@ -185,8 +185,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 #deck-list .dl-item .dl-count{color:var(--gold);font-weight:700}
 .deck-actions{margin-top:6px;text-align:center}
 /* Settings */
-#screen-settings{background:var(--bg)}
-.settings-wrap{width:360px;padding:24px;background:var(--bg2);border:2px solid var(--gold-dim);border-radius:8px}
+.settings-wrap{width:360px;padding:24px;background:var(--bg2);border:2px solid var(--gold-dim);border-radius:8px;max-height:80vh;overflow-y:auto}
 .settings-wrap h2{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:20px;margin-bottom:16px;text-align:center}
 .setting-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .setting-row label{font-size:13px}
@@ -208,7 +207,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   text-overflow:ellipsis;white-space:nowrap}
 .music-playing{color:var(--hp-green)!important}
 /* Shop */
-#screen-shop{background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18);position:relative;overflow:hidden}
 .shop-wrap{max-width:420px;margin:0 auto;padding:24px;text-align:center;position:relative;z-index:2}
 .shop-merchant{margin:16px 0;padding:16px;background:rgba(255,107,157,0.05);border:1px solid var(--gold-dim);border-radius:8px}
 .merchant-art{font-size:72px;margin-bottom:8px;filter:drop-shadow(0 4px 12px rgba(255,107,157,0.3))}
@@ -777,7 +775,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .zzz-right-strip .zzz-strip-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4)}
 .zzz-right-strip .zzz-strip-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
 /* Top accent strip (for adventure screen) */
-.zzz-top-strip{position:absolute;top:0;left:0;right:0;height:48px;z-index:3;
+.zzz-top-strip{position:absolute;top:0;left:48px;right:0;height:48px;z-index:3;
   background:linear-gradient(90deg,#7a5acd 0%,#6040b0 50%,#7a5acd 100%);
   display:flex;align-items:center;padding:0 20px;gap:14px}
 .zzz-top-strip::after{content:'';position:absolute;inset:0;
@@ -789,9 +787,77 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .zzz-top-strip .st-dots{display:flex;gap:4px;align-items:center}
 .zzz-top-strip .st-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4)}
 .zzz-top-strip .st-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
+/* === Generic side strip base (recolor per screen via accent var) === */
+.zzz-side-strip{position:absolute;top:0;bottom:0;width:48px;z-index:3;
+  display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:14px;overflow:hidden}
+.zzz-side-strip::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,0,0,0.08) 18px,rgba(0,0,0,0.08) 20px);pointer-events:none}
+.zzz-side-strip .zzz-strip-text{writing-mode:vertical-rl;text-orientation:mixed;font-family:'Baloo 2','Fredoka',sans-serif;
+  font-size:10px;font-weight:800;letter-spacing:4px;color:rgba(255,255,255,0.7);text-transform:uppercase;flex-shrink:0}
+.zzz-side-strip .zzz-strip-text.big{font-size:14px;color:rgba(255,255,255,0.9);letter-spacing:5px}
+.zzz-side-strip .zzz-strip-icon{font-size:18px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));flex-shrink:0}
+.zzz-side-strip .zzz-strip-dots{display:flex;flex-direction:column;gap:3px;align-items:center}
+.zzz-side-strip .zzz-strip-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4)}
+.zzz-side-strip .zzz-strip-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
+/* Per-screen strip colors + positions */
+.zzz-side-strip.strip-wiki{left:0;background:linear-gradient(180deg,#06b6d4 0%,#0891b2 50%,#06b6d4 100%)}
+.zzz-side-strip.strip-story{left:0;background:linear-gradient(180deg,#f59e0b 0%,#d97706 50%,#f59e0b 100%)}
+.zzz-side-strip.strip-deck{right:0;background:linear-gradient(180deg,#3b82f6 0%,#2563eb 50%,#3b82f6 100%)}
+.zzz-side-strip.strip-shop{left:0;background:linear-gradient(180deg,#eab308 0%,#ca8a04 50%,#eab308 100%)}
+.zzz-side-strip.strip-settings{left:0;background:linear-gradient(180deg,#64748b 0%,#475569 50%,#64748b 100%)}
+.zzz-side-strip.strip-adventure{left:0;background:linear-gradient(180deg,#7a5acd 0%,#6040b0 50%,#7a5acd 100%)}
+/* Per-screen bottom accent bars */
+.zzz-screen-bottom{position:absolute;bottom:0;left:0;right:0;z-index:5;display:flex;gap:0;align-items:stretch}
+.zzz-screen-bottom.has-left{left:48px}
+.zzz-screen-bottom.has-right{right:48px}
+.zzz-screen-bottom .zzz-bottom-accent{flex:0 0 auto}
+.zzz-screen-bottom .zzz-sb-white{background:rgba(255,255,255,0.95);color:#1a1a2e;padding:14px 18px;flex:1;
+  position:relative;overflow:hidden;border-top:4px solid #ff3e7a;box-shadow:0 -4px 24px rgba(0,0,0,0.2)}
+.zzz-screen-bottom .zzz-sb-white::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;z-index:1}
+.zzz-screen-bottom .zzz-sb-white .sb-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:2px}
+.zzz-screen-bottom .zzz-sb-white .sb-big{font-size:22px;font-weight:900;line-height:1;font-family:'Baloo 2','Fredoka',sans-serif;color:#1a1a2e}
+.zzz-screen-bottom .zzz-sb-white .sb-sub{font-size:10px;font-weight:700;color:#555;margin-top:2px}
+/* Color variants for bottom accent bar */
+#screen-wiki .zzz-screen-bottom .zzz-sb-white{border-top-color:#06b6d4}
+#screen-wiki .zzz-screen-bottom .zzz-sb-white::before{background:linear-gradient(90deg,#06b6d4,#22d3ee,#06b6d4)}
+#screen-wiki .zzz-screen-bottom .sb-label{color:#06b6d4}
+#screen-wiki .zzz-screen-bottom .zzz-bottom-accent{background:#06b6d4}
+#screen-story .zzz-screen-bottom .zzz-sb-white{border-top-color:#f59e0b}
+#screen-story .zzz-screen-bottom .zzz-sb-white::before{background:linear-gradient(90deg,#f59e0b,#fbbf24,#f59e0b)}
+#screen-story .zzz-screen-bottom .sb-label{color:#f59e0b}
+#screen-story .zzz-screen-bottom .zzz-bottom-accent{background:#f59e0b}
+#screen-deck .zzz-screen-bottom .zzz-sb-white{border-top-color:#3b82f6}
+#screen-deck .zzz-screen-bottom .zzz-sb-white::before{background:linear-gradient(90deg,#3b82f6,#60a5fa,#3b82f6)}
+#screen-deck .zzz-screen-bottom .sb-label{color:#3b82f6}
+#screen-deck .zzz-screen-bottom .zzz-bottom-accent{background:#3b82f6}
+#screen-shop .zzz-screen-bottom .zzz-sb-white{border-top-color:#eab308}
+#screen-shop .zzz-screen-bottom .zzz-sb-white::before{background:linear-gradient(90deg,#eab308,#facc15,#eab308)}
+#screen-shop .zzz-screen-bottom .sb-label{color:#eab308}
+#screen-shop .zzz-screen-bottom .zzz-bottom-accent{background:#eab308}
+#screen-settings .zzz-screen-bottom .zzz-sb-white{border-top-color:#64748b}
+#screen-settings .zzz-screen-bottom .zzz-sb-white::before{background:linear-gradient(90deg,#64748b,#94a3b8,#64748b)}
+#screen-settings .zzz-screen-bottom .sb-label{color:#64748b}
+#screen-settings .zzz-screen-bottom .zzz-bottom-accent{background:#64748b}
+/* Per-screen layout adjustments */
+#screen-wiki .zzz-screen-main,#screen-story .zzz-screen-main,#screen-shop .zzz-screen-main,
+#screen-settings .zzz-screen-main{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;padding-left:48px;padding-bottom:60px}
+#screen-deck .zzz-screen-main-deck{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2;padding-right:48px;padding-bottom:60px}
+/* Screen-specific menu labels */
+#screen-wiki .zzz-menu-label,#screen-story .zzz-menu-label,#screen-deck .zzz-menu-label,
+#screen-shop .zzz-menu-label,#screen-settings .zzz-menu-label{position:absolute;z-index:5;text-align:right}
+#screen-wiki .zzz-menu-label{top:24px;right:24px}
+#screen-story .zzz-menu-label{top:24px;right:24px}
+#screen-deck .zzz-menu-label{top:24px;right:56px}
+#screen-shop .zzz-menu-label{top:24px;right:24px}
+#screen-settings .zzz-menu-label{top:24px;right:24px}
+/* Override old screen backgrounds */
+#screen-deck{background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18)!important}
+#screen-settings{background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18)!important}
+/* Adventure screen: add left strip alongside top strip */
 /* Screen info widget bars (bottom white panels for levels/adventure) */
 .zzz-screen-info{position:absolute;bottom:0;left:0;right:0;z-index:5;display:flex;gap:0;align-items:stretch}
 #screen-levels .zzz-screen-info{right:48px}
+#screen-adventure .zzz-screen-info{left:48px}
 .zzz-screen-info .zzz-widget-card{background:rgba(255,255,255,0.95);color:#1a1a2e;padding:14px 22px;
   backdrop-filter:blur(10px);min-width:100px;position:relative;overflow:hidden;flex:1;
   border-top:4px solid #ff3e7a;box-shadow:0 -4px 24px rgba(0,0,0,0.2);border-radius:0}
@@ -826,7 +892,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-levels .zzz-levels-bottom-btns{display:flex;gap:10px;margin-top:16px}
 #screen-levels .zzz-levels-bottom-btns .menu-btn{width:auto;padding:8px 18px;font-size:13px;border-radius:14px;margin:0;display:inline-block}
 /* Adventure screen layout */
-#screen-adventure .zzz-adv-main{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2;padding-top:48px}
+#screen-adventure .zzz-adv-main{position:absolute;inset:0;display:flex;flex-direction:column;z-index:2;padding-top:48px;padding-left:48px}
 #screen-adventure .zzz-adv-top{flex:1;display:flex;align-items:center;justify-content:center;padding:20px 24px 80px}
 #screen-adventure .zzz-adv-content{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:440px;width:100%}
 #screen-adventure .zzz-adv-content .title{font-size:36px;margin-bottom:4px}
@@ -947,7 +1013,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .zzz-right-strip .zzz-strip-text{font-size:8px;letter-spacing:2px}
   .zzz-right-strip .zzz-strip-text.big{font-size:11px;letter-spacing:3px}
   .zzz-right-strip .zzz-strip-icon{font-size:14px}
-  .zzz-top-strip{height:36px;padding:0 12px;gap:8px}
+  .zzz-top-strip{height:36px;padding:0 12px;gap:8px;left:36px}
   .zzz-top-strip .st-text{font-size:8px;letter-spacing:2px}
   .zzz-top-strip .st-text.big{font-size:10px}
   .zzz-top-strip .st-icon{font-size:14px}
@@ -958,8 +1024,23 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .zzz-screen-info .zzz-widget-card{padding:10px 14px;min-width:auto}
   .zzz-screen-info .si-big{font-size:22px}
   .zzz-screen-info .si-sub{font-size:9px}
-  #screen-adventure .zzz-adv-main{padding-top:36px}
+  #screen-adventure .zzz-adv-main{padding-top:36px;padding-left:36px}
+  #screen-adventure .zzz-screen-info{left:36px}
   #screen-adventure .zzz-adv-top{padding:12px 16px 72px}
+  /* Mobile: side strips for new screens */
+  .zzz-side-strip{width:36px;padding:14px 0;gap:10px}
+  .zzz-side-strip .zzz-strip-text{font-size:8px;letter-spacing:2px}
+  .zzz-side-strip .zzz-strip-text.big{font-size:11px;letter-spacing:3px}
+  .zzz-side-strip .zzz-strip-icon{font-size:14px}
+  #screen-wiki .zzz-screen-main,#screen-story .zzz-screen-main,#screen-shop .zzz-screen-main,
+  #screen-settings .zzz-screen-main{padding-left:36px;padding-bottom:52px}
+  #screen-deck .zzz-screen-main-deck{padding-right:36px;padding-bottom:52px}
+  #screen-deck .zzz-menu-label{right:44px}
+  .zzz-screen-bottom.has-left{left:36px}
+  .zzz-screen-bottom.has-right{right:36px}
+  .zzz-screen-bottom .zzz-sb-white{padding:10px 12px}
+  .zzz-screen-bottom .zzz-sb-white .sb-big{font-size:18px}
+  .zzz-screen-bottom .zzz-sb-white .sb-sub{font-size:8px}
   .battle-info-widget{display:none}
 }
 /* ============ ADVENTURE MAP ============ */
@@ -1277,6 +1358,14 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <div class="st-text">MODE</div>
     <div class="st-icon">⚔</div>
   </div>
+  <!-- Left purple accent strip -->
+  <div class="zzz-side-strip strip-adventure">
+    <div class="zzz-strip-icon">🗺</div>
+    <div class="zzz-strip-text big">ADV</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span></div>
+    <div class="zzz-strip-text">MAP</div>
+    <div class="zzz-strip-icon">⚔</div>
+  </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label" style="top:56px">
     <div class="zzz-label-en">ADVENTURE</div>
@@ -1355,140 +1444,235 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 
 <!-- WIKI / ENCYCLOPEDIA SCREEN -->
 <div id="screen-wiki" class="screen">
-  <div class="menu-wrap" style="max-width:700px;width:95%;max-height:90vh;overflow-y:auto">
-    <h2 class="title" style="font-size:30px">百科</h2>
-    <div style="display:flex;gap:10px;justify-content:center;margin-bottom:12px">
-      <button class="menu-btn sm" id="wiki-tab-cards" onclick="Wiki.showTab('cards')" style="flex:1">卡牌图鉴</button>
-      <button class="menu-btn sm" id="wiki-tab-relics" onclick="Wiki.showTab('relics')" style="flex:1">遗物图鉴</button>
-      <button class="menu-btn sm" id="wiki-tab-events" onclick="Wiki.showTab('events')" style="flex:1">事件一览</button>
-      <button class="menu-btn sm" id="wiki-tab-music" onclick="Wiki.showTab('music')" style="flex:1">音乐鉴赏</button>
+  <div class="screen-particles" data-colors="#06b6d4,#22d3ee,#0891b2,#ffffff" data-count="18"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriW" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriW)"/></svg></div>
+  <div class="zzz-side-strip strip-wiki">
+    <div class="zzz-strip-icon">📖</div>
+    <div class="zzz-strip-text big">WIKI</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span><span class="active"></span></div>
+    <div class="zzz-strip-text">CODEX</div>
+    <div class="zzz-strip-icon">🔍</div>
+  </div>
+  <div class="zzz-menu-label">
+    <div class="zzz-label-en">ENCYCLOPEDIA</div>
+    <div class="zzz-label-num">04</div>
+  </div>
+  <div class="zzz-screen-main">
+    <div class="menu-wrap" style="max-width:700px;width:95%;max-height:80vh;overflow-y:auto">
+      <h2 class="title" style="font-size:30px">百科</h2>
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:12px">
+        <button class="menu-btn sm" id="wiki-tab-cards" onclick="Wiki.showTab('cards')" style="flex:1">卡牌图鉴</button>
+        <button class="menu-btn sm" id="wiki-tab-relics" onclick="Wiki.showTab('relics')" style="flex:1">遗物图鉴</button>
+        <button class="menu-btn sm" id="wiki-tab-events" onclick="Wiki.showTab('events')" style="flex:1">事件一览</button>
+        <button class="menu-btn sm" id="wiki-tab-music" onclick="Wiki.showTab('music')" style="flex:1">音乐鉴赏</button>
+      </div>
+      <div id="wiki-content"></div>
+      <div class="divider"></div>
+      <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
     </div>
-    <div id="wiki-content"></div>
-    <div class="divider"></div>
-    <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
+  </div>
+  <div class="zzz-screen-bottom has-left">
+    <div class="zzz-bottom-accent"><div class="ba-icon">📖</div><div class="ba-text">DICE<br>WIKI</div></div>
+    <div class="zzz-sb-white"><div class="sb-label">CODEX</div><div class="sb-big">百科全书</div><div class="sb-sub">卡牌 · 遗物 · 事件 · 音乐</div></div>
   </div>
 </div>
 
 <!-- STORY SCREEN -->
 <div id="screen-story" class="screen">
-  <div class="menu-wrap" style="max-width:700px;width:95%;max-height:90vh;overflow-y:auto">
-    <h2 class="title" style="font-size:30px">剧情</h2>
-    <div id="story-content"></div>
-    <div class="divider"></div>
-    <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
-      <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="Story.back()">↩ 返回</button></div>
+  <div class="screen-particles" data-colors="#f59e0b,#fbbf24,#d97706,#ffffff" data-count="18"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriS" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriS)"/></svg></div>
+  <div class="zzz-side-strip strip-story">
+    <div class="zzz-strip-icon">📜</div>
+    <div class="zzz-strip-text big">STORY</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span></div>
+    <div class="zzz-strip-text">LORE</div>
+    <div class="zzz-strip-icon">✨</div>
+  </div>
+  <div class="zzz-menu-label">
+    <div class="zzz-label-en">STORY</div>
+    <div class="zzz-label-num">05</div>
+  </div>
+  <div class="zzz-screen-main">
+    <div class="menu-wrap" style="max-width:700px;width:95%;max-height:80vh;overflow-y:auto">
+      <h2 class="title" style="font-size:30px">剧情</h2>
+      <div id="story-content"></div>
+      <div class="divider"></div>
+      <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
+        <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="Story.back()">↩ 返回</button></div>
+      </div>
     </div>
+  </div>
+  <div class="zzz-screen-bottom has-left">
+    <div class="zzz-bottom-accent"><div class="ba-icon">📜</div><div class="ba-text">DICE<br>LORE</div></div>
+    <div class="zzz-sb-white"><div class="sb-label">STORY</div><div class="sb-big">剧情篇章</div><div class="sb-sub">锈蚀世界的故事</div></div>
   </div>
 </div>
 
 <!-- DECK BUILDER SCREEN -->
 <div id="screen-deck" class="screen">
-  <div class="deck-builder">
-    <div class="deck-header">
-      <h2>构筑牌组</h2>
-      <span id="deck-count">0 / 20</span>
-      <button class="menu-btn sm" onclick="showScreen('screen-menu')">返回</button>
-    </div>
-    <div class="deck-body">
-      <div id="card-pool" class="card-grid"></div>
-      <div class="deck-list-wrap">
-        <h3>当前牌组</h3>
-        <div id="deck-list"></div>
-        <div class="deck-actions">
-          <button class="menu-btn sm" onclick="DeckBuilder.autoFill()">自动填充</button>
-          <button class="menu-btn sm" onclick="DeckBuilder.clear()">清空</button>
-          <button class="menu-btn sm primary" onclick="DeckBuilder.save()">保存</button>
+  <div class="screen-particles" data-colors="#3b82f6,#60a5fa,#2563eb,#ffffff" data-count="18"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriD" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriD)"/></svg></div>
+  <div class="zzz-side-strip strip-deck">
+    <div class="zzz-strip-icon">🃏</div>
+    <div class="zzz-strip-text big">DECK</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span><span class="active"></span></div>
+    <div class="zzz-strip-text">BUILD</div>
+    <div class="zzz-strip-icon">🔧</div>
+  </div>
+  <div class="zzz-menu-label">
+    <div class="zzz-label-en">DECK BUILDER</div>
+    <div class="zzz-label-num">06</div>
+  </div>
+  <div class="zzz-screen-main-deck">
+    <div class="deck-builder">
+      <div class="deck-header">
+        <h2>构筑牌组</h2>
+        <span id="deck-count">0 / 20</span>
+        <button class="menu-btn sm" onclick="showScreen('screen-menu')">返回</button>
+      </div>
+      <div class="deck-body">
+        <div id="card-pool" class="card-grid"></div>
+        <div class="deck-list-wrap">
+          <h3>当前牌组</h3>
+          <div id="deck-list"></div>
+          <div class="deck-actions">
+            <button class="menu-btn sm" onclick="DeckBuilder.autoFill()">自动填充</button>
+            <button class="menu-btn sm" onclick="DeckBuilder.clear()">清空</button>
+            <button class="menu-btn sm primary" onclick="DeckBuilder.save()">保存</button>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="zzz-screen-bottom has-right">
+    <div class="zzz-sb-white"><div class="sb-label">DECK</div><div class="sb-big">牌组构筑</div><div class="sb-sub">打造你的策略</div></div>
+    <div class="zzz-bottom-accent"><div class="ba-icon">🃏</div><div class="ba-text">DECK<br>BUILD</div></div>
   </div>
 </div>
 
 <!-- SETTINGS SCREEN -->
 <div id="screen-settings" class="screen">
-  <div class="settings-wrap">
-    <h2>游戏设置</h2>
-    <div class="setting-row"><label>动画速度</label>
-      <select id="set-speed" onchange="Settings.speed=+this.value">
-        <option value="1.5" selected>慢速</option><option value="1">正常</option><option value="0.5">快速</option>
-      </select>
-    </div>
-    <div class="setting-row"><label>自动使用回应法术</label>
-      <input type="checkbox" id="set-auto-response" checked onchange="Settings.autoResponse=this.checked">
-    </div>
-    <div class="setting-section">音乐设置</div>
-    <div class="setting-row"><label>主音量</label>
-      <input type="range" id="set-volume" min="0" max="100" value="60" oninput="AudioMgr.setVolume(this.value/100)">
-    </div>
-    <div class="upload-row"><label>主菜单</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-menu">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('menu')">替换</button>
+  <div class="screen-particles" data-colors="#64748b,#94a3b8,#475569,#ffffff" data-count="15"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriSt" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriSt)"/></svg></div>
+  <div class="zzz-side-strip strip-settings">
+    <div class="zzz-strip-icon">⚙</div>
+    <div class="zzz-strip-text big">SET</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span></div>
+    <div class="zzz-strip-text">CONFIG</div>
+    <div class="zzz-strip-icon">🔧</div>
+  </div>
+  <div class="zzz-menu-label">
+    <div class="zzz-label-en">SETTINGS</div>
+    <div class="zzz-label-num">07</div>
+  </div>
+  <div class="zzz-screen-main">
+    <div class="settings-wrap">
+      <h2>游戏设置</h2>
+      <div class="setting-row"><label>动画速度</label>
+        <select id="set-speed" onchange="Settings.speed=+this.value">
+          <option value="1.5" selected>慢速</option><option value="1">正常</option><option value="0.5">快速</option>
+        </select>
       </div>
-    </div>
-    <div class="upload-row"><label>组牌界面</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-deck">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('deck')">替换</button>
+      <div class="setting-row"><label>自动使用回应法术</label>
+        <input type="checkbox" id="set-auto-response" checked onchange="Settings.autoResponse=this.checked">
       </div>
-    </div>
-    <div class="upload-row"><label>战斗</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-battle">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('battle')">替换</button>
+      <div class="setting-section">音乐设置</div>
+      <div class="setting-row"><label>主音量</label>
+        <input type="range" id="set-volume" min="0" max="100" value="60" oninput="AudioMgr.setVolume(this.value/100)">
       </div>
-    </div>
-    <div class="upload-row"><label>精英战斗</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-battle_elite">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('battle_elite')">替换</button>
+      <div class="upload-row"><label>主菜单</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-menu">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('menu')">替换</button>
+        </div>
       </div>
-    </div>
-    <div class="upload-row"><label>Boss战</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-battle_boss">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('battle_boss')">替换</button>
+      <div class="upload-row"><label>组牌界面</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-deck">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('deck')">替换</button>
+        </div>
       </div>
-    </div>
-    <div class="upload-row"><label>商店/百科</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-shop">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('shop')">替换</button>
+      <div class="upload-row"><label>战斗</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-battle">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('battle')">替换</button>
+        </div>
       </div>
-    </div>
-    <div class="upload-row"><label>冒险/事件</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-event">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('event')">替换</button>
+      <div class="upload-row"><label>精英战斗</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-battle_elite">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('battle_elite')">替换</button>
+        </div>
       </div>
-    </div>
-    <div class="upload-row"><label>剧情</label>
-      <div class="upload-info">
-        <span class="upload-status" id="music-status-story">默认合成</span>
-        <button class="upload-btn" onclick="AudioMgr.pickFile('story')">替换</button>
+      <div class="upload-row"><label>Boss战</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-battle_boss">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('battle_boss')">替换</button>
+        </div>
       </div>
+      <div class="upload-row"><label>商店/百科</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-shop">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('shop')">替换</button>
+        </div>
+      </div>
+      <div class="upload-row"><label>冒险/事件</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-event">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('event')">替换</button>
+        </div>
+      </div>
+      <div class="upload-row"><label>剧情</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-story">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('story')">替换</button>
+        </div>
+      </div>
+      <input type="file" id="music-file-input" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" style="display:none">
+      <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
     </div>
-    <input type="file" id="music-file-input" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" style="display:none">
-    <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
+  </div>
+  <div class="zzz-screen-bottom has-left">
+    <div class="zzz-bottom-accent"><div class="ba-icon">⚙</div><div class="ba-text">GAME<br>SET</div></div>
+    <div class="zzz-sb-white"><div class="sb-label">SETTINGS</div><div class="sb-big">游戏设置</div><div class="sb-sub">音量 · 速度 · 音乐</div></div>
   </div>
 </div>
 
 <!-- SHOP SCREEN -->
 <div id="screen-shop" class="screen">
-  <div class="shop-wrap">
-    <h2 class="title" style="font-size:36px">商店</h2>
-    <div class="divider"></div>
-    <div class="shop-merchant">
-      <div class="merchant-art">🧙‍♂️</div>
-      <div class="merchant-dialog">"旅行者，想看看我的珍藏吗？每包10张卡牌，说不定有稀有好货..."</div>
+  <div class="screen-particles" data-colors="#eab308,#facc15,#ca8a04,#ffffff" data-count="18"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriSh" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriSh)"/></svg></div>
+  <div class="zzz-side-strip strip-shop">
+    <div class="zzz-strip-icon">🛒</div>
+    <div class="zzz-strip-text big">SHOP</div>
+    <div class="zzz-strip-dots"><span class="active"></span><span></span><span class="active"></span></div>
+    <div class="zzz-strip-text">STORE</div>
+    <div class="zzz-strip-icon">💰</div>
+  </div>
+  <div class="zzz-menu-label">
+    <div class="zzz-label-en">CARD SHOP</div>
+    <div class="zzz-label-num">08</div>
+  </div>
+  <div class="zzz-screen-main">
+    <div class="shop-wrap">
+      <h2 class="title" style="font-size:36px">商店</h2>
+      <div class="divider"></div>
+      <div class="shop-merchant">
+        <div class="merchant-art">🧙‍♂️</div>
+        <div class="merchant-dialog">"旅行者，想看看我的珍藏吗？每包10张卡牌，说不定有稀有好货..."</div>
+      </div>
+      <div class="shop-info">
+        <div class="shop-gold-display">💰 金币: <span id="shop-gold">0</span></div>
+        <div id="shop-collection" style="font-size:12px;color:var(--text-dim);margin-top:4px"></div>
+      </div>
+      <button id="buy-pack-btn" class="menu-btn primary" onclick="Shop.buyPack()" style="font-size:18px;padding:14px">购买卡包 (500金币)</button>
+      <div class="divider"></div>
+      <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
     </div>
-    <div class="shop-info">
-      <div class="shop-gold-display">💰 金币: <span id="shop-gold">0</span></div>
-      <div id="shop-collection" style="font-size:12px;color:var(--text-dim);margin-top:4px"></div>
-    </div>
-    <button id="buy-pack-btn" class="menu-btn primary" onclick="Shop.buyPack()" style="font-size:18px;padding:14px">购买卡包 (500金币)</button>
-    <div class="divider"></div>
-    <button class="menu-btn" onclick="showScreen('screen-menu')">返回</button>
+  </div>
+  <div class="zzz-screen-bottom has-left">
+    <div class="zzz-bottom-accent"><div class="ba-icon">🛒</div><div class="ba-text">CARD<br>SHOP</div></div>
+    <div class="zzz-sb-white"><div class="sb-label">SHOP</div><div class="sb-big">卡牌商店</div><div class="sb-sub">购买卡包 · 收集卡牌</div></div>
   </div>
 </div>
 
