@@ -280,7 +280,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .hand-count{font-family:'Share Tech Mono';font-size:11px;color:var(--text-dim)}
 .deck-count{font-family:'Share Tech Mono';font-size:11px;color:var(--gold-dim);margin-left:4px}
 .deck-count.deck-empty{color:var(--hp-red);animation:hpPulse 1s ease-in-out infinite}
-.deploy-zone{display:flex;gap:10px;align-items:center;justify-content:center;min-height:60px;padding:8px 16px;position:relative;
+.deploy-zone{display:flex;gap:8px;align-items:center;justify-content:center;min-height:46px;padding:5px 10px;position:relative;
   background:rgba(0,0,0,0.15);border:1px solid rgba(255,107,157,0.15);border-radius:8px;margin:4px 0;
   box-shadow:inset 0 0 30px rgba(0,0,0,0.3)}
 .deploy-zone::before,.deploy-zone::after{content:'⚙';position:absolute;font-size:14px;color:rgba(255,107,157,0.12);
@@ -366,7 +366,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .action-btn:disabled{opacity:0.25;pointer-events:none}
 #turn-info{font-size:10px;color:var(--text-dim);text-align:center;font-family:'Share Tech Mono';margin-top:auto}
 /* Cards */
-.card{width:140px;height:230px;border-radius:6px;cursor:pointer;transition:all 0.2s ease-out;position:relative;
+.card{width:155px;height:255px;border-radius:6px;cursor:pointer;transition:all 0.2s ease-out;position:relative;
   border:2px solid var(--card-border);overflow:hidden;flex-shrink:0;font-size:0;
   background:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(255,107,157,0.015) 4px,rgba(255,107,157,0.015) 5px),
     linear-gradient(145deg,#1e1d32,#16152a);
@@ -380,7 +380,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   white-space:normal;overflow:hidden;text-shadow:0 1px 2px rgba(0,0,0,0.8);line-height:1.3;min-height:16px}
 .card .c-name .c-tag{font-size:7px;font-weight:400;color:var(--text-dim);background:rgba(255,255,255,0.1);
   padding:0 2px;border-radius:2px;margin-right:2px;vertical-align:middle}
-.card .c-art{height:70px;display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;
+.card .c-art{height:78px;display:flex;align-items:center;justify-content:center;font-size:38px;position:relative;
   background:linear-gradient(135deg,rgba(255,62,122,0.12),rgba(255,107,157,0.08),rgba(255,62,122,0.06));
   border-top:1px solid rgba(255,107,157,0.15);border-bottom:1px solid rgba(255,107,157,0.15);
   box-shadow:inset 0 0 15px rgba(0,0,0,0.3)}
@@ -398,8 +398,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .card .a-die{width:18px;height:18px;background:linear-gradient(135deg,#3a3a4e,#2a2a3e);border:1px solid var(--gold-dim);
   border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--gold)}
 /* Deploy zone cards bigger */
-.deploy-zone .card{width:150px;height:240px}
-.deploy-zone .card .c-art{height:80px;font-size:40px}
+.deploy-zone .card{width:155px;height:250px}
+.deploy-zone .card .c-art{height:78px;font-size:38px}
 /* Card back */
 .card-back{width:48px;height:64px;background:linear-gradient(135deg,#2a1838,#1a1028);border:2px solid var(--gold-dim);
   border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold-dim);margin:0 2px}
@@ -763,7 +763,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 /* ========== ZZZ SCREEN DECORATIONS (levels, adventure, battle) ========== */
 /* Right accent strip (for levels screen) */
 .zzz-right-strip{position:absolute;top:0;right:0;bottom:0;width:48px;z-index:3;
-  background:linear-gradient(180deg,#ff6a2a 0%,#e05520 50%,#ff6a2a 100%);
+  background:linear-gradient(180deg,#a3e635 0%,#7ccf1b 50%,#a3e635 100%);
   display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:14px}
 .zzz-right-strip::after{content:'';position:absolute;inset:0;
   background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,0,0,0.08) 18px,rgba(0,0,0,0.08) 20px);pointer-events:none}
@@ -795,13 +795,13 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   border-top:4px solid #ff3e7a;box-shadow:0 -4px 24px rgba(0,0,0,0.2);border-radius:0}
 .zzz-screen-info .zzz-widget-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
   background:linear-gradient(90deg,#ff3e7a,#ff6b9d,#ff3e7a);z-index:1}
-#screen-levels .zzz-screen-info .zzz-widget-card{border-top-color:#ff6a2a}
-#screen-levels .zzz-screen-info .zzz-widget-card::before{background:linear-gradient(90deg,#ff6a2a,#ff8c4a,#ff6a2a)}
+#screen-levels .zzz-screen-info .zzz-widget-card{border-top-color:#a3e635}
+#screen-levels .zzz-screen-info .zzz-widget-card::before{background:linear-gradient(90deg,#a3e635,#bef264,#a3e635)}
 #screen-adventure .zzz-screen-info .zzz-widget-card{border-top-color:#7a5acd}
 #screen-adventure .zzz-screen-info .zzz-widget-card::before{background:linear-gradient(90deg,#7a5acd,#9f7aea,#7a5acd)}
 .zzz-screen-info .zzz-widget-card+.zzz-widget-card{border-left:1px solid rgba(200,180,200,0.25)}
 .zzz-screen-info .si-label{font-size:8px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px}
-#screen-levels .zzz-screen-info .si-label{color:#ff6a2a}
+#screen-levels .zzz-screen-info .si-label{color:#a3e635}
 #screen-adventure .zzz-screen-info .si-label{color:#7a5acd}
 .zzz-screen-info .si-big{font-size:28px;font-weight:900;line-height:1;font-family:'Baloo 2','Fredoka',sans-serif;color:#1a1a2e}
 .zzz-screen-info .si-sub{font-size:11px;font-weight:700;color:#555;margin-top:2px;letter-spacing:1px}
@@ -810,16 +810,16 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-levels .zzz-levels-top{flex:1;display:flex;align-items:center;padding:20px 24px 80px 32px}
 #screen-levels .zzz-levels-content{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%}
 #screen-levels .zzz-levels-content .title{font-size:36px;text-align:left;margin-bottom:8px}
-#screen-levels .zzz-levels-content .subtitle{text-align:left;color:#ff6a2a;letter-spacing:6px}
+#screen-levels .zzz-levels-content .subtitle{text-align:left;color:#a3e635;letter-spacing:6px}
 #screen-levels .zzz-levels-btns{display:flex;flex-direction:column;gap:6px;max-width:400px;width:100%}
 #screen-levels .zzz-levels-btns .lv-row{display:flex;justify-content:flex-start}
 #screen-levels .zzz-levels-btns .lv-row:nth-child(odd){margin-left:0}
 #screen-levels .zzz-levels-btns .lv-row:nth-child(even){margin-left:24px}
 #screen-levels .zzz-levels-btns .menu-btn{text-align:left;padding:10px 20px;border-radius:16px;margin:0;width:auto;display:inline-block;
-  border-color:rgba(255,106,42,0.3);font-size:14px}
-#screen-levels .zzz-levels-btns .menu-btn::before{background:#ff6a2a;border-radius:16px 0 0 16px}
-#screen-levels .zzz-levels-btns .menu-btn:hover{border-color:rgba(255,106,42,0.6);
-  box-shadow:0 0 20px rgba(255,106,42,0.3)}
+  border-color:rgba(163,230,53,0.3);font-size:14px}
+#screen-levels .zzz-levels-btns .menu-btn::before{background:#a3e635;border-radius:16px 0 0 16px}
+#screen-levels .zzz-levels-btns .menu-btn:hover{border-color:rgba(163,230,53,0.6);
+  box-shadow:0 0 20px rgba(163,230,53,0.3)}
 #screen-levels .zzz-levels-btns .menu-btn.locked{opacity:0.35;pointer-events:none}
 #screen-levels .zzz-levels-bottom-btns{display:flex;gap:10px;margin-top:16px}
 #screen-levels .zzz-levels-bottom-btns .menu-btn{width:auto;padding:8px 18px;font-size:13px;border-radius:14px;margin:0;display:inline-block}
@@ -867,7 +867,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .pname{font-size:10px;min-width:50px;letter-spacing:1px}
   .hp-bar{width:100px;height:18px;border-radius:9px}
   .hp-bar span{font-size:9px}
-  .deploy-zone{min-height:50px;padding:3px 4px;flex-wrap:wrap;gap:4px}
+  .deploy-zone{min-height:38px;padding:3px 4px;flex-wrap:wrap;gap:4px}
   .card{width:78px;height:130px}
   .card .c-name{font-size:7px;padding:1px 2px;min-height:12px}
   .card .c-art{height:34px;font-size:20px}
@@ -1156,8 +1156,8 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <div class="zzz-levels-top">
       <div class="zzz-levels-content">
         <h2 class="title">选择关卡</h2>
-        <p class="subtitle" style="color:#ff6a2a">STAGE SELECT</p>
-        <div class="divider" style="margin:12px 0;background:linear-gradient(90deg,rgba(255,106,42,0.4),transparent)"></div>
+        <p class="subtitle" style="color:#a3e635">STAGE SELECT</p>
+        <div class="divider" style="margin:12px 0;background:linear-gradient(90deg,rgba(163,230,53,0.4),transparent)"></div>
         <div id="level-buttons" class="zzz-levels-btns"></div>
         <div class="zzz-levels-bottom-btns zzz-menu-btns" style="max-width:320px">
           <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="showScreen('screen-shop')">🛒 商店</button></div>
