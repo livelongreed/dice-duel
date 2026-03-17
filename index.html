@@ -1159,10 +1159,10 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
         <p class="subtitle" style="color:#ff6a2a">STAGE SELECT</p>
         <div class="divider" style="margin:12px 0;background:linear-gradient(90deg,rgba(255,106,42,0.4),transparent)"></div>
         <div id="level-buttons" class="zzz-levels-btns"></div>
-        <div class="zzz-levels-bottom-btns">
-          <button class="menu-btn" onclick="showScreen('screen-shop')">🛒 商店</button>
-          <button class="menu-btn" onclick="showScreen('screen-deck')">🃏 构筑牌组</button>
-          <button class="menu-btn" onclick="showScreen('screen-menu')">↩ 返回</button>
+        <div class="zzz-levels-bottom-btns zzz-menu-btns" style="max-width:320px">
+          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="showScreen('screen-shop')">🛒 商店</button></div>
+          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn" onclick="showScreen('screen-deck')">🃏 构筑牌组</button></div>
+          <div class="zbtn-row" style="margin-left:48px"><button class="menu-btn" onclick="showScreen('screen-menu')">↩ 返回</button></div>
         </div>
       </div>
     </div>
@@ -1222,9 +1222,9 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
             <span style="color:rgba(200,30,30,0.9)">👑Boss</span>
           </p>
         </div>
-        <div style="display:flex;gap:10px;justify-content:center">
-          <button class="menu-btn sm" onclick="DeckViewer.showStarterDeck()">📋 查看初始卡组</button>
-          <button class="menu-btn sm" onclick="showScreen('screen-menu')">↩ 返回</button>
+        <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
+          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="DeckViewer.showStarterDeck()">📋 查看初始卡组</button></div>
+          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn" onclick="showScreen('screen-menu')">↩ 返回</button></div>
         </div>
       </div>
     </div>
@@ -1295,7 +1295,9 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <h2 class="title" style="font-size:30px">剧情</h2>
     <div id="story-content"></div>
     <div class="divider"></div>
-    <button class="menu-btn" onclick="Story.back()">返回</button>
+    <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
+      <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="Story.back()">↩ 返回</button></div>
+    </div>
   </div>
 </div>
 
@@ -1527,9 +1529,11 @@ const LevelMgr={
       return `<div class="lv-row"><button class="${cls}" onclick="LevelMgr.startLevel(${l.id})">${label}</button></div>`;
     }).join('');
     // Update bottom info bar
-    const goldEl=document.getElementById('levels-gold-display');if(goldEl)goldEl.textContent=PlayerData.gold;
-    const deckEl=document.getElementById('levels-deck-count');if(deckEl)deckEl.textContent=PlayerData.collection.length;
-    const lvEl=document.getElementById('levels-max-level');if(lvEl)lvEl.textContent=unlocked;
+    try{
+      const goldEl=document.getElementById('levels-gold-display');if(goldEl)goldEl.textContent=PlayerData.gold;
+      const deckEl=document.getElementById('levels-deck-count');if(deckEl)deckEl.textContent=PlayerData.unlockedCards.length;
+      const lvEl=document.getElementById('levels-max-level');if(lvEl)lvEl.textContent=unlocked;
+    }catch(e){}
   },
   startLevel(lv){
     if(DeckBuilder.deck.length!==20){
