@@ -2679,6 +2679,7 @@ const Adventure={
     this.deck=[...ADVENTURE_STARTER_DECK];
     this.upgradedCards=new Set();
     this.relics=[];
+    this.removeCount=0;
     this.bonusDiceNextBattle=0;
     this.currentFloor=-1;this.visitedNode=null;
     this.map=this.generateMap();
@@ -3061,8 +3062,10 @@ const Adventure={
       });
     }
     if(!this._shopRemovedCard){
+      const removePrice=75+this.removeCount*25;
+      const canRemove=this.gold>=removePrice;
       html+=`<div class="divider" style="margin:10px 0;border-top:1px solid var(--glass-border)"></div>`;
-      html+=`<button class="adv-btn danger" onclick="Adventure.shopRemoveCard()">删除1张牌 (免费, 仅1次)</button>`;
+      html+=`<button class="adv-btn danger" ${canRemove?'':'disabled style="opacity:0.5"'} onclick="Adventure.shopRemoveCard()">删除1张牌 (${removePrice}💰)</button>`;
     }
     html+=`<div style="margin-top:12px"><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.renderMap()">离开商店</button></div>`;
     p.innerHTML=html;
@@ -3091,10 +3094,12 @@ const Adventure={
 
   shopRemoveCard(){
     if(this._shopRemovedCard)return;
+    const removePrice=75+this.removeCount*25;
+    if(this.gold<removePrice)return;
     const seen=new Map();
     this.deck.forEach(id=>{seen.set(id,(seen.get(id)||0)+1)});
     const p=$('adv-panel');
-    let html=`<h3>🗑️ 选择删除的卡牌</h3><div style="max-height:300px;overflow-y:auto">`;
+    let html=`<h3>🗑️ 选择删除的卡牌</h3><p>花费 ${removePrice}💰 删除1张卡</p><div style="max-height:300px;overflow-y:auto">`;
     const entries=[...seen.entries()];
     entries.forEach(([id,count])=>{
       const def=getCardDef(id);
@@ -3108,10 +3113,14 @@ const Adventure={
   },
 
   doRemoveCard(cardId){
+    const removePrice=75+this.removeCount*25;
+    if(this.gold<removePrice)return;
+    this.gold-=removePrice;
     const idx=this.deck.indexOf(cardId);
     if(idx>=0)this.deck.splice(idx,1);
     this._shopRemovedCard=true;
-    advMsg(`删除了「${getCardDef(cardId).name}」!`);
+    this.removeCount++;
+    advMsg(`花费${removePrice}💰 删除了「${getCardDef(cardId).name}」!`);
     setTimeout(()=>this.renderShop(),800);
   },
 
