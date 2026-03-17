@@ -2090,12 +2090,13 @@ const ALL_CARDS=[
 {id:'slime',type:'creature',name:'史莱姆',emoji:'🟢',base:0,slots:3,
   effectDesc:'胜出:若骰子之和<10,恢复3HP',timing:'win',
   effect(ctx){const sum=(ctx.myDice||[]).reduce((a,b)=>a+b,0);if(sum<10){ctx.owner.hp=Math.min(ctx.owner.maxHp||30,ctx.owner.hp+3);log(`史莱姆:骰子和${sum}<10,恢复3HP!`,'effect')}else{log(`史莱姆:骰子和${sum}≥10,未恢复`,'effect')}}},
-{id:'glutton_grum',type:'creature',name:'暴食者格鲁姆',emoji:'🐗',base:8,slots:0,
+{id:'glutton_grum',type:'creature',name:'暴食者格鲁姆',emoji:'🐗',base:7,slots:0,
   effectDesc:'部署时:弃掉1张手牌,若成功,槽位变为5',timing:'deploy',
   effect(ctx){const c=ctx.myCreature;if(ctx.owner.hand.length===0){log('暴食者格鲁姆:无手牌可弃,槽位不变','effect');return}
+    c.slots=5;
     if(ctx.owner.isPlayer){const opts=ctx.owner.hand.map((h,i)=>({label:`${h.emoji}${h.name}`}));
-      showOverlay('暴食者格鲁姆:选择弃掉1张手牌',opts,i=>{const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);c.slots=5;log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()})
-    }else{const i=Math.floor(Math.random()*ctx.owner.hand.length);const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);c.slots=5;log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()}}},
+      showOverlay('暴食者格鲁姆:选择弃掉1张手牌',opts,i=>{const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()})
+    }else{const i=Math.floor(Math.random()*ctx.owner.hand.length);const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()}}},
 {id:'frost_dragon',type:'creature',name:'霜鳞龙永冬',emoji:'🐲',base:4,slots:1,
   effectDesc:'部署后:冻结随机生物的随机骰子(该骰子本回合无效)',timing:'deploy',
   effect(ctx){const targets=[];[ctx.owner,ctx.enemy].forEach(p=>{if(p.deployedCreature&&p.deployedCreature.assignedDice.length>0)targets.push(p.deployedCreature)});
@@ -2158,7 +2159,7 @@ const ALL_CARDS=[
 {id:'dice_copy',type:'spell',name:'骰子复制',emoji:'🪞',base:0,slots:0,
   effectDesc:'对拼时:随机复制我方1个槽内骰子到空槽',timing:'duel_start',
   effect(ctx){const mc=ctx.myCreature;if(!mc||!mc.assignedDice||mc.assignedDice.length===0)return;
-    const totalSlots=mc.slots+(mc.overloadSlot||0)+(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('overload_slot')?1:0);
+    const totalSlots=mc.slots+(mc.overloadSlot||0)+(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('overload_slot')?1:0)-(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')?1:0);
     if(mc.assignedDice.length<totalSlots){
     const v=mc.assignedDice[Math.floor(Math.random()*mc.assignedDice.length)];mc.assignedDice.push(v);log(`骰子复制:复制${v}点骰子到空槽`,'effect')}
     else{log('骰子复制:无空槽位','effect')}}},
@@ -2243,6 +2244,10 @@ const ALL_RELICS=[
   {id:'dragon_scale',name:'巨龙鳞片',emoji:'🐉',rarity:'rare',desc:'每回合获得1护甲'},
   {id:'war_horn',name:'战争号角',emoji:'📯',rarity:'rare',desc:'每回合第一次对拼中，你的生物总值+2'},
   {id:'immortal_seed',name:'不朽之种',emoji:'🌱',rarity:'rare',desc:'生物被摧毁时，将其复制牌(基础值+1)加入牌库'},
+  {id:'spell_book',name:'魔法书',emoji:'📖',rarity:'common',desc:'使用法术牌时30%概率复制一张加入手牌(每回合1次)'},
+  {id:'double_blade',name:'双刃剑',emoji:'⚔️',rarity:'common',desc:'所有生物基础值+2，但槽位-1'},
+  {id:'life_amulet',name:'生命护符',emoji:'💚',rarity:'rare',desc:'每回合开始时，若生命<15，恢复2点生命'},
+  {id:'rebirth_rune',name:'重生符文',emoji:'♻️',rarity:'rare',desc:'首次将死时(HP≤0)保留1点生命，摧毁此遗物'},
 ];
 function getRelicDef(id){return ALL_RELICS.find(r=>r.id===id)}
 function isCommonCard(id){return COMMON_CARDS.includes(id)}
@@ -2250,7 +2255,7 @@ function getCommonCards(){return ALL_CARDS.filter(c=>COMMON_CARDS.includes(c.id)
 function getRareCards(){return ALL_CARDS.filter(c=>!COMMON_CARDS.includes(c.id))}
 function getCardDef(id){return ALL_CARDS.find(c=>c.id===id)}
 function makeCardInstance(def){return{...def,assignedDice:[],growth:0,tempBonus:0}}
-function getCreatureValue(c){if(!c)return 0;const frozen=new Set(c.frozenDice||[]);let val=c.base+(c.growth||0)+(c.tempBonus||0)+(c.assignedDice||[]).reduce((a,b,i)=>a+(frozen.has(i)?0:b),0);if(c.id==='greedy_mimic')val+=(c.assignedDice||[]).length;return val}
+function getCreatureValue(c){if(!c)return 0;const frozen=new Set(c.frozenDice||[]);let val=c.base+(c.growth||0)+(c.tempBonus||0)+(c.assignedDice||[]).reduce((a,b,i)=>a+(frozen.has(i)?0:b),0);if(c.id==='greedy_mimic')val+=(c.assignedDice||[]).length;if(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')&&c.type==='creature')val+=2;return val}
 function discardCard(p,card){if(card&&card.id)p.discard.push(card.id)}
 function reshuffleDeck(p){if(!p.discard.length)return;const d=p.discard.map(id=>{const def=getCardDef(id);return makeCardInstance(def)});shuffle(d);p.deck=d;p.discard=[];log((p.isPlayer?'铸炉师':'机械领主')+'的弃牌堆已洗入牌库! ('+d.length+'张)','phase')}
 function drawCards(p,n){for(let i=0;i<n;i++){if(p.hand.length>=9)break;if(!p.deck.length){reshuffleDeck(p);if(!p.deck.length)break}const card=p.deck.pop();p.hand.push(card);if(card.id==='magnet_puppet'){card._magnetPending=true}}}
@@ -3258,6 +3263,8 @@ const Adventure={
     }
     advMsg(result);
     if(this.hp<=0){
+      // Relic: 重生符文
+      if(Adventure.hasRelic('rebirth_rune')){this.hp=1;Adventure.removeRelic('rebirth_rune');advMsg('♻️ 重生符文: 免于死亡! 符文碎裂!');return}
       setTimeout(()=>{this.closeOverlay();this.onBattleLose()},1000);
       return;
     }
@@ -3471,6 +3478,11 @@ const G={
     delete this.p.dmgCap;delete this.ai.dmgCap;
     log(`— 第 ${this.turn} 回合 —`,'phase');
     showTurnBanner(this.turn);
+    // Relic: 生命护符 — heal 2 if HP < 15
+    if(this.adventureMode&&Adventure.hasRelic('life_amulet')&&this.p.hp<15){
+      this.p.hp=Math.min(this.p.maxHp||30,this.p.hp+2);log('💚 生命护符: 生命值低于15, 恢复2HP!','effect')}
+    // Reset spell_book trigger for this turn
+    this._spellBookUsed=false;
 
     // Draw
     const pDraw=this.firstTurn?(this.playerFirstDraw||4):1;
@@ -3673,6 +3685,10 @@ const G={
       this.p.deployedSpells.push(card);
       this.p.hand.splice(idx,1);
       log(`部署法术 ${card.name}`);
+      // Relic: 魔法书 — 30% chance to copy spell to hand (once per turn)
+      if(this.adventureMode&&Adventure.hasRelic('spell_book')&&!this._spellBookUsed&&Math.random()<0.3){
+        this._spellBookUsed=true;const copy=makeCardInstance(getCardDef(card.id));this.p.hand.push(copy);
+        log('📖 魔法书: 法术被复制了一张到手牌!','effect')}
     }
     render();
     // Slam animation on deployed card
@@ -3702,7 +3718,7 @@ const G={
     if(target==='creature'){card=this.p.deployedCreature}
     else{const i=+target.split('-')[1];card=this.p.deployedSpells[i]}
     if(!card)return;
-    const totalSlots=card.slots+(this.adventureMode&&Adventure.hasRelic('overload_slot')&&card.type==='creature'?1:(card.overloadSlot||0));
+    const totalSlots=card.slots+(this.adventureMode&&Adventure.hasRelic('overload_slot')&&card.type==='creature'?1:(card.overloadSlot||0))-(this.adventureMode&&Adventure.hasRelic('double_blade')&&card.type==='creature'?1:0);
     const maxSlots=totalSlots-(card.assignedDice||[]).length;
     if(maxSlots<=0&&totalSlots>0){log('槽位已满');return}
     if(card.slots===0&&!card.overloadSlot&&!(this.adventureMode&&Adventure.hasRelic('overload_slot')&&card.type==='creature')){log('此卡无骰子槽位');return}
@@ -4103,6 +4119,10 @@ const G={
   },
 
   checkGameOver(){
+    // Relic: 重生符文 — prevent death once
+    if(this.adventureMode&&this.p.hp<=0&&Adventure.hasRelic('rebirth_rune')){
+      this.p.hp=1;Adventure.removeRelic('rebirth_rune');Adventure.hp=1;
+      log('♻️ 重生符文: 免于死亡! 保留1点生命, 符文碎裂!','effect');render();return false}
     if(this.adventureMode){
       if(this.p.hp<=0){setPhase('战斗失败!');showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()});return true}
       if(this.ai.hp<=0){setPhase('战斗胜利!');spawnVictoryParticles();showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});return true}
@@ -4295,7 +4315,7 @@ function renderCard(c,onclick,faceDown,extraClass=''){
   const isSpell=c.type==='spell';
   const val=c.type==='creature'?getCreatureValue(c):'';
   const growth=c.growth?`+${c.growth}`:'';
-  const _ts=c.slots+(c.type==='creature'&&typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('overload_slot')?1:(c.overloadSlot||0));
+  const _ts=c.slots+(c.type==='creature'&&typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('overload_slot')?1:(c.overloadSlot||0))-(c.type==='creature'&&typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')?1:0);
   const detailData=encodeURIComponent(JSON.stringify({name:c.name,type:c.type,emoji:c.emoji,base:c.base,
     slots:_ts,growth:c.growth,val,effectDesc:c.effectDesc,assignedDice:c.assignedDice||[],ad:(c.assignedDice||[]).length}));
   return `<div class="card ${isSpell?'spell-card':''} ${extraClass}" data-card-type="${c.type}" onclick="${onclick||''}"
