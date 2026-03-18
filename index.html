@@ -918,9 +918,12 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .deck-body{flex-direction:column}
   .deck-list-wrap{width:100%;max-height:200px}
   .card-grid{max-height:50vh}
-  #game-layout{grid-template-columns:1fr;grid-template-rows:1fr auto}
+  #game-layout{grid-template-columns:1fr;grid-template-rows:1fr auto;margin-left:0;width:100%}
   #game-log{display:none}
   #log-toggle{display:block;position:fixed;top:6px;left:6px;z-index:151;width:auto;padding:4px 10px;font-size:10px}
+  #screen-game .game-strip{display:none}
+  #screen-game .game-label{display:none}
+  #screen-game .game-bottom-bar{display:none}
   #right-panel{position:fixed;bottom:0;left:0;right:0;height:auto;max-height:110px;flex-direction:row;flex-wrap:wrap;
     align-items:center;border-left:none;border-top:2px solid var(--gold-dim);z-index:100;padding:5px 6px;gap:3px;overflow-x:auto;
     background:rgba(20,16,12,0.98)}
@@ -1351,8 +1354,84 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   font-family:'ZCOOL KuaiLe',sans-serif;backdrop-filter:blur(8px)}
 .game-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* ========== BUTTON CLICK FEEDBACK ========== */
-.menu-btn:active,.adv-btn:active,.action-btn:active{transform:scale(0.95)!important;filter:brightness(0.85);
-  transition-duration:0.08s!important}
+.menu-btn:active,.adv-btn:active,.action-btn:active,.zzz-strip-settings:active,.die:active,
+.zzz-nav-icon:active,.upload-btn:active,.strip-abandon:active{transform:scale(0.92)!important;filter:brightness(0.8);
+  transition-duration:0.06s!important}
+/* ZZZ click ripple */
+@keyframes zzzRipple{0%{transform:translate(-50%,-50%) scale(0);opacity:0.7}
+  100%{transform:translate(-50%,-50%) scale(2.5);opacity:0}}
+.zzz-ripple{position:absolute;width:60px;height:60px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,62,122,0.5) 0%,transparent 70%);
+  animation:zzzRipple 0.45s ease-out forwards;z-index:999}
+/* ========== BATTLE SCREEN ZZZ OVERHAUL ========== */
+#screen-game .game-strip{position:absolute;top:0;left:0;bottom:0;width:48px;z-index:6;
+  background:linear-gradient(180deg,#ff3e7a 0%,#e0245e 50%,#ff3e7a 100%);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:12px;
+  box-shadow:2px 0 16px rgba(255,62,122,0.2)}
+#screen-game .game-strip .gs-icon{font-size:16px}
+#screen-game .game-strip .gs-text{writing-mode:vertical-lr;text-orientation:mixed;font-family:'Share Tech Mono',monospace;
+  font-size:9px;letter-spacing:3px;color:rgba(255,255,255,0.85);font-weight:700}
+#screen-game .game-strip .gs-dots{display:flex;flex-direction:column;gap:3px;align-items:center}
+#screen-game .game-strip .gs-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4)}
+#screen-game .game-strip .gs-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
+#screen-game .game-label{position:absolute;top:12px;right:12px;z-index:6;text-align:right}
+#screen-game .game-label .gl-en{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:4px;
+  color:rgba(255,255,255,0.4);text-transform:uppercase}
+#screen-game .game-label .gl-num{font-family:'Baloo 2','Fredoka',sans-serif;font-size:48px;font-weight:900;line-height:1;
+  color:rgba(255,255,255,0.04);letter-spacing:-2px}
+#screen-game .game-bottom-bar{position:absolute;bottom:0;left:48px;right:0;height:36px;z-index:6;
+  background:rgba(10,10,26,0.85);backdrop-filter:blur(10px);border-top:1px solid rgba(255,62,122,0.2);
+  display:flex;align-items:center;padding:0 12px;gap:16px}
+#screen-game .game-bottom-bar .gbb-item{display:flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:10px}
+#screen-game .game-bottom-bar .gbb-label{color:rgba(255,255,255,0.35);letter-spacing:2px;font-size:8px;text-transform:uppercase}
+#screen-game .game-bottom-bar .gbb-val{color:var(--gold);font-weight:700;font-size:12px}
+#screen-game .game-bottom-bar .gbb-sep{width:1px;height:16px;background:rgba(255,255,255,0.1)}
+#game-layout{width:100%;height:100vh;display:grid;grid-template-columns:minmax(140px,180px) 1fr minmax(160px,200px);
+  gap:0;position:relative;z-index:1;margin-left:48px;width:calc(100% - 48px)}
+#game-log{background:rgba(10,10,26,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-right:1px solid rgba(255,62,122,0.12);padding:10px;overflow-y:auto}
+.panel-title{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:3px;
+  border-bottom:1px solid rgba(255,62,122,0.15);padding-bottom:6px;margin-bottom:8px;text-transform:uppercase}
+#right-panel{background:rgba(10,10,26,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-left:1px solid rgba(255,62,122,0.12);padding:10px;
+  display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+#right-panel .panel-title{color:var(--rust-light)}
+.player-bar{display:flex;align-items:center;gap:10px;padding:6px 10px;
+  background:rgba(10,10,26,0.6);border:1px solid rgba(255,62,122,0.1);border-radius:4px;
+  backdrop-filter:blur(8px)}
+.deploy-zone{display:flex;gap:8px;align-items:center;justify-content:center;min-height:46px;padding:5px 10px;position:relative;
+  background:rgba(10,10,26,0.4);border:1px solid rgba(255,62,122,0.1);border-radius:4px;margin:4px 0;
+  box-shadow:inset 0 0 20px rgba(0,0,0,0.2)}
+#battle-zone{min-height:48px;display:flex;align-items:center;justify-content:center;gap:16px;padding:6px;position:relative;
+  border-top:1px solid rgba(255,62,122,0.2);border-bottom:1px solid rgba(255,62,122,0.2);overflow:hidden;
+  background:linear-gradient(90deg,transparent,rgba(255,62,122,0.03),transparent)}
+.action-btn{width:100%;padding:8px;border:1px solid rgba(255,62,122,0.25);
+  background:rgba(10,10,26,0.7);color:var(--text);font-family:'ZCOOL KuaiLe','Fredoka',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;border-radius:3px;transition:all 0.15s;
+  backdrop-filter:blur(4px);position:relative;overflow:hidden}
+.action-btn:hover{border-color:var(--rust-light);color:#fff;transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(255,62,122,0.2),0 0 8px rgba(255,62,122,0.1);
+  background:rgba(255,62,122,0.12)}
+.action-btn.primary{border-color:var(--rust);background:linear-gradient(180deg,rgba(255,62,122,0.2),rgba(224,36,94,0.1));color:var(--gold)}
+.action-btn.primary:hover{background:linear-gradient(180deg,rgba(255,62,122,0.35),rgba(224,36,94,0.2));box-shadow:var(--glow)}
+.action-btn:disabled{opacity:0.25;pointer-events:none}
+.battle-info-widget{margin-top:auto;border:1px solid rgba(255,62,122,0.1);border-radius:4px;
+  padding:8px;background:rgba(10,10,26,0.5)}
+.bi-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:3px;
+  color:rgba(255,62,122,0.5);text-transform:uppercase;margin-bottom:6px;
+  border-bottom:1px solid rgba(255,62,122,0.1);padding-bottom:4px}
+.bi-row{display:flex;justify-content:space-between;padding:2px 0}
+.bi-key{font-size:10px;color:rgba(255,255,255,0.4);font-family:'Share Tech Mono',monospace}
+.bi-val{font-size:11px;color:var(--gold);font-weight:700;font-family:'Share Tech Mono',monospace}
+.die{width:100%;aspect-ratio:1;background:rgba(10,10,26,0.6);border:1px solid rgba(255,107,157,0.25);
+  border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;
+  color:var(--gold);font-family:'Share Tech Mono';cursor:pointer;transition:all 0.2s;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,0.3),0 2px 6px rgba(0,0,0,0.3);
+  text-shadow:0 0 8px rgba(255,107,157,0.5)}
+.die:hover{border-color:var(--rust-light);transform:scale(1.05);background:rgba(255,62,122,0.08)}
+.die.selected{border-color:var(--gold);box-shadow:0 0 12px rgba(255,107,157,0.4),inset 0 0 8px rgba(255,107,157,0.1);
+  transform:scale(1.08);background:rgba(255,62,122,0.12)}
+.die.used{opacity:0.2;pointer-events:none;transform:none}
 </style>
 </head>
 <body>
@@ -1938,6 +2017,19 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   <div class="screen-bg" style="background-image:url('assets/bg-game.png')"></div>
   <div class="screen-particles" data-colors="#ff3e7a,#ff6b9d,#e8d0f0,#6a5acd" data-count="20"></div>
   <canvas id="particle-canvas"></canvas>
+  <!-- ZZZ Left strip -->
+  <div class="game-strip">
+    <div class="gs-icon">⚔</div>
+    <div class="gs-text">BATTLE</div>
+    <div class="gs-dots"><span class="active"></span><span></span><span class="active"></span></div>
+    <div class="gs-text">DUEL</div>
+    <div class="gs-icon">🎲</div>
+    <div class="zzz-strip-divider"></div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-menu')">↩</div>
+  </div>
+  <!-- ZZZ Top-right label -->
+  <div class="game-label"><div class="gl-en">BATTLE FIELD</div><div class="gl-num">05</div></div>
   <div id="game-layout">
     <button id="log-toggle" class="action-btn" onclick="document.getElementById('game-log').classList.toggle('log-overlay-show')">日志</button>
     <!-- Left log -->
@@ -1978,7 +2070,6 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
       <div class="divider-sm"></div>
       <button id="btn-confirm" class="action-btn primary" onclick="G.confirm()">确认</button>
       <button id="btn-skip" class="action-btn" onclick="G.skipDuel()">跳过对拼</button>
-      <button id="btn-back" class="action-btn" onclick="showScreen('screen-menu')">退出</button>
       <div id="turn-info"></div>
       <!-- Battle info widget -->
       <div class="battle-info-widget">
@@ -1988,6 +2079,16 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
         <div class="bi-row"><span class="bi-key">对拼</span><span class="bi-val" id="bi-duels">0/1</span></div>
       </div>
     </div>
+  </div>
+  <!-- ZZZ Bottom bar -->
+  <div class="game-bottom-bar">
+    <div class="gbb-item"><span class="gbb-label">TURN</span><span class="gbb-val" id="gbb-turn">1</span></div>
+    <div class="gbb-sep"></div>
+    <div class="gbb-item"><span class="gbb-label">PHASE</span><span class="gbb-val" id="gbb-phase">—</span></div>
+    <div class="gbb-sep"></div>
+    <div class="gbb-item"><span class="gbb-label">DUELS</span><span class="gbb-val" id="gbb-duels">0/1</span></div>
+    <div style="flex:1"></div>
+    <div class="gbb-item"><span class="gbb-label">DICE DUEL</span><span style="color:rgba(255,62,122,0.5);font-size:9px;font-family:'Share Tech Mono'">// BATTLE MODE</span></div>
   </div>
 </div>
 
@@ -5402,6 +5503,49 @@ const SFX={
         g.gain.exponentialRampToValueAtTime(0.001,now+0.1);o.start(now);o.stop(now+0.1);}
   }
 };
+
+/* ===== GLOBAL BUTTON CLICK SFX + RIPPLE ===== */
+(function(){
+  const SEL='button,.menu-btn,.action-btn,.zzz-strip-settings,.zzz-nav-icon,.upload-btn,.die,.strip-abandon,.adv-btn,.deck-btn';
+  document.addEventListener('click',function(e){
+    const t=e.target.closest(SEL);if(!t)return;
+    /* SFX */
+    try{SFX.play('click')}catch(x){}
+    /* Ripple */
+    const r=document.createElement('div');r.className='zzz-ripple';
+    const rect=t.getBoundingClientRect();
+    r.style.left=(e.clientX-rect.left)+'px';
+    r.style.top=(e.clientY-rect.top)+'px';
+    const pos=getComputedStyle(t).position;
+    if(pos==='static')t.style.position='relative';
+    t.appendChild(r);
+    setTimeout(()=>r.remove(),500);
+  },true);
+  /* Sync bottom bar with battle info widget */
+  const _origSet=Object.getOwnPropertyDescriptor(HTMLElement.prototype,'textContent');
+  if(_origSet){
+    const syncIds={'bi-turn':'gbb-turn','bi-phase':'gbb-phase','bi-duels':'gbb-duels'};
+    const obs=new MutationObserver(muts=>{
+      muts.forEach(m=>{
+        const id=m.target.id;
+        if(syncIds[id]){const t=document.getElementById(syncIds[id]);if(t)t.textContent=m.target.textContent}
+      });
+    });
+    document.addEventListener('DOMContentLoaded',()=>{
+      Object.keys(syncIds).forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)obs.observe(el,{childList:true,characterData:true,subtree:true});
+      });
+    });
+    /* Run observer immediately if DOM already loaded */
+    if(document.readyState!=='loading'){
+      Object.keys(syncIds).forEach(id=>{
+        const el=document.getElementById(id);
+        if(el)obs.observe(el,{childList:true,characterData:true,subtree:true});
+      });
+    }
+  }
+})();
 
 /* ===== GAME TOAST ===== */
 function showGameToast(msg,dur){
