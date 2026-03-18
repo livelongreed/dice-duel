@@ -111,12 +111,12 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .zzz-menu-btns .menu-btn{margin:0;text-align:left;padding:14px 24px;border-radius:20px;
   font-size:15px;width:auto;display:inline-block;white-space:nowrap}
 .zzz-menu-btns .menu-btn::before{border-radius:20px 0 0 20px}
-.zzz-menu-btns .zbtn-row{display:flex;justify-content:flex-start}
-.zzz-menu-btns .zbtn-row:nth-child(1){margin-left:0;margin-bottom:6px}
-.zzz-menu-btns .zbtn-row:nth-child(2){margin-left:30px;margin-bottom:10px}
-.zzz-menu-btns .zbtn-row:nth-child(3){margin-left:55px;margin-bottom:6px}
-.zzz-menu-btns .zbtn-row:nth-child(4){margin-left:80px;margin-bottom:10px}
-.zzz-menu-btns .zbtn-row:nth-child(5){margin-left:105px;margin-bottom:6px}
+.zzz-menu-btns .zbtn-row{display:flex;justify-content:flex-start;position:relative}
+.zzz-menu-btns .zbtn-row:nth-child(1){margin-left:0;margin-bottom:6px;z-index:5}
+.zzz-menu-btns .zbtn-row:nth-child(2){margin-left:30px;margin-bottom:10px;z-index:4}
+.zzz-menu-btns .zbtn-row:nth-child(3){margin-left:55px;margin-bottom:6px;z-index:3}
+.zzz-menu-btns .zbtn-row:nth-child(4){margin-left:80px;margin-bottom:10px;z-index:2}
+.zzz-menu-btns .zbtn-row:nth-child(5){margin-left:105px;margin-bottom:6px;z-index:1}
 /* Button size variations - all within similar range */
 .zzz-menu-btns .zbtn-row:nth-child(1) .menu-btn{font-size:15px;padding:13px 26px;border-radius:20px}
 .zzz-menu-btns .zbtn-row:nth-child(2) .menu-btn{font-size:16px;padding:14px 28px;border-radius:22px}
@@ -1499,7 +1499,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .deploy-zone .card .c-effect{max-height:34px!important}
   /* --- Hand: horizontal scroll --- */
   #player-hand{flex-wrap:nowrap!important;overflow-x:auto!important;justify-content:flex-start!important;
-    padding:2px 3px!important;gap:0!important;-webkit-overflow-scrolling:touch!important}
+    padding:2px 3px!important;gap:0!important;-webkit-overflow-scrolling:touch!important;min-height:auto!important}
   #player-hand .card{margin-right:-18px!important;flex-shrink:0!important}
   #player-hand .card:last-child{margin-right:0!important}
   #player-hand .card:hover{transform:translateY(-12px) scale(1.08)!important;margin-right:0!important;margin-left:4px!important}
@@ -1519,6 +1519,22 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .duel-vs{font-size:10px!important}
   #screen-game.active::before{opacity:0.02!important}
 }
+/* === ZZZ Greeting Popup === */
+.zzz-greeting-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity 0.3s}
+.zzz-greeting-overlay.show{opacity:1;pointer-events:auto}
+.zzz-greeting-box{background:linear-gradient(135deg,#1a1a2e 0%,#2a1a3e 100%);border:2px solid #ff3e7a;
+  border-radius:18px;padding:32px 40px;max-width:360px;width:90%;text-align:center;position:relative;
+  box-shadow:0 0 40px rgba(255,62,122,0.3),0 0 80px rgba(255,62,122,0.1);
+  transform:scale(0.8) translateY(20px);transition:transform 0.4s cubic-bezier(.22,1,.36,1)}
+.zzz-greeting-overlay.show .zzz-greeting-box{transform:scale(1) translateY(0)}
+.zzz-greeting-box::before{content:'';position:absolute;top:-1px;left:20%;right:20%;height:3px;
+  background:linear-gradient(90deg,transparent,#ff3e7a,transparent)}
+.zzz-greeting-tag{font-size:9px;letter-spacing:4px;color:#ff3e7a;text-transform:uppercase;margin-bottom:10px;font-weight:700}
+.zzz-greeting-text{font-size:17px;color:#fff;line-height:1.6;font-weight:500;text-shadow:0 0 20px rgba(255,62,122,0.3)}
+.zzz-greeting-close{margin-top:18px;background:transparent;border:1px solid rgba(255,62,122,0.5);color:#ff6b9d;
+  padding:8px 28px;border-radius:20px;cursor:pointer;font-size:12px;letter-spacing:2px;transition:all 0.2s}
+.zzz-greeting-close:hover{background:rgba(255,62,122,0.15);border-color:#ff3e7a}
 </style>
 </head>
 <body>
@@ -1607,6 +1623,21 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
       <div class="zzz-weather-icon" id="zzz-weather-icon"></div>
       <div class="zzz-weather-text" id="zzz-weather-text"></div>
       <div class="zzz-weather-temp" id="zzz-weather-temp"></div>
+    </div>
+    <div class="zzz-widget-card" id="zzz-bt-card">
+      <div class="zzz-date-label">BLUETOOTH</div>
+      <div style="font-size:28px;line-height:1">🔵</div>
+      <div style="font-size:10px;color:#555;margin-top:4px" id="zzz-bt-status">已连接</div>
+    </div>
+    <div class="zzz-widget-card" id="zzz-signal-card">
+      <div class="zzz-date-label">SIGNAL</div>
+      <div style="font-size:28px;line-height:1" id="zzz-signal-icon">📶</div>
+      <div style="font-size:10px;color:#555;margin-top:4px" id="zzz-signal-text">4G</div>
+    </div>
+    <div class="zzz-widget-card" id="zzz-network-card">
+      <div class="zzz-date-label">NETWORK</div>
+      <div style="font-size:28px;line-height:1" id="zzz-net-icon">🌐</div>
+      <div style="font-size:10px;color:#555;margin-top:4px" id="zzz-net-text">在线</div>
     </div>
   </div>
 </div>
@@ -2495,6 +2526,7 @@ function showScreen(id,isBack){
     if(id==='screen-wiki')Wiki.showTab(Wiki.currentTab);
     if(id==='screen-story')Story.init();
     if(id==='screen-menu'){NewsMatrix.resume()}else{NewsMatrix.stop()}
+    ZZZGreeting.tryShow(id);
     slide.classList.remove(inCls);
     void slide.offsetWidth;
     slide.classList.add(outCls);
@@ -2585,10 +2617,59 @@ function initZZZWidget(){
   if(el('zzz-weather-icon'))el('zzz-weather-icon').textContent=w.icon;
   if(el('zzz-weather-text'))el('zzz-weather-text').textContent=w.text;
   if(el('zzz-weather-temp'))el('zzz-weather-temp').textContent=w.temp;
+  // Simulate status indicators
+  const btStates=['已连接','搜索中','HolloW','Bangboo'];
+  const sigStates=[{icon:'📶',text:'5G'},{icon:'📶',text:'4G'},{icon:'📶',text:'3G'},{icon:'📡',text:'LTE'}];
+  const netStates=[{icon:'🌐',text:'在线'},{icon:'🌐',text:'WiFi'},{icon:'📡',text:'卫星'}];
+  const bt=btStates[Math.floor(Math.random()*btStates.length)];
+  const sig=sigStates[Math.floor(Math.random()*sigStates.length)];
+  const net=netStates[Math.floor(Math.random()*netStates.length)];
+  if(el('zzz-bt-status'))el('zzz-bt-status').textContent=bt;
+  if(el('zzz-signal-icon'))el('zzz-signal-icon').textContent=sig.icon;
+  if(el('zzz-signal-text'))el('zzz-signal-text').textContent=sig.text;
+  if(el('zzz-net-icon'))el('zzz-net-icon').textContent=net.icon;
+  if(el('zzz-net-text'))el('zzz-net-text').textContent=net.text;
   updateTime();
   setInterval(updateTime,1000);
 }
 initZZZWidget();
+/* === ZZZ Greeting Popup System === */
+const ZZZGreeting={
+  messages:[
+    '欢迎回来，代理人。今天也要全力以赴哦！',
+    '嘿！你来啦～今天的空洞探索准备好了吗？',
+    '代理人，新的委托已经到了，快去看看吧！',
+    '又见面了！今天的绳网信号不错呢～',
+    '休息好了吗？新的冒险在等着你！'
+  ],
+  _shown:{},
+  _overlayEl:null,
+  init(){
+    const ov=document.createElement('div');
+    ov.className='zzz-greeting-overlay';
+    ov.innerHTML=`<div class="zzz-greeting-box">
+      <div class="zzz-greeting-tag">INTER-KNOT COMMS</div>
+      <div class="zzz-greeting-text" id="zzz-greet-msg"></div>
+      <button class="zzz-greeting-close" onclick="ZZZGreeting.hide()">确 认</button>
+    </div>`;
+    document.body.appendChild(ov);
+    this._overlayEl=ov;
+    ov.addEventListener('click',e=>{if(e.target===ov)this.hide()});
+  },
+  tryShow(screenId){
+    const validScreens=['screen-menu','screen-levels','screen-adventure','screen-map'];
+    if(!validScreens.includes(screenId))return;
+    if(this._shown[screenId])return;
+    this._shown[screenId]=true;
+    const msg=this.messages[Math.floor(Math.random()*this.messages.length)];
+    const el=document.getElementById('zzz-greet-msg');
+    if(el)el.textContent=msg;
+    setTimeout(()=>{if(this._overlayEl)this._overlayEl.classList.add('show')},500);
+  },
+  hide(){
+    if(this._overlayEl)this._overlayEl.classList.remove('show');
+  }
+};
 function $(id){return document.getElementById(id)}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rollDice(n){return Array.from({length:n},()=>Math.floor(Math.random()*6)+1)}
@@ -2838,6 +2919,10 @@ function getRelicDef(id){return ALL_RELICS.find(r=>r.id===id)}
 function isCommonCard(id){return COMMON_CARDS.includes(id)}
 function getCommonCards(){return ALL_CARDS.filter(c=>COMMON_CARDS.includes(c.id))}
 function getRareCards(){return ALL_CARDS.filter(c=>!COMMON_CARDS.includes(c.id))}
+function getCommonCreatures(){return ALL_CARDS.filter(c=>c.type==='creature'&&COMMON_CARDS.includes(c.id))}
+function getRareCreatures(){return ALL_CARDS.filter(c=>c.type==='creature'&&!COMMON_CARDS.includes(c.id))}
+function getCommonSpells(){return ALL_CARDS.filter(c=>c.type==='spell'&&COMMON_CARDS.includes(c.id))}
+function getRareSpells(){return ALL_CARDS.filter(c=>c.type==='spell'&&!COMMON_CARDS.includes(c.id))}
 function getCardDef(id){return ALL_CARDS.find(c=>c.id===id)}
 function makeCardInstance(def){return{...def,assignedDice:[],growth:0,tempBonus:0}}
 function getCreatureValue(c){if(!c)return 0;const frozen=new Set(c.frozenDice||[]);let val=c.base+(c.growth||0)+(c.tempBonus||0)+(c.assignedDice||[]).reduce((a,b,i)=>a+(frozen.has(i)?0:b),0);if(c.id==='greedy_mimic')val+=(c.assignedDice||[]).length;if(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')&&c.type==='creature')val+=2;return val}
@@ -3411,7 +3496,17 @@ const Adventure={
       const nodesCount=types.length;
       const nodes=[];
       for(let i=0;i<nodesCount;i++){
-        nodes.push({type:types[i],connections:[],visited:false,floor:f,idx:i,
+        const nodeType=types[i];
+        let enemyCreature=null;
+        if(nodeType==='battle'){
+          const pool=getCommonCreatures();
+          enemyCreature=pool[Math.floor(Math.random()*pool.length)];
+        } else if(nodeType==='elite'){
+          const pool=getRareCreatures();
+          enemyCreature=pool[Math.floor(Math.random()*pool.length)];
+        }
+        nodes.push({type:nodeType,connections:[],visited:false,floor:f,idx:i,
+          enemyCreature:enemyCreature,
           offsetX:Math.round((Math.random()-0.5)*40),
           offsetY:Math.round((Math.random()-0.5)*12)});
       }
@@ -3514,8 +3609,9 @@ const Adventure={
         const onclick=isAvail?`onclick="Adventure.visitNode(${f},${i})"`:'';
         const sz=node.type==='boss'?64:52;
         html+=`<div class="${cls}" ${onclick} data-floor="${f}" data-idx="${i}" style="position:absolute;left:${x-sz/2}px;top:${ny-sz/2}px">`;
-        html+=`<span class="map-node-tooltip">${labels[node.type]}</span>`;
-        html+=icons[node.type];
+        const tooltipLabel=node.enemyCreature?`${node.enemyCreature.emoji} ${node.enemyCreature.name}`:labels[node.type];
+        html+=`<span class="map-node-tooltip">${tooltipLabel}</span>`;
+        html+=node.enemyCreature?node.enemyCreature.emoji:icons[node.type];
         html+=`</div>`;
       });
       // Floor label
@@ -3569,9 +3665,9 @@ const Adventure={
     node.visited=true;
     this.renderMap();
     switch(node.type){
-      case'battle':this.handleBattle('normal');break;
-      case'elite':this.handleBattle('elite');break;
-      case'boss':this.handleBattle('boss');break;
+      case'battle':this.handleBattle('normal',node);break;
+      case'elite':this.handleBattle('elite',node);break;
+      case'boss':this.handleBattle('boss',node);break;
       case'campfire':this.handleCampfire();break;
       case'shop':this.handleShop();break;
       case'chest':this.handleChest();break;
@@ -3580,11 +3676,12 @@ const Adventure={
   },
 
   // --- BATTLE ---
-  handleBattle(type){
+  handleBattle(type,node){
     G.adventureMode=true;
     G.adventureBattleType=type;
+    const enemyCreature=node&&node.enemyCreature?node.enemyCreature:null;
     showScreen('screen-game');
-    G.startAdventure(type);
+    G.startAdventure(type,enemyCreature);
   },
 
   onBattleWin(type){
@@ -3621,9 +3718,10 @@ const Adventure={
   },
 
   showBattleReward(type,gold){
-    const pool=type==='elite'?getRareCards():getCommonCards();
+    const opCards=Adventure._lastOpponentCards;
+    const pool=opCards&&opCards.length>0?opCards:(type==='elite'?getRareCards():getCommonCards());
     const shuffled=shuffle([...pool]);
-    const picks=shuffled.slice(0,3);
+    const picks=shuffled.slice(0,Math.min(3,shuffled.length));
     const p=$('adv-panel');
     let html=`<h3>⚔️ 战斗胜利!</h3><p>获得 ${gold} 💰</p><p>选择一张卡牌加入牌组 (或跳过):</p><div class="adv-card-pick">`;
     picks.forEach((c,i)=>{
@@ -3997,7 +4095,7 @@ const G={
 
   // Adventure mode battle start
   adventureMode:false, adventureBattleType:null,
-  startAdventure(type){
+  startAdventure(type,enemyCreature){
     const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false});
     Object.assign(this.p,mkP(),{isPlayer:true});
@@ -4009,16 +4107,31 @@ const G={
     this.ai.maxHp=this.ai.hp;
     this.playerFirstDraw=4;
     this.p.deck=Adventure.makeAdventureDeck();
-    if(type==='normal'){
-      const pool=getCommonCards();shuffle(pool);
-      const picked=pool.slice(0,Math.min(8,pool.length));
-      let d=[];picked.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
+    if(type==='normal'||type==='elite'){
+      // Build opponent deck: 4 spells + 2 random creatures + 2 namesake creatures
+      const isNormal=type==='normal';
+      const spellPool=isNormal?getCommonSpells():getRareSpells();
+      const creaturePool=isNormal?getCommonCreatures():getRareCreatures();
+      shuffle(spellPool);shuffle(creaturePool);
+      const pickedSpells=spellPool.slice(0,Math.min(4,spellPool.length));
+      // Filter out the namesake creature from random creature picks
+      const nameId=enemyCreature?enemyCreature.id:null;
+      const otherCreatures=creaturePool.filter(c=>c.id!==nameId);
+      shuffle(otherCreatures);
+      const pickedCreatures=otherCreatures.slice(0,Math.min(2,otherCreatures.length));
+      let deckCards=[...pickedSpells,...pickedCreatures];
+      if(enemyCreature)deckCards.push(enemyCreature,enemyCreature);
+      // Store unique card defs for reward filtering
+      Adventure._lastOpponentCards=[...new Map(deckCards.map(c=>[c.id,c])).values()];
+      let d=[];deckCards.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
       this.ai.deck=shuffle(d);
     } else {
+      // Boss: keep original behavior
       const pool=getRareCards();shuffle(pool);
       const picked=pool.slice(0,Math.min(10,pool.length));
       let d=[];picked.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
       this.ai.deck=shuffle(d);
+      Adventure._lastOpponentCards=null;
     }
     if(Adventure.bonusDiceNextBattle>0){
       this.p.bonusDiceNext=Adventure.bonusDiceNextBattle;
@@ -4030,7 +4143,8 @@ const G={
     this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;
     $('log-content').innerHTML='';
     const typeNames={normal:'普通战斗',elite:'精英战斗',boss:'Boss战: 锈蚀领主'};
-    log(`${typeNames[type]} 开始!`,'phase');
+    const enemyLabel=enemyCreature?`${enemyCreature.emoji} ${enemyCreature.name}`:typeNames[type];
+    log(`${type==='boss'?typeNames[type]:enemyLabel} 开始!`,'phase');
     this.newTurn();
   },
 
@@ -4967,7 +5081,10 @@ function renderAiHand(){
 PlayerData.init();
 DeckBuilder.init();
 AudioMgr.init();
+ZZZGreeting.init();
 render();
+// Show greeting for initial menu screen
+setTimeout(()=>ZZZGreeting.tryShow('screen-menu'),800);
 // Start menu music on first user interaction (browser policy)
 document.addEventListener('click',function _startMusic(){
   document.removeEventListener('click',_startMusic);
