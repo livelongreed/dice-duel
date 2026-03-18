@@ -1203,6 +1203,10 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .adv-shop-item .item-name{color:var(--text);font-size:14px}
 .adv-shop-item .item-desc{color:var(--text-dim);font-size:11px;display:block;line-height:1.4;word-wrap:break-word;margin-top:2px}
 .adv-shop-item .item-price{color:var(--gold);font-size:14px;font-weight:bold}
+@keyframes shopBuyFlash{0%{box-shadow:0 0 0 rgba(255,215,0,0)}30%{box-shadow:0 0 30px rgba(255,215,0,0.6),inset 0 0 20px rgba(255,215,0,0.15)}100%{box-shadow:0 0 0 rgba(255,215,0,0)}}
+.shop-buy-flash{animation:shopBuyFlash 0.6s ease-out}
+@keyframes coinFly{0%{opacity:1;transform:translateY(0) scale(1)}60%{opacity:1;transform:translateY(-30px) scale(1.3)}100%{opacity:0;transform:translateY(-50px) scale(0.8)}}
+.coin-fly{position:absolute;top:50%;right:16px;font-size:20px;pointer-events:none;animation:coinFly 0.7s ease-out forwards;z-index:10}
 /* Deck viewer overlay */
 .deck-viewer-overlay{position:fixed;inset:0;background:rgba(5,5,15,0.88);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter:blur(8px)}
 .deck-viewer{background:rgba(20,20,40,0.95);border:2px solid var(--gold-dim);border-radius:16px;padding:20px 24px;max-width:520px;width:92%;max-height:80vh;overflow-y:auto;text-align:center}
@@ -3850,21 +3854,31 @@ const Adventure={
   buyShopRelic(idx){
     const r=this._shopRelics[idx];
     if(this.gold<r.price)return;
-    this.gold-=r.price;
-    this.addRelic(r.id);
-    r.sold=true;
-    advMsg(`获得遗物「${r.emoji} ${r.name}」!`);
-    setTimeout(()=>this.renderShop(),800);
+    showOverlay(`购买「${r.emoji} ${r.name}」?\n花费 ${r.price} 💰`,[{label:'确认购买'},{label:'取消'}],choice=>{
+      if(choice!==0){this.renderShop();return}
+      if(this.gold<r.price)return;
+      this.gold-=r.price;
+      this.addRelic(r.id);
+      r.sold=true;
+      SFX.play('coin');
+      advMsg(`获得遗物「${r.emoji} ${r.name}」!`);
+      setTimeout(()=>this.renderShop(),800);
+    });
   },
 
   buyShopCard(idx){
     const c=this._shopCards[idx];
     if(this.gold<c.price)return;
-    this.gold-=c.price;
-    this.deck.push(c.id);
-    c.sold=true;
-    advMsg(`购买了「${c.name}」!`);
-    setTimeout(()=>this.renderShop(),800);
+    showOverlay(`购买「${c.emoji} ${c.name}」?\n花费 ${c.price} 💰`,[{label:'确认购买'},{label:'取消'}],choice=>{
+      if(choice!==0){this.renderShop();return}
+      if(this.gold<c.price)return;
+      this.gold-=c.price;
+      this.deck.push(c.id);
+      c.sold=true;
+      SFX.play('coin');
+      advMsg(`购买了「${c.name}」!`);
+      setTimeout(()=>this.renderShop(),800);
+    });
   },
 
   shopRemoveCard(){
@@ -3890,13 +3904,19 @@ const Adventure={
   doRemoveCard(cardId){
     const removePrice=75+this.removeCount*25;
     if(this.gold<removePrice)return;
-    this.gold-=removePrice;
-    const idx=this.deck.indexOf(cardId);
-    if(idx>=0)this.deck.splice(idx,1);
-    this._shopRemovedCard=true;
-    this.removeCount++;
-    advMsg(`花费${removePrice}💰 删除了「${getCardDef(cardId).name}」!`);
-    setTimeout(()=>this.renderShop(),800);
+    const def=getCardDef(cardId);
+    showOverlay(`删除「${def?def.emoji+' '+def.name:cardId}」?\n花费 ${removePrice} 💰`,[{label:'确认删除'},{label:'取消'}],choice=>{
+      if(choice!==0){this.shopRemoveCard();return}
+      if(this.gold<removePrice)return;
+      this.gold-=removePrice;
+      const idx=this.deck.indexOf(cardId);
+      if(idx>=0)this.deck.splice(idx,1);
+      this._shopRemovedCard=true;
+      this.removeCount++;
+      SFX.play('coin');
+      advMsg(`花费${removePrice}💰 删除了「${def?def.name:cardId}」!`);
+      setTimeout(()=>this.renderShop(),800);
+    });
   },
 
   // --- EVENT ---
@@ -3984,11 +4004,16 @@ const Adventure={
   buyBlackMarket(idx,cost){
     const c=this._bmCards[idx];
     if(this.hp<=cost)return;
-    this.hp-=cost;
-    this.deck.push(c.id);
-    advMsg(`失去${cost}HP, 获得「${c.name}」!`);
-    if(this.hp<=0){setTimeout(()=>{this.closeOverlay();this.onBattleLose()},800);return}
-    setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    showOverlay(`购买「${c.emoji} ${c.name}」?\n花费 ${cost} ❤️ 生命值`,[{label:'确认购买'},{label:'取消'}],choice=>{
+      if(choice!==0){this.showBlackMarket();return}
+      if(this.hp<=cost)return;
+      this.hp-=cost;
+      this.deck.push(c.id);
+      SFX.play('coin');
+      advMsg(`失去${cost}HP, 获得「${c.name}」!`);
+      if(this.hp<=0){setTimeout(()=>{this.closeOverlay();this.onBattleLose()},800);return}
+      setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    });
   },
 
   // --- ANCIENT ALTAR EVENT ---
@@ -5688,6 +5713,20 @@ const SFX={
         g.gain.exponentialRampToValueAtTime(0.001,now+0.2);o.start(now);o.stop(now+0.2);break;
       case'click':o.type='sine';o.frequency.value=1000;g.gain.setValueAtTime(this._vol*0.2,now);
         g.gain.exponentialRampToValueAtTime(0.001,now+0.05);o.start(now);o.stop(now+0.05);break;
+      case'coin':{
+        // Coin jingle: two quick bright tones
+        o.type='sine';o.frequency.value=1400;
+        g.gain.setValueAtTime(this._vol*0.4,now);
+        g.gain.exponentialRampToValueAtTime(0.001,now+0.15);
+        o.start(now);o.stop(now+0.15);
+        // Second higher tone
+        const o2=ctx.createOscillator(),g2=ctx.createGain();
+        g2.connect(ctx.destination);o2.connect(g2);
+        o2.type='sine';o2.frequency.value=1800;
+        g2.gain.setValueAtTime(this._vol*0.35,now+0.08);
+        g2.gain.exponentialRampToValueAtTime(0.001,now+0.22);
+        o2.start(now+0.08);o2.stop(now+0.22);break;
+      }
       default:o.type='sine';o.frequency.value=600;g.gain.setValueAtTime(this._vol*0.3,now);
         g.gain.exponentialRampToValueAtTime(0.001,now+0.1);o.start(now);o.stop(now+0.1);}
   }
