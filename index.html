@@ -64,8 +64,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* === ZZZ DATE/WEATHER WIDGET — full-width bottom bar === */
 .zzz-info-widget{position:absolute;bottom:0;left:64px;right:0;z-index:5;display:flex;gap:0;align-items:stretch}
 .zzz-widget-card{background:rgba(255,255,255,0.95);color:#1a1a2e;border-radius:0;padding:18px 28px;
-  backdrop-filter:blur(10px);min-width:130px;position:relative;overflow:hidden;flex:1;
+  backdrop-filter:blur(10px);min-width:0;position:relative;overflow:hidden;flex:1;
   border-top:4px solid #ff3e7a;box-shadow:0 -4px 24px rgba(0,0,0,0.2)}
+#zzz-date-card{flex:3}
+#zzz-weather-card{flex:2}
+#zzz-network-card{flex:1}
 .zzz-widget-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
   background:linear-gradient(90deg,#ff3e7a,#ff6b9d,#ff3e7a);z-index:1}
 .zzz-widget-card+.zzz-widget-card{border-left:1px solid rgba(200,180,200,0.25)}
