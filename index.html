@@ -279,6 +279,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   background-color:var(--hp-green);background-size:200% 100%;
   animation:hpStripeScroll 2s linear infinite;
   box-shadow:0 0 8px rgba(72,187,120,0.4),inset 0 1px 0 rgba(255,255,255,0.15)}
+.hp-fill.enemy-hp{background-color:var(--hp-red);box-shadow:0 0 8px rgba(245,101,101,0.4),inset 0 1px 0 rgba(255,255,255,0.15)}
 .hp-fill.critical{background-color:var(--hp-red);box-shadow:0 0 8px rgba(245,101,101,0.4),inset 0 1px 0 rgba(255,255,255,0.15)}
 .hp-bar span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;
   color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.9),0 0 6px rgba(0,0,0,0.5);font-family:'Share Tech Mono'}
@@ -1474,12 +1475,13 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   /* --- Action buttons: compact row --- */
   .action-btn{width:auto!important;flex:1!important;min-width:44px!important;padding:5px 2px!important;font-size:9px!important}
   /* --- Main area: padding for panel + bottom bar --- */
-  #main-area{padding-bottom:122px!important;height:100vh!important}
+  #main-area{padding-bottom:100px!important;height:100vh!important}
   /* --- Zones: compact --- */
   #ai-zone,#player-zone{padding:1px 3px!important}
   #ai-zone{flex:0.55!important}
-  .player-bar{gap:4px!important;padding:2px 3px!important}
-  .pname{font-size:9px!important;min-width:40px!important;letter-spacing:0px!important}
+  #player-zone{flex:0 1 auto!important;min-height:0!important}
+  .player-bar{gap:4px!important;padding:2px 3px!important;flex-wrap:wrap!important}
+  .pname{font-size:9px!important;min-width:40px!important;letter-spacing:0px!important;flex-shrink:0!important}
   .hp-bar{width:80px!important;height:16px!important;border-radius:8px!important}
   .hp-bar span{font-size:8px!important}
   .deploy-zone{min-height:32px!important;padding:2px 3px!important;flex-wrap:wrap!important;gap:3px!important}
@@ -1623,16 +1625,6 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
       <div class="zzz-weather-icon" id="zzz-weather-icon"></div>
       <div class="zzz-weather-text" id="zzz-weather-text"></div>
       <div class="zzz-weather-temp" id="zzz-weather-temp"></div>
-    </div>
-    <div class="zzz-widget-card" id="zzz-bt-card">
-      <div class="zzz-date-label">BLUETOOTH</div>
-      <div style="font-size:28px;line-height:1">🔵</div>
-      <div style="font-size:10px;color:#555;margin-top:4px" id="zzz-bt-status">已连接</div>
-    </div>
-    <div class="zzz-widget-card" id="zzz-signal-card">
-      <div class="zzz-date-label">SIGNAL</div>
-      <div style="font-size:28px;line-height:1" id="zzz-signal-icon">📶</div>
-      <div style="font-size:10px;color:#555;margin-top:4px" id="zzz-signal-text">4G</div>
     </div>
     <div class="zzz-widget-card" id="zzz-network-card">
       <div class="zzz-date-label">NETWORK</div>
@@ -2157,7 +2149,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <div id="main-area">
       <div id="ai-zone">
         <div class="player-bar"><span class="pname" id="ai-pname">机械领主</span>
-          <div class="hp-bar"><div class="hp-fill" id="ai-hp-fill"></div><span id="ai-hp-text">30</span></div>
+          <div class="hp-bar"><div class="hp-fill enemy-hp" id="ai-hp-fill"></div><span id="ai-hp-text">30</span></div>
           <span class="deck-count deck-btn" id="ai-deck-count" title="牌库" onclick="DeckViewer.showBattleDeck('ai')">🃏0</span>
           <span class="deck-count deck-btn" id="ai-discard-count" title="弃牌堆" onclick="DeckViewer.showBattleDiscard('ai')" style="margin-left:2px">♻0</span>
           <span id="ai-hand-count" class="hand-count">0</span>
@@ -2618,15 +2610,8 @@ function initZZZWidget(){
   if(el('zzz-weather-text'))el('zzz-weather-text').textContent=w.text;
   if(el('zzz-weather-temp'))el('zzz-weather-temp').textContent=w.temp;
   // Simulate status indicators
-  const btStates=['已连接','搜索中','HolloW','Bangboo'];
-  const sigStates=[{icon:'📶',text:'5G'},{icon:'📶',text:'4G'},{icon:'📶',text:'3G'},{icon:'📡',text:'LTE'}];
   const netStates=[{icon:'🌐',text:'在线'},{icon:'🌐',text:'WiFi'},{icon:'📡',text:'卫星'}];
-  const bt=btStates[Math.floor(Math.random()*btStates.length)];
-  const sig=sigStates[Math.floor(Math.random()*sigStates.length)];
   const net=netStates[Math.floor(Math.random()*netStates.length)];
-  if(el('zzz-bt-status'))el('zzz-bt-status').textContent=bt;
-  if(el('zzz-signal-icon'))el('zzz-signal-icon').textContent=sig.icon;
-  if(el('zzz-signal-text'))el('zzz-signal-text').textContent=sig.text;
   if(el('zzz-net-icon'))el('zzz-net-icon').textContent=net.icon;
   if(el('zzz-net-text'))el('zzz-net-text').textContent=net.text;
   updateTime();
@@ -2656,7 +2641,7 @@ const ZZZGreeting={
     ov.addEventListener('click',e=>{if(e.target===ov)this.hide()});
   },
   tryShow(screenId){
-    const validScreens=['screen-menu','screen-levels','screen-adventure','screen-map'];
+    const validScreens=['screen-menu','screen-levels'];
     if(!validScreens.includes(screenId))return;
     if(this._shown[screenId])return;
     this._shown[screenId]=true;
