@@ -829,7 +829,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 /* Per-screen bottom accent bars */
 .zzz-screen-bottom{position:absolute;bottom:0;left:0;right:0;z-index:5;display:flex;gap:0;align-items:stretch;
   transform:skewX(-5deg);transform-origin:bottom right}
-.zzz-screen-bottom>*{transform:skewX(5deg)}
+.zzz-screen-bottom .zzz-sb-white>*,.zzz-screen-bottom .zzz-bottom-accent>*{transform:skewX(5deg)}
 .zzz-screen-bottom.has-left{left:48px}
 .zzz-screen-bottom.has-right{right:48px}
 .zzz-screen-bottom .zzz-bottom-accent{flex:0 0 auto}
@@ -879,7 +879,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 /* Screen info widget bars (bottom white panels for levels/adventure) */
 .zzz-screen-info{position:absolute;bottom:0;left:0;right:0;z-index:5;display:flex;gap:0;align-items:stretch;
   transform:skewX(-5deg);transform-origin:bottom right}
-.zzz-screen-info>*{transform:skewX(5deg)}
+.zzz-screen-info .zzz-widget-card>*{transform:skewX(5deg)}
 #screen-levels .zzz-screen-info{right:48px}
 #screen-adventure .zzz-screen-info{left:48px}
 .zzz-screen-info .zzz-widget-card{background:rgba(255,255,255,0.95);color:#1a1a2e;padding:14px 22px;
@@ -1135,7 +1135,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .map-side-strip .strip-abandon:hover{background:rgba(255,255,255,0.35);transform:scale(1.1);border-color:#fff}
 .map-bottom-bar{position:absolute;bottom:0;left:48px;right:0;z-index:8;display:flex;align-items:stretch;
   pointer-events:none;transform:skewX(-5deg);transform-origin:bottom right}
-.map-bottom-bar>*{transform:skewX(5deg)}
+.map-bottom-bar .mb-accent>*,.map-bottom-bar .mb-white>*{transform:skewX(5deg)}
 .map-bottom-bar .mb-accent{background:#ff3e7a;padding:12px 14px;display:flex;align-items:center;gap:8px;
   min-width:100px;position:relative;overflow:hidden;pointer-events:auto}
 .map-bottom-bar .mb-accent::after{content:'';position:absolute;inset:0;
