@@ -1435,6 +1435,13 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .die.selected{border-color:var(--gold);box-shadow:0 0 12px rgba(255,107,157,0.4),inset 0 0 8px rgba(255,107,157,0.1);
   transform:scale(1.08);background:rgba(255,62,122,0.12)}
 .die.used{opacity:0.2;pointer-events:none;transform:none}
+/* ========== MOBILE: OVERRIDE BATTLE ZZZ OVERHAUL ========== */
+@media(max-width:768px){
+  #screen-game .game-strip{display:none!important}
+  #screen-game .game-label{display:none!important}
+  #screen-game .game-bottom-bar{display:none!important}
+  #game-layout{margin-left:0!important;width:100%!important;grid-template-columns:1fr!important;grid-template-rows:1fr auto!important}
+}
 </style>
 </head>
 <body>
