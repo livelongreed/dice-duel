@@ -4392,6 +4392,11 @@ const G={
       this.p.hand.splice(idx,1);
       this.p.extraCreatureNext=false;
       log(`部署 ${card.name}`);
+      // Trigger immediate deploy effects (e.g. glutton_grum slots change)
+      if(card.timing==='deploy'&&card.effect&&!card._deployTriggered){
+        card._deployTriggered=true;
+        card.effect({owner:this.p,enemy:this.ai,myCreature:card,myDice:card.assignedDice,mySpellDice:[]});
+      }
       Tutorial.notify('deploy_creature');
     } else if(card.type==='spell'){
       card.assignedDice=[];
@@ -4483,6 +4488,11 @@ const G={
       pick.assignedDice=[];pick.tempBonus=0;
       this.ai.deployedCreature=pick;
       this.ai.hand=this.ai.hand.filter(c=>c!==pick);
+      // Trigger immediate deploy effects for AI (e.g. glutton_grum)
+      if(pick.timing==='deploy'&&pick.effect&&!pick._deployTriggered){
+        pick._deployTriggered=true;
+        pick.effect({owner:this.ai,enemy:this.p,myCreature:pick,myDice:pick.assignedDice,mySpellDice:[]});
+      }
     }
 
     // Deploy beneficial spells
@@ -4586,7 +4596,8 @@ const G={
     const side=player===this.p?'player':'ai';
     // Creature effects (silenced check)
     if(player.deployedCreature&&player.deployedCreature.timing===timing){
-      if(player.effectsSilenced){log(`${player.deployedCreature.name}的效果被封印!`,'effect')}
+      if(player.deployedCreature._deployTriggered&&timing==='deploy'){/* already triggered on place, skip */}
+      else if(player.effectsSilenced){log(`${player.deployedCreature.name}的效果被封印!`,'effect')}
       else{const enemy=player===this.p?this.ai:this.p;
       const cSlot=findDeployedCardEl(side,'creature');
       pulseEffect(cSlot);
