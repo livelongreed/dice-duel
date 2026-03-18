@@ -270,8 +270,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   linear-gradient(180deg,#06061a 0%,#10102a 25%,#14122a 50%,#10102a 75%,#06061a 100%)}
 #screen-game.active::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.035;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-#game-layout{width:100%;height:100vh;display:grid;grid-template-columns:minmax(140px,180px) 1fr minmax(160px,200px);gap:0;position:relative;z-index:1}
-#game-log{background:rgba(10,10,20,0.7);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-right:1px solid var(--glass-border);padding:8px;overflow-y:auto}
+#game-layout{width:100%;height:100vh;display:grid;grid-template-columns:1fr minmax(160px,200px);gap:0;position:relative;z-index:1}
+#game-log{position:absolute;top:0;left:48px;bottom:36px;width:280px;z-index:8;
+  background:rgba(10,10,20,0.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-right:2px solid rgba(255,62,122,0.25);padding:0;overflow:hidden;
+  transform:translateX(-100%);opacity:0;pointer-events:none;
+  transition:transform 0.3s cubic-bezier(0.22,1,0.36,1),opacity 0.25s ease;
+  display:flex;flex-direction:column}
+#game-log.log-expanded{transform:translateX(0);opacity:1;pointer-events:auto}
+#game-log.log-collapsed{transform:translateX(-100%);opacity:0;pointer-events:none}
+#game-log .log-slide-header{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px;
+  border-bottom:1px solid rgba(255,62,122,0.15);flex-shrink:0}
+#game-log .log-slide-header .panel-title{margin-bottom:0;border-bottom:none;padding-bottom:0}
+#game-log .log-close-btn{background:none;border:1px solid rgba(255,62,122,0.3);color:var(--text-dim);
+  font-size:18px;width:28px;height:28px;border-radius:4px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all 0.2s;line-height:1}
+#game-log .log-close-btn:hover{background:rgba(255,62,122,0.2);color:#fff;border-color:rgba(255,62,122,0.5)}
+#game-log #log-content{flex:1;overflow-y:auto;padding:8px 12px;font-size:10px;line-height:1.5}
+#log-strip-btn.log-active{background:rgba(255,255,255,0.35)!important;box-shadow:0 0 8px rgba(255,255,255,0.3)}
 .panel-title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:12px;color:var(--gold);letter-spacing:2px;
   border-bottom:1px solid var(--gold-dim);padding-bottom:4px;margin-bottom:6px}
 #log-content{font-size:10px;line-height:1.5}
@@ -741,10 +757,8 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 .zzz-widget-card{box-shadow:0 -4px 24px rgba(0,0,0,0.2),2px 0 6px rgba(255,0,50,0.08),-2px 0 6px rgba(0,200,255,0.08)}
 .zzz-widget-card::before{background:linear-gradient(90deg,rgba(255,0,50,0.8),#ff3e7a,rgba(0,200,255,0.8))}
 
-/* Mobile Log Overlay */
+/* Mobile Log - now uses slide-out panel */
 #log-toggle{display:none}
-#game-log.log-overlay-show{display:block!important;position:fixed;inset:0;z-index:150;
-  background:rgba(10,10,20,0.97);padding:44px 12px 12px}
 /* Card Detail Popup */
 #card-detail{display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.75);
   align-items:center;justify-content:center}
@@ -963,8 +977,8 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
   .deck-list-wrap{width:100%;max-height:200px}
   .card-grid{max-height:50vh}
   #game-layout{grid-template-columns:1fr;grid-template-rows:1fr auto}
-  #game-log{display:none}
-  #log-toggle{display:block;position:fixed;top:6px;left:38px;z-index:151;width:auto;padding:4px 10px;font-size:10px}
+  #game-log{bottom:0;width:260px}
+  #log-toggle{display:none}
   #right-panel{position:fixed;bottom:0;left:0;right:0;height:auto;max-height:110px;flex-direction:row;flex-wrap:wrap;
     align-items:center;border-left:none;border-top:2px solid var(--gold-dim);z-index:100;padding:5px 6px;gap:3px;overflow-x:auto;
     background:rgba(20,16,12,0.98)}
@@ -1469,10 +1483,9 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
 #screen-game .game-bottom-bar .gbb-label{color:rgba(255,255,255,0.35);letter-spacing:2px;font-size:8px;text-transform:uppercase}
 #screen-game .game-bottom-bar .gbb-val{color:var(--gold);font-weight:700;font-size:12px}
 #screen-game .game-bottom-bar .gbb-sep{width:1px;height:16px;background:rgba(255,255,255,0.1)}
-#game-layout{width:100%;height:100vh;display:grid;grid-template-columns:minmax(140px,180px) 1fr minmax(160px,200px);
+#game-layout{width:100%;height:100vh;display:grid;grid-template-columns:1fr minmax(160px,200px);
   gap:0;position:relative;z-index:1;margin-left:48px;width:calc(100% - 48px)}
-#game-log{background:rgba(10,10,26,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-right:1px solid rgba(255,62,122,0.12);padding:10px;overflow-y:auto}
+/* game-log styles are now defined in the base section as a slide-out panel */
 .panel-title{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:3px;
   border-bottom:1px solid rgba(255,62,122,0.15);padding-bottom:6px;margin-bottom:8px;text-transform:uppercase}
 #right-panel{background:rgba(10,10,26,0.8);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
@@ -1649,9 +1662,9 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <div class="zzz-strip-icon">🎴</div>
     <div class="zzz-strip-text">PLAY</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
-    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
-    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
+    <div class="zzz-strip-settings" onclick="showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="showScreen('screen-wiki')">📖</div>
+    <div class="zzz-strip-settings" onclick="showScreen('screen-deck')">🃏</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label">
@@ -2228,15 +2241,22 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <div class="gs-text">DUEL</div>
     <div class="gs-icon">🎲</div>
     <div class="zzz-strip-divider"></div>
+    <div class="zzz-strip-settings" id="log-strip-btn" onclick="toggleBattleLog()">📜</div>
+    <div class="zzz-strip-divider"></div>
     <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
     <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-menu')">↩</div>
+  </div>
+  <!-- Slide-out battle log panel -->
+  <div id="game-log" class="log-collapsed">
+    <div class="log-slide-header">
+      <div class="panel-title">战斗日志</div>
+      <button class="log-close-btn" onclick="toggleBattleLog()">&times;</button>
+    </div>
+    <div id="log-content"></div>
   </div>
   <!-- ZZZ Top-right label -->
   <div class="game-label"><div class="gl-en">BATTLE FIELD</div><div class="gl-num">05</div></div>
   <div id="game-layout">
-    <button id="log-toggle" class="action-btn" onclick="document.getElementById('game-log').classList.toggle('log-overlay-show')">日志</button>
-    <!-- Left log -->
-    <div id="game-log"><div class="panel-title">战斗日志</div><div id="log-content"></div></div>
     <!-- Main area -->
     <div id="main-area">
       <div id="ai-zone">
@@ -2486,8 +2506,8 @@ const AudioMgr={
       const blobUrl=URL.createObjectURL(blob);
       if(!this._userSlots[slot])this.tracks[slot]=blobUrl;
       this._preloaded[slot]='done';
-      /* If this slot already has an Audio element waiting, update its src */
-      if(this.audioEls[slot]&&!this._userSlots[slot]){this.audioEls[slot].src=blobUrl}
+      /* If this slot already has an Audio element waiting and it's paused, update its src */
+      if(this.audioEls[slot]&&!this._userSlots[slot]&&this.audioEls[slot].paused){this.audioEls[slot].src=blobUrl}
     }).catch(()=>{this._preloaded[slot]=false});
   },
   /* Preload common tracks on first user interaction */
@@ -2749,6 +2769,13 @@ const ZZZGreeting={
 function $(id){return document.getElementById(id)}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rollDice(n){return Array.from({length:n},()=>Math.floor(Math.random()*6)+1)}
+function toggleBattleLog(){
+  const logEl=$('game-log');const btn=$('log-strip-btn');
+  if(!logEl)return;
+  const isExpanded=logEl.classList.contains('log-expanded');
+  if(isExpanded){logEl.classList.remove('log-expanded');logEl.classList.add('log-collapsed');if(btn)btn.classList.remove('log-active')}
+  else{logEl.classList.remove('log-collapsed');logEl.classList.add('log-expanded');if(btn)btn.classList.add('log-active')}
+}
 function log(msg,cls=''){const el=$('log-content');if(!el)return;el.innerHTML=`<div class="log-entry ${cls}">${msg}</div>`+el.innerHTML;
   if(cls==='effect'){
     let icon='✨';
@@ -2824,13 +2851,12 @@ const ALL_CARDS=[
 {id:'clock_prophet',type:'creature',name:'钟表先知',emoji:'🔮',base:5,slots:2,
   effectDesc:'部署时:窥视所有对手手牌',timing:'deploy',
   effect(ctx){if(ctx.enemy.hand.length>0){const names=ctx.enemy.hand.map(c=>`${c.name}(${c.type==='creature'?'基础'+c.base:'法术'})`).join(', ');log(`先知窥视对手手牌: ${names}`,'effect')}else{log('先知窥视:对手无手牌','effect')}}},
-{id:'iron_giant',type:'creature',name:'铁甲巨人',emoji:'🦾',base:8,slots:0,
+{id:'iron_giant',type:'creature',name:'铁甲巨人',emoji:'🦾',base:9,slots:0,
   effectDesc:'无特殊效果',timing:'none',
   effect(ctx){}},
 {id:'boiler_spider',type:'creature',name:'锅炉蜘蛛',emoji:'🕷️',base:2,slots:2,
   effectDesc:'胜出:对手生物下回合-3基础值',timing:'win',
-  effect(ctx){if(ctx.enemy.deployedCreature){ctx.enemy.deployedCreature.tempBonus=(ctx.enemy.deployedCreature.tempBonus||0)-3;log('锅炉蜘蛛:对手生物-3基础值','effect')}
-    else{log('锅炉蜘蛛:对手无生物','effect')}}},
+  effect(ctx){ctx.enemy._spiderDebuffNext=true;log('锅炉蜘蛛:对手下回合生物-3基础值!','effect')}},
 {id:'rage_ogre',type:'creature',name:'狂暴食人魔',emoji:'👹',base:2,slots:3,
   effectDesc:'胜出:每有1个骰子=4,对对手造成2点伤害',timing:'win',
   effect(ctx){const hits=(ctx.myDice||[]).filter(d=>d===4).length;if(hits>0){ctx.enemy.hp-=hits*2;log(`食人魔狂暴:${hits}个骰子=4,造成${hits*2}伤害!`,'effect')}else{log('食人魔:无骰子=4','effect')}}},
@@ -2853,8 +2879,8 @@ const ALL_CARDS=[
       showOverlay('暴食者格鲁姆:选择弃掉1张手牌',opts,i=>{const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()})
     }else{const i=Math.floor(Math.random()*ctx.owner.hand.length);const removed=ctx.owner.hand.splice(i,1)[0];discardCard(ctx.owner,removed);log('暴食者格鲁姆:弃掉手牌,槽位变为5!','effect');render()}}},
 {id:'frost_dragon',type:'creature',name:'霜鳞龙永冬',emoji:'🐲',base:4,slots:1,
-  effectDesc:'部署后:冻结随机生物的随机骰子(该骰子本回合无效)',timing:'deploy',
-  effect(ctx){const targets=[];[ctx.owner,ctx.enemy].forEach(p=>{if(p.deployedCreature&&p.deployedCreature.assignedDice.length>0)targets.push(p.deployedCreature)});
+  effectDesc:'部署后:冻结随机生物的随机骰子(该骰子本回合无效)',timing:'duel_start',
+  effect(ctx){const targets=[];[ctx.owner,ctx.enemy].forEach(p=>{if(p.deployedCreature&&p.deployedCreature!==ctx.myCreature&&(p.deployedCreature.assignedDice||[]).length>0)targets.push(p.deployedCreature)});
     if(targets.length===0){log('霜鳞龙永冬:无可冻结目标','effect');return}
     const t=targets[Math.floor(Math.random()*targets.length)];const di=Math.floor(Math.random()*t.assignedDice.length);
     t.frozenDice=t.frozenDice||[];t.frozenDice.push(di);log(`霜鳞龙永冬:冻结了${t.name}的骰子[${t.assignedDice[di]}]!`,'effect')}},
@@ -3048,14 +3074,14 @@ const ALL_CARDS=[
       if(stolen>0)log(`葫芦契约:葫芦! 偷走对手${stolen}张牌!`,'effect')}
     else{log('葫芦契约:未构成葫芦','effect')}}},
 {id:'pair_amplify',type:'spell',name:'对子增幅',emoji:'🔊',base:0,slots:2,
-  effectDesc:'对拼开始:若2骰构成对子(相同),手牌中所有生物基础值+4',timing:'duel_start',
-  effect(ctx){const d=ctx.mySpellDice||[];if(d.length===2&&d[0]===d[1]){
-    let count=0;ctx.owner.hand.forEach(c=>{if(c.type==='creature'){c.base+=4;count++}});
-    log(`对子增幅:对子${d[0]}! 手牌${count}个生物基础值+4!`,'effect')}
-    else{log('对子增幅:未构成对子','effect')}}},
+  effectDesc:'对拼开始:手牌生物基础值+2;若2骰构成对子(相同)则改为+4',timing:'duel_start',
+  effect(ctx){const d=ctx.mySpellDice||[];const isPair=d.length===2&&d[0]===d[1];const bonus=isPair?4:2;
+    let count=0;ctx.owner.hand.forEach(c=>{if(c.type==='creature'){c.growth=(c.growth||0)+bonus;count++}});
+    if(count>0)log(`对子增幅:${isPair?'对子'+d[0]+'! ':''}手牌${count}个生物基础值+${bonus}!`,'effect');
+    else log('对子增幅:手牌无生物','effect')}},
 ];
 
-const COMMON_CARDS=['shadow_rat','swift_bird','steam_sentinel','gear_hound','chimney_golem','magnet_puppet','boiler_spider','slime','time_traveler','greedy_mimic','crystal_guard','even_absorb','overload_pulse','steam_burst','emergency_repair','metal_shield','doom_prophet','soul_thief','double_pair','curse_sacrifice','gourd_contract','pair_amplify'];
+const COMMON_CARDS=['shadow_rat','swift_bird','steam_sentinel','gear_hound','chimney_golem','magnet_puppet','boiler_spider','slime','time_traveler','greedy_mimic','crystal_guard','even_absorb','overload_pulse','steam_burst','emergency_repair','metal_shield','doom_prophet','soul_thief','double_pair','curse_sacrifice','gourd_contract','pair_amplify','iron_giant','clock_prophet'];
 
 const ALL_RELICS=[
   {id:'lucky_dice',name:'幸运骰子',emoji:'🎲',rarity:'common',desc:'第一回合多获得1个骰子，但该回合必须使用该骰子，否则失去遗物'},
@@ -4511,7 +4537,15 @@ const G={
     const hasExtra=(this.p.extraRerolls||0)>0;
     if(this.p.rerolled&&!hasExtra)return;
     if(!this.p.rerolled){this.p.rerolled=true}else{this.p.extraRerolls--}
-    this.p.dice=rollDice(this.p.dice.length);
+    // Preserve banked dice when rerolling
+    const bankedDice=this.p.bankedDice||[];
+    const bankedCount=bankedDice.length;
+    const rerollCount=this.p.dice.length-bankedCount;
+    const newDice=rollDice(rerollCount);
+    // Append banked dice at the end (they were added at the end during rollPhase)
+    this.p.dice=newDice.concat(bankedDice);
+    // Lucky dice index is no longer valid after reroll
+    if(this._luckyDiceIdx>=0)this._luckyDiceIdx=-1;
     log(`重掷: ${this.p.dice.join(', ')}${hasExtra?` (额外重掷剩余${this.p.extraRerolls||0}次)`:''}`);
     if(this.p.rerolled&&!(this.p.extraRerolls>0))enableBtn('btn-reroll',false);
     this.selectedDice=[];
@@ -4531,17 +4565,15 @@ const G={
       if(this.adventureMode){
         // Lucky Dice: check if the lucky die was used
         if(Adventure.hasRelic('lucky_dice')&&this._luckyDiceIdx>=0){
-          const luckyUsed=this._luckyDiceIdx<0||!this.p.dice.includes(undefined);
-          // Check if the lucky die is still in the unused dice pool
-          // The lucky die was at _luckyDiceIdx. If it's still in p.dice (not assigned), relic lost
+          // Check if the lucky die was actually assigned to a creature or spell
+          const luckyDieValue=this.p.dice[this._luckyDiceIdx];
           const allAssigned=[];
           if(this.p.deployedCreature)(this.p.deployedCreature.assignedDice||[]).forEach(d=>allAssigned.push(d));
           this.p.deployedSpells.forEach(s=>(s.assignedDice||[]).forEach(d=>allAssigned.push(d)));
           const totalUsed=allAssigned.length;
           const totalDice=this.p.dice.length;
-          // If not all dice used and lucky die idx still free, lose relic
+          // If not all dice were used, the lucky die might not have been used
           if(totalUsed<totalDice){
-            // Lucky die not guaranteed used - simplified: if any dice remain unused, check
             Adventure.removeRelic('lucky_dice');
             log('🎲 幸运骰子未使用,遗物失去!','effect');
           }
@@ -4617,10 +4649,13 @@ const G={
       this.p.hand.splice(idx,1);
       this.p.extraCreatureNext=false;
       log(`部署 ${card.name}`);
-      // Trigger immediate deploy effects (e.g. glutton_grum slots change)
+      // Deploy effects now trigger in doRevealAndDuel after dice are assigned
+      // Exception: glutton_grum and other non-dice-dependent deploy effects trigger early
       if(card.timing==='deploy'&&card.effect&&!card._deployTriggered){
-        card._deployTriggered=true;
-        card.effect({owner:this.p,enemy:this.ai,myCreature:card,myDice:card.assignedDice,mySpellDice:[]});
+        if(card.id==='glutton_grum'||card.id==='doom_prophet'||card.id==='clock_prophet'||card.id==='dream_morpheus'){
+          card._deployTriggered=true;
+          card.effect({owner:this.p,enemy:this.ai,myCreature:card,myDice:card.assignedDice,mySpellDice:[]});
+        }
       }
       Tutorial.notify('deploy_creature');
     } else if(card.type==='spell'){
@@ -4776,6 +4811,17 @@ const G={
       this.p.deployedCreature.tempBonus=(this.p.deployedCreature.tempBonus||0)+2;
       log('🩸 血之契约: HP低于10, 生物+2基础值!','effect');
     }
+    // Boiler Spider debuff from last turn: apply -3 to deployed creature
+    if(this.p._spiderDebuffNext&&this.p.deployedCreature){
+      this.p.deployedCreature.tempBonus=(this.p.deployedCreature.tempBonus||0)-3;
+      this.p._spiderDebuffNext=false;
+      log('锅炉蜘蛛:上回合效果, 生物-3基础值!','effect');
+    } else {this.p._spiderDebuffNext=false}
+    if(this.ai._spiderDebuffNext&&this.ai.deployedCreature){
+      this.ai.deployedCreature.tempBonus=(this.ai.deployedCreature.tempBonus||0)-3;
+      this.ai._spiderDebuffNext=false;
+      log('锅炉蜘蛛:上回合效果, 对手生物-3基础值!','effect');
+    } else {this.ai._spiderDebuffNext=false}
     render();
     await delay(400);
 
@@ -4850,9 +4896,24 @@ const G={
 
   triggerDuelStartEffects(player,ctx){
     const side=player===this.p?'player':'ai';
+    const enemy=player===this.p?this.ai:this.p;
+    // Creature duel_start effects (e.g. element_harmonizer, chaos_dice_demon, leopard_king, double_pair)
+    if(player.deployedCreature&&player.deployedCreature.timing==='duel_start'){
+      if(!player.effectsSilenced){
+        const c=player.deployedCreature;
+        const localCtx={owner:player,enemy,myCreature:c,
+          myDice:c.assignedDice||[],mySpellDice:[],extraDuels:0,enemyValueReduce:0};
+        const cEl=findDeployedCardEl(side,'creature');
+        pulseEffect(cEl);triggerCardEffectAnim(cEl,c.name+' 效果!',c.id);
+        c.effect(localCtx);
+        ctx.extraDuels+=localCtx.extraDuels||0;
+        if(player===this.p)ctx.enemyValueReduce+=(localCtx.enemyValueReduce||0);
+        else ctx.pValueReduce=(ctx.pValueReduce||0)+(localCtx.enemyValueReduce||0);
+      } else {log(`${player.deployedCreature.name}的效果被封印!`,'effect')}
+    }
+    // Spell duel_start effects
     player.deployedSpells.forEach((s,i)=>{
       if(s.timing==='duel_start'){
-        const enemy=player===this.p?this.ai:this.p;
         const localCtx={owner:player,enemy,myCreature:player.deployedCreature,
           myDice:player.deployedCreature?player.deployedCreature.assignedDice:[],
           mySpellDice:s.assignedDice,extraDuels:0,enemyValueReduce:0};
@@ -4921,6 +4982,7 @@ const G={
         pc.effect(effectCtx);
       }
       else if(pc.timing==='win'&&this.p.effectsSilenced)log(`${pc.name}的效果被封印!`,'effect');
+      // Player win spells (check negateEnemySpells is NOT relevant here—player won, these are player's spells)
       this.p.deployedSpells.forEach((s,i)=>{if(s.timing==='win'){
         effectCtx.mySpellDice=s.assignedDice;
         const spellEl=findDeployedCardEl('player','spell',i);
@@ -4933,7 +4995,7 @@ const G={
       // Turtle passive - both sides halved if either creature is turtle
       if(ac.id==='ancient_turtle'||pc.id==='ancient_turtle'){dmg=Math.ceil(dmg/2);log('远古巨龟:伤害减半!','effect')}
       // Shield
-      if(this.ai.shield>0){const red=Math.min(this.ai.shield,dmg);dmg-=red;this.ai.shield-=red;dmg=Math.max(1,dmg)}
+      if(this.ai.shield>0){const red=Math.min(this.ai.shield,dmg);dmg-=red;this.ai.shield-=red}
       // Damage cap (金属护盾)
       if(typeof this.ai.dmgCap==='number'){dmg=Math.min(dmg,this.ai.dmgCap);delete this.ai.dmgCap}
       // Crystal Guard: if AI has crystal_guard in hand and dmg>3, negate and discard it
@@ -4958,6 +5020,7 @@ const G={
         ac.effect(effectCtx);
       }
       else if(ac.timing==='win'&&this.ai.effectsSilenced)log(`${ac.name}的效果被封印!`,'effect');
+      // AI win spells
       this.ai.deployedSpells.forEach((s,i)=>{if(s.timing==='win'){
         effectCtx.mySpellDice=s.assignedDice;
         const spellEl=findDeployedCardEl('ai','spell',i);
@@ -4968,7 +5031,7 @@ const G={
       dmg+=effectCtx.bonusDmg;
       if(effectCtx.doubleDmg)dmg*=2;
       if(pc.id==='ancient_turtle'||ac.id==='ancient_turtle'){dmg=Math.ceil(dmg/2);log('远古巨龟:伤害减半!','effect')}
-      if(this.p.shield>0){const red=Math.min(this.p.shield,dmg);dmg-=red;this.p.shield-=red;dmg=Math.max(1,dmg)}
+      if(this.p.shield>0){const red=Math.min(this.p.shield,dmg);dmg-=red;this.p.shield-=red}
       // Damage cap (金属护盾)
       if(typeof this.p.dmgCap==='number'){dmg=Math.min(dmg,this.p.dmgCap);delete this.p.dmgCap}
       // Crystal Guard: if player has crystal_guard in hand and dmg>3, negate and discard it
@@ -4997,18 +5060,26 @@ const G={
       log('平局! 双方不受伤害','combat');
       markDuelResult('tie');
       delete this.p.dmgCap;delete this.ai.dmgCap;
+      // Iron Singer: hand_duel should trigger on tie (still a duel participation)
+      this.triggerHandDuelEffects(this.p);
+      this.triggerHandDuelEffects(this.ai);
     }
+    // Determine which side's spells are negated by hummingbird
+    const negatedSide=effectCtx.negateEnemySpells?effectCtx.enemy:null;
     /* duel_end timing: fires for BOTH sides regardless of who won */
     [this.p,this.ai].forEach(pl=>{
       const side=pl===this.p?'player':'ai';
       const enemy=pl===this.p?this.ai:this.p;
-      pl.deployedSpells.forEach((s,i)=>{
-        if(s.timing==='duel_end'){
-          const spellEl=findDeployedCardEl(side,'spell',i);
-          pulseEffect(spellEl);triggerCardEffectAnim(spellEl,s.name+' 发动!',s.id);
-          s.effect({mySpellDice:s.assignedDice,owner:pl,enemy,myCreature:pl.deployedCreature});
-        }
-      });
+      if(pl===negatedSide){log('蜂鸟效果:对手法术被封锁!','effect')}
+      else{
+        pl.deployedSpells.forEach((s,i)=>{
+          if(s.timing==='duel_end'){
+            const spellEl=findDeployedCardEl(side,'spell',i);
+            pulseEffect(spellEl);triggerCardEffectAnim(spellEl,s.name+' 发动!',s.id);
+            s.effect({mySpellDice:s.assignedDice,owner:pl,enemy,myCreature:pl.deployedCreature});
+          }
+        });
+      }
       if(pl.deployedCreature&&pl.deployedCreature.timing==='duel_end'&&!pl.effectsSilenced){
         const cEl=findDeployedCardEl(side,'creature');
         pulseEffect(cEl);triggerCardEffectAnim(cEl,pl.deployedCreature.name+' 效果!',pl.deployedCreature.id);
@@ -5024,6 +5095,8 @@ const G={
     if(!c)return;
     const val=getCreatureValue(c);
     let dmg=Math.max(1,val);
+    // Ancient turtle passive: halve damage
+    if((attacker.deployedCreature&&attacker.deployedCreature.id==='ancient_turtle')||(defender.deployedCreature&&defender.deployedCreature.id==='ancient_turtle')){dmg=Math.ceil(dmg/2);log('远古巨龟:伤害减半!','effect')}
     // Response spells for defender (e.g. metal_shield, emergency_repair)
     const defSide=defender===this.p?'player':'ai';
     defender.deployedSpells.forEach((s,i)=>{if(s.timing==='response'){
@@ -5031,13 +5104,15 @@ const G={
       const spellEl=findDeployedCardEl(defSide,'spell',i);
       pulseEffect(spellEl);triggerCardEffectAnim(spellEl,s.name+' 发动!',s.id);
       s.effect(ctx)}});
-    if(defender.shield>0){const r=Math.min(defender.shield,dmg);dmg-=r;defender.shield-=r;dmg=Math.max(1,dmg)}
+    if(defender.shield>0){const r=Math.min(defender.shield,dmg);dmg-=r;defender.shield-=r}
     // Damage cap (金属护盾)
     if(typeof defender.dmgCap==='number'){dmg=Math.min(dmg,defender.dmgCap);delete defender.dmgCap}
     // Crystal Guard
     if(dmg>3){const cgIdx=defender.hand.findIndex(c=>c.id==='crystal_guard'&&!c._crystalUsedThisTurn);
       if(cgIdx>=0){defender.hand[cgIdx]._crystalUsedThisTurn=true;const cg=defender.hand.splice(cgIdx,1)[0];discardCard(defender,cg);log('🔷 水晶守卫:免疫伤害并消失!','effect');dmg=0}}
     defender.hp-=dmg;
+    // Track damage dealt for gold_rain spell
+    if(attacker===this.p)this.pDmgDealtThisTurn=(this.pDmgDealtThisTurn||0)+dmg;
     const hpId=defender.isPlayer?'player-hp-fill':'ai-hp-fill';showDmgPopup(hpId,dmg);triggerHpHit(hpId);if(defender.isPlayer)showRedVignette();$('main-area').classList.add('screen-shake');setTimeout(()=>$('main-area').classList.remove('screen-shake'),400);
     const dName=defender.isPlayer?'铸炉师':'机械领主';
     log(`${c.name}(${val}) 直接攻击 ${dName}! 造成${dmg}伤害`,'combat');
@@ -5049,8 +5124,8 @@ const G={
     attacker.deployedSpells.forEach(s=>{if(s.timing==='win'){effectCtx.mySpellDice=s.assignedDice;s.effect(effectCtx)}});
     // Hand duel trigger
     this.triggerHandDuelEffects(attacker);
-    if(effectCtx.bonusDmg>0){defender.hp-=effectCtx.bonusDmg;if(effectCtx.directHpMax){defender.maxHp=(defender.maxHp||30)-effectCtx.bonusDmg;if(defender.maxHp<1)defender.maxHp=1}log(`额外${effectCtx.bonusDmg}伤害!`,'effect')}
-    if(effectCtx.directHpMax){defender.maxHp=(defender.maxHp||30)-dmg;if(defender.maxHp<1)defender.maxHp=1;log(`刺客效果:上限降至${defender.maxHp}!`,'effect')}
+    if(effectCtx.bonusDmg>0){defender.hp-=effectCtx.bonusDmg;if(attacker===this.p)this.pDmgDealtThisTurn=(this.pDmgDealtThisTurn||0)+effectCtx.bonusDmg;log(`额外${effectCtx.bonusDmg}伤害!`,'effect')}
+    if(effectCtx.directHpMax){const totalDmg=dmg+effectCtx.bonusDmg;defender.maxHp=(defender.maxHp||30)-totalDmg;if(defender.maxHp<1)defender.maxHp=1;log(`刺客效果:上限降至${defender.maxHp}!`,'effect')}
     // duel_end spells for both sides
     [attacker,defender].forEach(pl=>{
       const side=pl===this.p?'player':'ai';
@@ -6107,6 +6182,8 @@ const _origAudioPlay=AudioMgr.play?AudioMgr.play.bind(AudioMgr):null;
 if(_origAudioPlay){
   AudioMgr.play=function(slot,url){
     const oldTrack=this.currentTrack;
+    // If same track requested, skip (no crossfade needed)
+    if(oldTrack===slot)return;
     if(oldTrack&&this.audioEls[oldTrack]){
       const oldAudio=this.audioEls[oldTrack];
       const fadeOut=setInterval(()=>{
@@ -6114,6 +6191,8 @@ if(_origAudioPlay){
         else{clearInterval(fadeOut);oldAudio.pause();oldAudio.volume=this.volume}
       },50);
     }
+    // Reset currentTrack before calling original play to avoid early-return guard collision on retry
+    this.currentTrack=null;
     setTimeout(()=>{_origAudioPlay(slot,url)},oldTrack?300:0);
   };
 }
