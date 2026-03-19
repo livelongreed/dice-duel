@@ -1881,7 +1881,8 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
         <div class="zzz-levels-bottom-btns zzz-menu-btns" style="max-width:320px">
           <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="showScreen('screen-shop')">🛒 商店</button></div>
           <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn" onclick="showScreen('screen-deck')">🃏 构筑牌组</button></div>
-          <div class="zbtn-row" style="margin-left:48px"><button class="menu-btn" onclick="showScreen('screen-menu')">↩ 返回</button></div>
+          <div class="zbtn-row" style="margin-left:48px"><button class="menu-btn" id="btn-boss-challenge" onclick="LevelMgr.startBossChallenge()">🤖 挑战Boss</button></div>
+          <div class="zbtn-row" style="margin-left:72px"><button class="menu-btn" onclick="showScreen('screen-menu')">↩ 返回</button></div>
         </div>
       </div>
     </div>
@@ -2492,6 +2493,11 @@ const LevelMgr={
       const deckEl=document.getElementById('levels-deck-count');if(deckEl)deckEl.textContent=PlayerData.unlockedCards.length;
       const lvEl=document.getElementById('levels-max-level');if(lvEl)lvEl.textContent=unlocked;
     }catch(e){}
+    // Update boss button label
+    try{
+      const bossBtn=document.getElementById('btn-boss-challenge');
+      if(bossBtn)bossBtn.textContent=PlayerData.bossRewardClaimed?'🤖 挑战Boss (已通关)':'🤖 挑战Boss';
+    }catch(e){}
   },
   startLevel(lv){
     if(DeckBuilder.deck.length!==20){
@@ -2501,6 +2507,19 @@ const LevelMgr={
     Settings.level=lv;
     showScreen('screen-game');
     G.start();
+  },
+  startBossChallenge(){
+    if(DeckBuilder.deck.length!==20){
+      showOverlay('牌组必须恰好20张牌才能开始对决!',[{label:'去构筑牌组'},{label:'确定'}],i=>{if(i===0)showScreen('screen-deck')});
+      return;
+    }
+    G.bossChallenge=true;
+    G.adventureMode=false;
+    BossDialogue.reset();
+    showBossIntro(()=>{
+      showScreen('screen-game');
+      G.startBossDuel();
+    });
   }
 };
 const AudioMgr={
@@ -2694,8 +2713,9 @@ const AudioMgr={
     let slot=this._screenSlot[screenId]||null;
     if(!slot)return;
     /* For battle screen, pick music based on adventure battle type */
-    if(slot==='battle'&&typeof G!=='undefined'&&G.adventureBattleType){
-      if(G.adventureBattleType==='elite')slot='battle_elite';
+    if(slot==='battle'&&typeof G!=='undefined'){
+      if(G.bossChallenge)slot='battle_boss';
+      else if(G.adventureBattleType==='elite')slot='battle_elite';
       else if(G.adventureBattleType==='boss')slot='battle_boss';
     }
     /* Lazy: resolve URL and play — Audio object created on demand */
@@ -3331,6 +3351,7 @@ const STARTER_CARDS=['swift_bird','gear_hound','copper_dragon','chimney_golem','
 const PlayerData={
   gold:0,
   unlockedCards:[],
+  bossRewardClaimed:false,
   VERSION:3,
   init(){
     try{
@@ -3339,15 +3360,15 @@ const PlayerData={
         localStorage.removeItem('dd_playerdata');
         localStorage.removeItem('dd_deck');
         localStorage.setItem('dd_version',String(this.VERSION));
-        this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.save();return;
+        this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.save();return;
       }
       const s=localStorage.getItem('dd_playerdata');
-      if(s){const d=JSON.parse(s);this.gold=d.gold||0;this.unlockedCards=d.unlockedCards||[...STARTER_CARDS]}
-      else{this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.save()}
-    }catch(e){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.save()}
+      if(s){const d=JSON.parse(s);this.gold=d.gold||0;this.unlockedCards=d.unlockedCards||[...STARTER_CARDS];this.bossRewardClaimed=!!d.bossRewardClaimed}
+      else{this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.save()}
+    }catch(e){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.save()}
   },
   save(){
-    localStorage.setItem('dd_playerdata',JSON.stringify({gold:this.gold,unlockedCards:this.unlockedCards}));
+    localStorage.setItem('dd_playerdata',JSON.stringify({gold:this.gold,unlockedCards:this.unlockedCards,bossRewardClaimed:this.bossRewardClaimed}));
   },
   hasCard(id){return this.unlockedCards.includes(id)},
   addCard(id){if(!this.unlockedCards.includes(id))this.unlockedCards.push(id);this.save()},
@@ -4600,6 +4621,7 @@ const G={
 
   start(){
     // Reset
+    this.bossChallenge=false;
     const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
@@ -4620,6 +4642,36 @@ const G={
     $('log-content').innerHTML='';
     const lvNames={1:'简单',2:'普通',3:'困难',4:'困难+少抽',5:'困难+少抽+20HP',6:'困难+少抽+10HP'};
     log(`关卡${lv} (${lvNames[lv]}) 开始!`,'phase');
+    this.newTurn();
+  },
+
+  // Boss challenge from construction mode
+  bossChallenge:false,
+  isBossFight(){return (this.adventureMode&&this.adventureBattleType==='boss')||this.bossChallenge},
+  startBossDuel(){
+    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
+      shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
+    Object.assign(this.p,mkP(),{isPlayer:true});
+    Object.assign(this.ai,mkP(),{isPlayer:false});
+    this._spellsUsedThisGame=0;
+    this.adventureMode=false;
+    this.bossChallenge=true;
+    this.ai.hp=40;this.ai.maxHp=40;
+    this.p.maxHp=30;
+    const aiNameEl=$('ai-pname');if(aiNameEl)aiNameEl.textContent='🤖 铁面·机械领主';
+    this.playerFirstDraw=4;
+    this.p.deck=DeckBuilder.makeDeck();
+    // Boss deck
+    G._bossLowHpTriggered=false;G._playerLowHpTriggered=false;G._bossConsecutive1s=0;G._playerSameRolls=0;G._playerLastRollVal=0;
+    const bossDefs=BOSS_DECK_IDS.map(id=>getCardDef(id)).filter(Boolean);
+    let d=[];bossDefs.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
+    this.ai.deck=shuffle(d);
+    this.turn=0;this.firstTurn=true;this.aiFirstTurn=true;
+    this.destroyedThisTurn=[];this.pDmgDealtThisTurn=0;
+    this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;
+    $('log-content').innerHTML='';
+    log('Boss战: 铁面·机械领主 — 构筑挑战!','phase');
+    setTimeout(()=>bossSay(BossDialogue.battleStart()),800);
     this.newTurn();
   },
 
@@ -4914,7 +4966,7 @@ const G={
       this.p.extraRerolls=0;
       setPhase('部署阶段');showTurnToast();
       // Boss mechanic: calibrate a random player die to 4
-      if(this.adventureMode&&this.adventureBattleType==='boss'&&this.p.dice.length>0){
+      if(this.isBossFight()&&this.p.dice.length>0){
         // Pick a die that isn't already 4
         const candidates=this.p.dice.map((v,i)=>({v,i})).filter(d=>d.v!==4);
         if(candidates.length>0){
@@ -4932,7 +4984,7 @@ const G={
       render();
       Tutorial.notify('confirm_deploy');
       // Boss dialogue: player turn + dice reaction
-      if(this.adventureMode&&this.adventureBattleType==='boss'&&this.turn>1){
+      if(this.isBossFight()&&this.turn>1){
         const diceAvg=this.p.dice.reduce((a,b)=>a+b,0)/this.p.dice.length;
         if(diceAvg>=4.5)setTimeout(()=>bossSay(BossDialogue.highRoll()),500);
         else if(diceAvg<=2.5)setTimeout(()=>bossSay(BossDialogue.lowRoll()),500);
@@ -5193,7 +5245,7 @@ const G={
     this.triggerEffects('deploy',this.p);
     this.triggerEffects('deploy',this.ai);
     // Boss dialogue: card reactions
-    if(this.adventureMode&&this.adventureBattleType==='boss'){
+    if(this.isBossFight()){
       // Boss turn taunt
       if(this.ai.deployedCreature&&Math.random()<0.35)bossSay(BossDialogue.bossTurn());
       // Player dragon card
@@ -5579,6 +5631,30 @@ const G={
           if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.eggMechKill()),1200);
         }
         showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});return true}
+      return false;
+    }
+    // Boss challenge from construction mode
+    if(this.bossChallenge){
+      if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+        setTimeout(()=>bossSay(BossDialogue.bossWin()),300);
+        showOverlay('败北!',[{label:'返回'}],()=>{this.bossChallenge=false;showScreen('screen-levels')});return true}
+      if(this.ai.hp<=0){
+        setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);
+        if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');
+        spawnVictoryParticles();setTimeout(spawnVictoryParticles,400);setTimeout(spawnVictoryParticles,800);
+        setTimeout(()=>bossSay(BossDialogue.playerWin()),300);
+        if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.eggMechKill()),1200);
+        let rewardMsg='击败了铁面·机械领主!';
+        if(!PlayerData.bossRewardClaimed){
+          PlayerData.bossRewardClaimed=true;
+          PlayerData.addGold(1000);
+          rewardMsg+=' 首次击败奖励: +1000金币!';
+        } else {
+          rewardMsg+=' (奖励已领取)';
+        }
+        showOverlay(rewardMsg,[{label:'返回'}],()=>{this.bossChallenge=false;showScreen('screen-levels')});
+        return true;
+      }
       return false;
     }
     if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
