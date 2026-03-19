@@ -303,6 +303,39 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* In small containers, position tooltip below */
 .pcf-effect .kw .kw-tip,.c-effect .kw .kw-tip{bottom:auto;top:calc(100% + 6px)}
 .pcf-effect .kw .kw-tip::after,.c-effect .kw .kw-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:rgba(255,107,157,0.35)}
+/* Boss intro overlay */
+#boss-intro{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s}
+#boss-intro.show{opacity:1}
+#boss-intro.fade-out{opacity:0}
+#boss-intro .bi-bg{position:absolute;inset:0;background:rgba(5,5,15,0.97)}
+#boss-intro .bi-content{position:relative;z-index:1;text-align:center;max-width:380px;padding:30px;
+  animation:biSlideIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes biSlideIn{from{transform:translateY(30px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+#boss-intro .bi-warning{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:6px;color:#ff3e7a;
+  animation:biFlash 0.8s ease-in-out infinite alternate;margin-bottom:16px}
+@keyframes biFlash{from{opacity:0.5}to{opacity:1}}
+#boss-intro .bi-icon{font-size:72px;margin:8px 0;filter:drop-shadow(0 0 20px rgba(255,62,122,0.5))}
+#boss-intro .bi-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:28px;font-weight:800;color:#fff;
+  letter-spacing:4px;text-shadow:0 0 20px rgba(255,62,122,0.4)}
+#boss-intro .bi-title{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,107,157,0.7);letter-spacing:3px;margin:4px 0 12px}
+#boss-intro .bi-divider{width:60%;height:2px;margin:0 auto 12px;background:linear-gradient(90deg,transparent,#ff3e7a,transparent)}
+#boss-intro .bi-mechanic{font-size:13px;color:var(--text);line-height:1.6;padding:10px 16px;
+  background:rgba(255,62,122,0.08);border:1px solid rgba(255,62,122,0.2);border-radius:6px;margin:8px 0}
+#boss-intro .bi-label{display:inline-block;background:#ff3e7a;color:#fff;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:3px;margin-right:8px;letter-spacing:1px}
+#boss-intro .bi-quote{font-style:italic;color:var(--text-dim);font-size:12px;margin:10px 0}
+#boss-intro .bi-deck-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,107,157,0.6);letter-spacing:2px;margin:8px 0 4px}
+#boss-intro .bi-deck{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+#boss-intro .bi-card{font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,107,157,0.2);border-radius:4px}
+#boss-intro .bi-hp{font-family:'Share Tech Mono',monospace;font-size:12px;color:#ff6b9d;margin-top:12px;letter-spacing:2px}
+/* Boss dialogue bubble */
+.boss-bubble{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-10px);z-index:100;
+  padding:10px 20px;border-radius:8px;font-size:13px;color:#e8e0f0;font-style:italic;
+  background:rgba(14,12,30,0.95);border:1px solid rgba(255,62,122,0.3);
+  box-shadow:0 4px 24px rgba(0,0,0,0.5);max-width:360px;text-align:center;
+  opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none}
+.boss-bubble.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* Game layout */
 #screen-game{display:none;background:linear-gradient(180deg,#08081a 0%,#10102a 40%,#14122a 60%,#08081a 100%)}
 #screen-game.active{display:flex;position:relative;background:
@@ -4130,8 +4163,15 @@ const Adventure={
     G.adventureMode=true;
     G.adventureBattleType=type;
     const enemyCreature=node&&node.enemyCreature?node.enemyCreature:null;
-    showScreen('screen-game');
-    G.startAdventure(type,enemyCreature);
+    if(type==='boss'){
+      showBossIntro(()=>{
+        showScreen('screen-game');
+        G.startAdventure(type,enemyCreature);
+      });
+    } else {
+      showScreen('screen-game');
+      G.startAdventure(type,enemyCreature);
+    }
   },
 
   onBattleWin(type){
@@ -4165,7 +4205,7 @@ const Adventure={
 
   showBossVictory(){
     const p=$('adv-panel');
-    p.innerHTML=`<h3>👑 冒险胜利!</h3><p>你击败了锈蚀领主!</p><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
+    p.innerHTML=`<h3>👑 冒险胜利!</h3><p>你击败了铁面·机械领主!</p><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
     advShowOverlay();
   },
 
@@ -4600,8 +4640,8 @@ const G={
     // Update AI display name
     const aiNameEl=$('ai-pname');
     if(aiNameEl){
-      if(enemyCreature)aiNameEl.textContent=enemyCreature.emoji+' '+enemyCreature.name;
-      else if(type==='boss')aiNameEl.textContent='锈蚀领主';
+      if(type==='boss')aiNameEl.textContent='🤖 铁面·机械领主';
+      else if(enemyCreature)aiNameEl.textContent=enemyCreature.emoji+' '+enemyCreature.name;
       else aiNameEl.textContent='机械领主';
     }
     this.playerFirstDraw=4;
@@ -4625,12 +4665,13 @@ const G={
       let d=[];deckCards.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
       this.ai.deck=shuffle(d);
     } else {
-      // Boss: keep original behavior
-      const pool=getRareCards();shuffle(pool);
-      const picked=pool.slice(0,Math.min(10,pool.length));
-      let d=[];picked.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
+      // Boss: 铁面·机械领主 specific deck
+      BossDialogue.reset();
+      G._bossLowHpTriggered=false;G._playerLowHpTriggered=false;G._bossConsecutive1s=0;G._playerSameRolls=0;G._playerLastRollVal=0;
+      const bossDefs=BOSS_DECK_IDS.map(id=>getCardDef(id)).filter(Boolean);
+      let d=[];bossDefs.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
       this.ai.deck=shuffle(d);
-      Adventure._lastOpponentCards=null;
+      Adventure._lastOpponentCards=bossDefs;
     }
     if(Adventure.bonusDiceNextBattle>0){
       this.p.bonusDiceNext=Adventure.bonusDiceNextBattle;
@@ -4641,9 +4682,10 @@ const G={
     this.destroyedThisTurn=[];this.pDmgDealtThisTurn=0;
     this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;
     $('log-content').innerHTML='';
-    const typeNames={normal:'普通战斗',elite:'精英战斗',boss:'Boss战: 锈蚀领主'};
+    const typeNames={normal:'普通战斗',elite:'精英战斗',boss:'Boss战: 铁面·机械领主'};
     const enemyLabel=enemyCreature?`${enemyCreature.emoji} ${enemyCreature.name}`:typeNames[type];
     log(`${type==='boss'?typeNames[type]:enemyLabel} 开始!`,'phase');
+    if(type==='boss')setTimeout(()=>bossSay(BossDialogue.battleStart()),800);
     this.newTurn();
   },
 
@@ -4871,13 +4913,17 @@ const G={
       // Clear any unused extra rerolls from this turn
       this.p.extraRerolls=0;
       setPhase('部署阶段');showTurnToast();
-      // Boss mechanic: reroll player's highest die
+      // Boss mechanic: calibrate a random player die to 4
       if(this.adventureMode&&this.adventureBattleType==='boss'&&this.p.dice.length>0){
-        let maxIdx=0;
-        this.p.dice.forEach((v,i)=>{if(v>this.p.dice[maxIdx])maxIdx=i});
-        const old=this.p.dice[maxIdx];
-        this.p.dice[maxIdx]=Math.ceil(Math.random()*6);
-        log(`锈蚀领主的诅咒! 你的最高骰子 ${old} → ${this.p.dice[maxIdx]}`,'effect');
+        // Pick a die that isn't already 4
+        const candidates=this.p.dice.map((v,i)=>({v,i})).filter(d=>d.v!==4);
+        if(candidates.length>0){
+          const pick=candidates[Math.floor(Math.random()*candidates.length)];
+          const old=this.p.dice[pick.i];
+          this.p.dice[pick.i]=4;
+          log(`⚙ 铁面·机械领主的校准! 你的骰子 ${old} → 4`,'effect');
+          bossSay('"你的骰子波动太大，让我帮你稳定一下。"');
+        }
       }
       enableBtn('btn-reroll',false);
       enableBtn('btn-confirm',true,'完成部署');
@@ -4885,6 +4931,18 @@ const G={
       log('出1个生物+法术,分配骰子,然后完成部署','phase');
       render();
       Tutorial.notify('confirm_deploy');
+      // Boss dialogue: player turn + dice reaction
+      if(this.adventureMode&&this.adventureBattleType==='boss'&&this.turn>1){
+        const diceAvg=this.p.dice.reduce((a,b)=>a+b,0)/this.p.dice.length;
+        if(diceAvg>=4.5)setTimeout(()=>bossSay(BossDialogue.highRoll()),500);
+        else if(diceAvg<=2.5)setTimeout(()=>bossSay(BossDialogue.lowRoll()),500);
+        else if(Math.random()<0.3)setTimeout(()=>bossSay(BossDialogue.playerTurn()),500);
+        // Easter egg: same roll 3 turns
+        const allSame=this.p.dice.every(v=>v===this.p.dice[0]);
+        if(allSame&&this.p.dice[0]===this._playerLastRollVal){this._playerSameRolls++;if(this._playerSameRolls>=2)setTimeout(()=>bossSay(BossDialogue.eggSameRoll()),500)}
+        else{this._playerSameRolls=0}
+        this._playerLastRollVal=allSame?this.p.dice[0]:0;
+      }
   },
 
   // --- Deploy interactions ---
@@ -5004,12 +5062,43 @@ const G={
     const avg=this.ai.dice.reduce((a,b)=>a+b,0)/this.ai.dice.length;
     if(avg<3&&!this.ai.rerolled){this.ai.dice=rollDice(this.ai.dice.length);this.ai.rerolled=true}
 
-    // Pick creature: strongest available that fits dice
     const creatures=this.ai.hand.filter(c=>c.type==='creature').sort((a,b)=>b.base-a.base);
     const spells=this.ai.hand.filter(c=>c.type==='spell');
+    const lowHand=this.ai.hand.length<=2;
+    let dicePool=[...this.ai.dice];
 
+    // --- Smart spell pre-analysis: find special dice combos ---
+    let reservedDice={}; // spellId -> [dice values to reserve]
+    // Steam Burst: needs 2 dice summing to 8
+    const steamBurst=spells.find(s=>s.id==='steam_burst');
+    if(steamBurst){
+      for(let i=0;i<dicePool.length;i++){for(let j=i+1;j<dicePool.length;j++){
+        if(dicePool[i]+dicePool[j]===8){reservedDice['steam_burst']=[dicePool[i],dicePool[j]];break}}
+        if(reservedDice['steam_burst'])break}
+    }
+    // Fate Wheel: needs 3 identical dice
+    const fateWheel=spells.find(s=>s.id==='fate_wheel');
+    if(fateWheel){
+      const freq={};dicePool.forEach(v=>freq[v]=(freq[v]||0)+1);
+      for(const[v,cnt]of Object.entries(freq)){if(cnt>=3){reservedDice['fate_wheel']=[+v,+v,+v];break}}
+    }
+    // Curse Sacrifice: needs a 6
+    const curseSac=spells.find(s=>s.id==='curse_sacrifice');
+    if(curseSac&&dicePool.includes(6)){reservedDice['curse_sacrifice']=[6]}
+    // Prioritize draw spells when hand is low
+    if(lowHand){
+      const drawSpells=['wisdom_tree','spark_inspiration','foresight','fate_wheel'];
+      drawSpells.forEach(sid=>{
+        const sp=spells.find(s=>s.id===sid&&!reservedDice[sid]);
+        if(sp&&sp.slots>0&&dicePool.length>=sp.slots&&!reservedDice[sid]){
+          const sorted=[...dicePool].sort((a,b)=>b-a);
+          reservedDice[sid]=sorted.slice(0,sp.slots);
+        }
+      });
+    }
+
+    // --- Pick creature ---
     if(creatures.length>0){
-      // Pick creature based on level
       let pick;
       const lv=Settings.level;
       if(lv>=3){pick=creatures[0]}
@@ -5018,40 +5107,65 @@ const G={
       pick.assignedDice=[];pick.tempBonus=0;
       this.ai.deployedCreature=pick;
       this.ai.hand=this.ai.hand.filter(c=>c!==pick);
-      // Trigger immediate deploy effects for AI (e.g. glutton_grum)
       if(pick.timing==='deploy'&&pick.effect&&!pick._deployTriggered){
         pick._deployTriggered=true;
         pick.effect({owner:this.ai,enemy:this.p,myCreature:pick,myDice:pick.assignedDice,mySpellDice:[]});
       }
     }
 
-    // Deploy beneficial spells
-    let dicePool=[...this.ai.dice];
-    // First assign dice to creature
+    // --- Assign dice: highest to creature first, but reserve special spell dice ---
+    const allReserved=[];
+    Object.values(reservedDice).forEach(arr=>arr.forEach(v=>allReserved.push(v)));
+    // Build available pool: try to keep reserved dice for spells
+    let creatureDice=[];let spellPool=[];
+    const tempPool=[...dicePool];
+    // Remove reserved dice from tempPool for creature assignment
+    const reserveCopy=[...allReserved];
+    const nonReserved=[];
+    tempPool.forEach(v=>{const ri=reserveCopy.indexOf(v);if(ri>=0){reserveCopy.splice(ri,1);spellPool.push(v)}else{nonReserved.push(v)}});
+    nonReserved.sort((a,b)=>b-a); // highest first for creature
     if(this.ai.deployedCreature){
       const c=this.ai.deployedCreature;
-      dicePool.sort((a,b)=>b-a);
-      while(c.assignedDice.length<c.slots&&dicePool.length>0){
-        c.assignedDice.push(dicePool.shift());
+      while(c.assignedDice.length<c.slots&&nonReserved.length>0){
+        c.assignedDice.push(nonReserved.shift());
+      }
+      // If creature still needs dice, take from spell reserved
+      while(c.assignedDice.length<c.slots&&spellPool.length>0){
+        spellPool.sort((a,b)=>b-a);
+        c.assignedDice.push(spellPool.shift());
       }
     }
+    // Remaining dice go to spell pool
+    const finalSpellPool=[...nonReserved,...spellPool];
 
-    // Deploy spells with remaining dice
+    // --- Deploy spells with smart dice assignment ---
+    let remainingDice=[...finalSpellPool];
+    // Priority order: reserved spells first, then others
+    const deployedSpellIds=new Set();
+    // Deploy spells that have reserved dice
+    for(const[sid,dice]of Object.entries(reservedDice)){
+      const s=spells.find(sp=>sp.id===sid&&!deployedSpellIds.has(sid));
+      if(!s)continue;
+      // Check if reserved dice are still available
+      const tempR=[...remainingDice];let canAssign=true;const assigned=[];
+      for(const v of dice){const idx=tempR.indexOf(v);if(idx>=0){tempR.splice(idx,1);assigned.push(v)}else{canAssign=false;break}}
+      if(canAssign){
+        s.assignedDice=assigned;remainingDice=tempR;
+        this.ai.deployedSpells.push(s);this.ai.hand=this.ai.hand.filter(c=>c!==s);deployedSpellIds.add(sid);
+      }
+    }
+    // Deploy remaining spells
     for(const s of spells){
+      if(deployedSpellIds.has(s.id))continue;
       if(s.slots===0){
-        // Free spells: deploy if beneficial
-        if(['time_warp','overload_pulse','dice_copy'].includes(s.id)){
-          s.assignedDice=[];
-          this.ai.deployedSpells.push(s);
-          this.ai.hand=this.ai.hand.filter(c=>c!==s);
+        if(['time_warp','overload_pulse','dice_copy','mirror_space','gold_rain','time_rewind'].includes(s.id)){
+          s.assignedDice=[];this.ai.deployedSpells.push(s);this.ai.hand=this.ai.hand.filter(c=>c!==s);deployedSpellIds.add(s.id);
         }
-      } else if(dicePool.length>=s.slots){
+      } else if(remainingDice.length>=s.slots){
         s.assignedDice=[];
-        while(s.assignedDice.length<s.slots&&dicePool.length>0){
-          s.assignedDice.push(dicePool.shift());
-        }
-        this.ai.deployedSpells.push(s);
-        this.ai.hand=this.ai.hand.filter(c=>c!==s);
+        remainingDice.sort((a,b)=>b-a);
+        while(s.assignedDice.length<s.slots&&remainingDice.length>0){s.assignedDice.push(remainingDice.shift())}
+        this.ai.deployedSpells.push(s);this.ai.hand=this.ai.hand.filter(c=>c!==s);deployedSpellIds.add(s.id);
       }
     }
     // Trigger hand_spell_use for AI hand creatures (畏怖合成兽)
@@ -5078,6 +5192,24 @@ const G={
     // Trigger deploy effects
     this.triggerEffects('deploy',this.p);
     this.triggerEffects('deploy',this.ai);
+    // Boss dialogue: card reactions
+    if(this.adventureMode&&this.adventureBattleType==='boss'){
+      // Boss turn taunt
+      if(this.ai.deployedCreature&&Math.random()<0.35)bossSay(BossDialogue.bossTurn());
+      // Player dragon card
+      if(this.p.deployedCreature&&['copper_dragon','frost_dragon'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.dragonCard()),600);
+      // Player spell
+      else if(this.p.deployedSpells.length>0&&Math.random()<0.3)setTimeout(()=>bossSay(BossDialogue.playerSpell()),600);
+      // HP thresholds
+      if(this.ai.hp<=this.ai.maxHp*0.3&&!G._bossLowHpTriggered){G._bossLowHpTriggered=true;setTimeout(()=>bossSay(BossDialogue.bossLowHp()),1200)}
+      if(this.p.hp<=this.p.maxHp*0.3&&!G._playerLowHpTriggered){G._playerLowHpTriggered=true;setTimeout(()=>bossSay(BossDialogue.playerLowHp()),1200)}
+      // Final round: both low HP
+      if(this.ai.hp<=this.ai.maxHp*0.3&&this.p.hp<=this.p.maxHp*0.3)setTimeout(()=>bossSay(BossDialogue.finalRound()),1500);
+      // Easter egg: boss consecutive 1s
+      const aiDiceAvg=this.ai.dice.reduce((a,b)=>a+b,0)/this.ai.dice.length;
+      if(aiDiceAvg<=1.5){G._bossConsecutive1s=(G._bossConsecutive1s||0)+1;if(G._bossConsecutive1s>=3)setTimeout(()=>bossSay(BossDialogue.eggBossBadLuck()),800)}
+      else{G._bossConsecutive1s=0}
+    }
     // Blood Contract relic: if HP < 10, deployed creature gets +2
     if(this.adventureMode&&Adventure.hasRelic('blood_contract')&&this.p.hp<10&&this.p.deployedCreature){
       this.p.deployedCreature.tempBonus=(this.p.deployedCreature.tempBonus||0)+2;
@@ -5437,11 +5569,21 @@ const G={
       this.p.hp=1;Adventure.removeRelic('rebirth_rune');Adventure.hp=1;
       log('♻️ 重生符文: 免于死亡! 保留1点生命, 符文碎裂!','effect');render();return false}
     if(this.adventureMode){
-      if(this.p.hp<=0){setPhase('战斗失败!');SFX.play('clash_lose');StatsTracker.recordGame(false);showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()});return true}
-      if(this.ai.hp<=0){setPhase('战斗胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');spawnVictoryParticles();showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});return true}
+      if(this.p.hp<=0){setPhase('战斗失败!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+        if(this.adventureBattleType==='boss')setTimeout(()=>bossSay(BossDialogue.bossWin()),300);
+        showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()});return true}
+      if(this.ai.hp<=0){setPhase('战斗胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');spawnVictoryParticles();
+        if(this.adventureBattleType==='boss'){
+          setTimeout(()=>bossSay(BossDialogue.playerWin()),300);
+          // Easter egg: mech kill mech
+          if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.eggMechKill()),1200);
+        }
+        showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});return true}
       return false;
     }
-    if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);showOverlay('败北!',[{label:'重新开始'}],()=>{showScreen('screen-levels')});return true}
+    if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+      // Easter egg: draw (both die same frame handled above in adventure)
+      showOverlay('败北!',[{label:'重新开始'}],()=>{showScreen('screen-levels')});return true}
     if(this.ai.hp<=0){
       const lv=Settings.level;
       if(lv<6)LevelMgr.unlock(lv+1);
@@ -5460,6 +5602,120 @@ const G={
     return false;
   }
 };
+
+// ============================================================
+// BOSS SYSTEM — 铁面·机械领主
+// ============================================================
+const BOSS_DECK_IDS=['copper_dragon','piston_warrior','clockwork_assassin','furnace_phoenix','magnet_puppet','iron_giant','metal_shield','steam_burst','overload_pulse','gear_boost','emergency_repair'];
+
+const BossDialogue={
+  _used:{},
+  reset(){this._used={}},
+  _pick(key,lines){
+    if(!this._used[key])this._used[key]=[];
+    const avail=lines.filter((_,i)=>!this._used[key].includes(i));
+    if(avail.length===0)return null;
+    const idx=lines.indexOf(avail[Math.floor(Math.random()*avail.length)]);
+    this._used[key].push(idx);
+    return lines[idx];
+  },
+  battleStart(){return this._pick('start',[
+    '"战斗开始。胜率计算中……你的胜率：12.7%。"',
+    '"欢迎来到机械领域。情感已被移除，只剩概率。"',
+    '"最优策略已加载。执行序列：击败你。"',
+    '"游戏开始。预计耗时：3分28秒。"'])},
+  playerTurn(){return this._pick('pturn',[
+    '"轮到你了。请执行你的回合操作。"',
+    '"你的决策树正在生成……错误率偏高。"',
+    '"根据数据，你的下一步大概率会出错。"',
+    '"我等待你的行动，然后计算对策。"'])},
+  bossTurn(){return this._pick('bturn',[
+    '"执行预设攻击程序。"',
+    '"计算中……最优解：对你造成伤害。"',
+    '"预测你的防守漏洞……已定位。"'])},
+  highRoll(){return this._pick('high',[
+    '"小概率事件发生，但仍在我的容错范围内。"',
+    '"运气？不过是未被解析的随机变量。"',
+    '"恭喜你触发了低概率事件，但这不会改变结局。"'])},
+  lowRoll(){return this._pick('low',[
+    '"符合预期。你的运气只是算法的玩具。"',
+    '"低点数输出，你的失败概率提升至89%。"',
+    '"你的随机数生成器质量堪忧。"',
+    '"意料之中。我的模型早已预测到。"',
+    '"低点数是大概率事件，你正在回归均值。"'])},
+  dragonCard(){return this._pick('dragon',[
+    '"这种生物在机械文明中早已被淘汰。"',
+    '"龙鳞的防御系数低于钛合金。"',
+    '"不错的卡牌，但不及我的机械军团。"'])},
+  playerSpell(){return this._pick('spell',[
+    '"你的魔法能量可以被量化，然后被抵消。"',
+    '"法术效果取决于变量，而我的计算可以规避。"',
+    '"根据能量守恒，你的法术消耗大于收益。"',
+    '"花哨的干扰项，不影响最终结果。"'])},
+  bossLowHp(){return this._pick('bhp',[
+    '"你让我不得不调用应急协议。"',
+    '"数据刷新：你的胜率上升至34%。仍在可控范围。"'])},
+  playerLowHp(){return this._pick('php',[
+    '"你的生命值即将归零。终结程序启动。"',
+    '"根据计算，你将在2回合内败北。"',
+    '"你的生物结构已濒临崩溃。"',
+    '"投降可以节省时间，继续战斗无意义。"',
+    '"你已进入斩杀线，但我不会留情。"'])},
+  finalRound(){return this._pick('final',[
+    '"终局计算中……胜率：51.3% vs 48.7%。"',
+    '"这一刻将决定谁的数据被清零。"',
+    '"最终回合，没有容错空间。"',
+    '"无论是胜是败，你都是值得记录的数据点。"',
+    '"执行终极协议：一掷定音。"'])},
+  bossWin(){return this._pick('bwin',[
+    '"任务完成。你已被击败。"',
+    '"你的数据已存入失败者档案。"',
+    '"游戏结束。感谢你提供对局数据。"'])},
+  playerWin(){return this._pick('pwin',[
+    '"你赢了。这不符合逻辑。"',
+    '"我……需要重新编程。"'])},
+  // Easter eggs
+  eggSameRoll(){return '"随机数种子被破解？这不可能。"'},
+  eggMechKill(){return '"同类相残……数据冲突。"'},
+  eggBossBadLuck(){return '"机械也会故障？检查硬件中……"'},
+  eggDraw(){return '"平局？系统无法定义。"'},
+};
+
+function bossSay(text){
+  if(!text)return;
+  log(`⚙ 铁面·机械领主: ${text}`,'effect');
+  // Show floating boss dialogue bubble
+  const el=document.createElement('div');
+  el.className='boss-bubble';
+  el.textContent=text;
+  const gameEl=document.getElementById('screen-game');
+  if(gameEl){gameEl.appendChild(el);setTimeout(()=>el.classList.add('show'),10);
+    setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400)},3500)}
+}
+
+function showBossIntro(callback){
+  const overlay=document.createElement('div');
+  overlay.id='boss-intro';
+  overlay.innerHTML=`<div class="bi-bg"></div>
+    <div class="bi-content">
+      <div class="bi-warning">⚠ WARNING ⚠</div>
+      <div class="bi-icon">🤖</div>
+      <div class="bi-name">铁面 · 机械领主</div>
+      <div class="bi-title">IRONFACE — MECHANICAL LORD</div>
+      <div class="bi-divider"></div>
+      <div class="bi-mechanic"><span class="bi-label">战斗机制</span>每回合可"校准"你的一个骰子（将点数改为4）</div>
+      <div class="bi-quote">"4是完美的平均数，其他点数都是异常值。"</div>
+      <div class="bi-deck-label">卡组构成</div>
+      <div class="bi-deck">${BOSS_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="bi-card" title="${c.name}">${c.emoji}</span>`:''}).join('')}</div>
+      <div class="bi-hp">HP: 40 | 难度: ★★★★★</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(()=>overlay.classList.add('show'),50);
+  setTimeout(()=>{
+    overlay.classList.add('fade-out');
+    setTimeout(()=>{overlay.remove();if(callback)callback()},600);
+  },3500);
+}
 
 // ============================================================
 // RENDERING
