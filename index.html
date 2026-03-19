@@ -298,9 +298,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .kw .kw-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
   border:5px solid transparent;border-top-color:rgba(255,107,157,0.35)}
-.kw:hover .kw-tip,.kw:active .kw-tip,.kw.kw-show .kw-tip{display:block;animation:kwFade 0.15s ease-out}
+.kw.kw-show .kw-tip{display:block;animation:kwFade 0.15s ease-out}
 @keyframes kwFade{from{opacity:0;transform:translateX(-50%) translateY(4px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-/* In small containers, position tooltip above or below smartly */
+/* In small containers, position tooltip below */
 .pcf-effect .kw .kw-tip,.c-effect .kw .kw-tip{bottom:auto;top:calc(100% + 6px)}
 .pcf-effect .kw .kw-tip::after,.c-effect .kw .kw-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:rgba(255,107,157,0.35)}
 /* Game layout */
@@ -2949,7 +2949,7 @@ const ALL_CARDS=[
 {id:'rage_ogre',type:'creature',name:'狂暴食人魔',emoji:'👹',base:2,slots:3,
   effectDesc:'胜出:每有1个骰子=4,对对手造成2点伤害',timing:'win',
   effect(ctx){const hits=(ctx.myDice||[]).filter(d=>d===4).length;if(hits>0){ctx.enemy.hp-=hits*2;log(`食人魔狂暴:${hits}个骰子=4,造成${hits*2}伤害!`,'effect')}else{log('食人魔:无骰子=4','effect')}}},
-{id:'trick_fairy',type:'creature',name:'诡计妖精',emoji:'🧚',base:2,slots:1,
+{id:'trick_fairy',type:'creature',name:'诡计妖精',emoji:'🧚',base:2,slots:2,
   effectDesc:'胜出:查看对手手牌,弃掉1张',timing:'win',
   effect(ctx){if(ctx.enemy.hand.length===0){log('妖精:对手无手牌','effect');return}
     if(ctx.owner.isPlayer){
@@ -3246,10 +3246,19 @@ const KW_DEFS={
   '摧毁':'生物在对拼中败北后被移入弃牌堆。',
   '冻结':'被冻结的骰子本回合不计入总值计算。'
 };
+let _kwTimer=null;
+function kwShow(el){
+  // Close any previously open keyword tooltip
+  const prev=document.querySelector('.kw.kw-show');
+  if(prev&&prev!==el)prev.classList.remove('kw-show');
+  if(_kwTimer){clearTimeout(_kwTimer);_kwTimer=null}
+  el.classList.add('kw-show');
+  _kwTimer=setTimeout(()=>{el.classList.remove('kw-show');_kwTimer=null},3000);
+}
 function kwHL(text){
   if(!text)return '';
   return text.replace(/诅咒|胜出|部署|对拼|护盾|槽位|摧毁|冻结/g,m=>
-    `<span class="kw" ontouchstart="this.classList.toggle('kw-show')">${m}<span class="kw-tip">${KW_DEFS[m]}</span></span>`);
+    `<span class="kw" onclick="event.stopPropagation();kwShow(this)" onmouseenter="kwShow(this)">${m}<span class="kw-tip">${KW_DEFS[m]}</span></span>`);
 }
 // --- Curse system ---
 function applyCurse(target,stacks,source){
