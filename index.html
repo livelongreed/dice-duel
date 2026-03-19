@@ -2438,7 +2438,7 @@ body{animation:chromaticFlicker 12s steps(1) infinite}
     <!-- Main area -->
     <div id="main-area">
       <div id="ai-zone">
-        <div class="player-bar"><span class="pname" id="ai-pname">机械领主</span>
+        <div class="player-bar"><span class="pname" id="ai-pname">对手</span>
           <div class="hp-bar"><div class="hp-fill enemy-hp" id="ai-hp-fill"></div><span id="ai-hp-text">30</span></div>
           <span class="deck-count deck-btn" id="ai-deck-count" title="牌库" onclick="DeckViewer.showBattleDeck('ai')">🃏0</span>
           <span class="deck-count deck-btn" id="ai-discard-count" title="弃牌堆" onclick="DeckViewer.showBattleDiscard('ai')" style="margin-left:2px">♻0</span>
@@ -3407,7 +3407,7 @@ function getCardDef(id){return ALL_CARDS.find(c=>c.id===id)}
 function makeCardInstance(def){return{...def,assignedDice:[],growth:0,tempBonus:0}}
 function getCreatureValue(c){if(!c)return 0;const frozen=new Set(c.frozenDice||[]);let val=c.base+(c.growth||0)+(c.tempBonus||0)+(c.assignedDice||[]).reduce((a,b,i)=>a+(frozen.has(i)?0:b),0);if(c.id==='greedy_mimic')val+=(c.assignedDice||[]).length;if(c._prophetDouble)val*=2;if(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')&&c.type==='creature')val+=3;return val}
 function discardCard(p,card){if(card&&card.id)p.discard.push(card.id)}
-function reshuffleDeck(p){if(!p.discard.length)return;const d=p.discard.map(id=>{const def=getCardDef(id);return makeCardInstance(def)});shuffle(d);p.deck=d;p.discard=[];log((p.isPlayer?'铸炉师':'机械领主')+'的弃牌堆已洗入牌库! ('+d.length+'张)','phase')}
+function reshuffleDeck(p){if(!p.discard.length)return;const d=p.discard.map(id=>{const def=getCardDef(id);return makeCardInstance(def)});shuffle(d);p.deck=d;p.discard=[];log((p.isPlayer?'铸炉师':(G.aiName||'对手'))+'的弃牌堆已洗入牌库! ('+d.length+'张)','phase')}
 function drawCards(p,n){for(let i=0;i<n;i++){if(p.hand.length>=9)break;if(!p.deck.length){reshuffleDeck(p);if(!p.deck.length)break}const card=p.deck.pop();p.hand.push(card);if(card.id==='magnet_puppet'){card._magnetPending=true}}}
 
 // ============================================================
@@ -4952,17 +4952,22 @@ const G={
   ai:{hp:30,hand:[],deck:[],dice:[],rerolled:false,isPlayer:false,
     deployedCreature:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
   turn:0,phase:'',selectedDice:[],maxDuels:1,duelsLeft:0,firstTurn:true,aiFirstTurn:true,
+  aiName:'对手',
 
   start(){
     // Reset
     this.bossChallenge=false;
+    this.boss2Challenge=false;
+    this.adventureMode=false;
+    this.adventureBattleType=null;
     const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
     Object.assign(this.ai,mkP(),{isPlayer:false});
     this._spellsUsedThisGame=0;
     // Reset AI display name
-    const aiNameEl=$('ai-pname');if(aiNameEl)aiNameEl.textContent='机械领主';
+    this.aiName='AI对手';
+    const aiNameEl=$('ai-pname');if(aiNameEl)aiNameEl.textContent='AI对手';
     // Level-based player HP penalty
     const lv=Settings.level;
     if(lv===5)this.p.hp=20;
@@ -4993,6 +4998,7 @@ const G={
     this.bossChallenge=true;
     this.ai.hp=40;this.ai.maxHp=40;
     this.p.maxHp=30;
+    this.aiName='铁面·机械领主';
     const aiNameEl=$('ai-pname');if(aiNameEl)aiNameEl.textContent='🤖 铁面·机械领主';
     this.playerFirstDraw=4;
     this.p.deck=DeckBuilder.makeDeck();
@@ -5021,6 +5027,7 @@ const G={
     this.boss2Challenge=true;
     this.ai.hp=45;this.ai.maxHp=45;
     this.p.maxHp=30;
+    this.aiName='骰魔·维克多';
     const aiNameEl=$('ai-pname');if(aiNameEl)aiNameEl.textContent='🎲 骰魔·维克多';
     this.playerFirstDraw=4;
     this.p.deck=DeckBuilder.makeDeck();
@@ -5044,6 +5051,9 @@ const G={
   // Adventure mode battle start
   adventureMode:false, adventureBattleType:null,
   startAdventure(type,enemyCreature){
+    this.bossChallenge=false;
+    this.boss2Challenge=false;
+    this._spellsUsedThisGame=0;
     const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
@@ -5062,10 +5072,10 @@ const G={
     // Update AI display name
     const aiNameEl=$('ai-pname');
     if(aiNameEl){
-      if(type==='boss')aiNameEl.textContent='🤖 铁面·机械领主';
-      else if(type==='boss2')aiNameEl.textContent='🎲 骰魔·维克多';
-      else if(enemyCreature)aiNameEl.textContent=enemyCreature.emoji+' '+enemyCreature.name;
-      else aiNameEl.textContent='机械领主';
+      if(type==='boss'){this.aiName='铁面·机械领主';aiNameEl.textContent='🤖 铁面·机械领主'}
+      else if(type==='boss2'){this.aiName='骰魔·维克多';aiNameEl.textContent='🎲 骰魔·维克多'}
+      else if(enemyCreature){this.aiName=enemyCreature.name;aiNameEl.textContent=enemyCreature.emoji+' '+enemyCreature.name}
+      else{this.aiName='未知敌人';aiNameEl.textContent='未知敌人'}
     }
     this.playerFirstDraw=4;
     this.p.deck=Adventure.makeAdventureDeck();
@@ -5166,7 +5176,7 @@ const G={
     this.ai.deployedCreature=null;this.ai.deployedSpells=[];
     // Clear per-turn flags
     if(this.p.effectsSilenced){log('封印效果解除(玩家)','effect');this.p.effectsSilenced=false}
-    if(this.ai.effectsSilenced){log('封印效果解除(机械领主)','effect');this.ai.effectsSilenced=false}
+    if(this.ai.effectsSilenced){log('封印效果解除('+(this.aiName||'对手')+')','effect');this.ai.effectsSilenced=false}
     this.selectedDice=[];this.maxDuels=1;this.duelsLeft=0;
     this.destroyedThisTurn=[];this.pDmgDealtThisTurn=0;
     this._calibratedDiceIdx=-1;this._luckyDiceIdx=-1;this._overloadActive=false;
@@ -5789,7 +5799,7 @@ const G={
 
     // Curse turn-end damage
     processCurseDamage(this.p,'铸炉师');
-    processCurseDamage(this.ai,'机械领主');
+    processCurseDamage(this.ai,this.aiName||'对手');
     // Relic: 诅咒宝珠 — draw cards based on enemy curse stacks
     if(this.adventureMode&&Adventure.hasRelic('curse_orb')){
       const stacks=this.ai.curseStacks||0;const draws=Math.min(2,Math.floor(stacks/3));
@@ -5946,7 +5956,7 @@ const G={
       if(effectCtx.directHpMax){this.ai.maxHp=(this.ai.maxHp||30)-dmg;if(this.ai.maxHp<1)this.ai.maxHp=1;log(`刺客效果:上限降至${this.ai.maxHp}!`,'effect')}
       showDmgPopup('ai-hp-fill',dmg);triggerHpHit('ai-hp-fill');$('main-area').classList.add('screen-shake');setTimeout(()=>$('main-area').classList.remove('screen-shake'),400);
       markDuelResult('left');
-      log(`${pc.name} 胜出! 造成 ${dmg} 伤害 (机械领主剩余${this.ai.hp}HP)`,'combat');
+      log(`${pc.name} 胜出! 造成 ${dmg} 伤害 (${this.aiName||'对手'}剩余${this.ai.hp}HP)`,'combat');
       // Phantom Sprite: return winning creature to hand
       if(effectCtx.returnToHand&&pc.id==='phantom_sprite'){pc._phantomReturning=true}
       // Track destroyed creature (AI's creature lost)
@@ -6065,7 +6075,7 @@ const G={
     // Track damage dealt for gold_rain spell
     if(attacker===this.p)this.pDmgDealtThisTurn=(this.pDmgDealtThisTurn||0)+dmg;
     const hpId=defender.isPlayer?'player-hp-fill':'ai-hp-fill';showDmgPopup(hpId,dmg);triggerHpHit(hpId);if(defender.isPlayer)showRedVignette();$('main-area').classList.add('screen-shake');setTimeout(()=>$('main-area').classList.remove('screen-shake'),400);
-    const dName=defender.isPlayer?'铸炉师':'机械领主';
+    const dName=defender.isPlayer?'铸炉师':(G.aiName||'对手');
     log(`${c.name}(${val}) 直接攻击 ${dName}! 造成${dmg}伤害`,'combat');
     // Win effects
     const effectCtx={bonusDmg:0,doubleDmg:false,directHpMax:false,diff:val,myCreature:c,myDice:c.assignedDice,
@@ -6132,7 +6142,7 @@ const G={
     }
     // Boss challenge from construction mode
     if(this.bossChallenge){
-      if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+      if(this.p.hp<=0){setPhase((this.aiName||'对手')+'胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
         showBossEndDialogue('lose',BossDialogue.bossWin(),()=>{
           showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;showScreen('screen-levels')})});
         return true}
@@ -6158,7 +6168,7 @@ const G={
       }
       return false;
     }
-    if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+    if(this.p.hp<=0){setPhase((this.aiName||'对手')+'胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
       // Easter egg: draw (both die same frame handled above in adventure)
       showOverlay('败北!',[{label:'重新开始'}],()=>{showScreen('screen-levels')});return true}
     if(this.ai.hp<=0){
@@ -6812,7 +6822,7 @@ const Tutorial={
   _waitCb:null,
 
   STEPS:[
-    {id:'welcome',title:'欢迎来到骰值对决!',text:'这是一个策略卡牌对战游戏。你将与AI机械领主进行回合制对决。\n\n双方各有 30 点生命值，将生命值削减到 0 即可获胜。',target:null,waitFor:null},
+    {id:'welcome',title:'欢迎来到骰值对决!',text:'这是一个策略卡牌对战游戏。你将与AI对手进行回合制对决。\n\n双方各有 30 点生命值，将生命值削减到 0 即可获胜。',target:null,waitFor:null},
     {id:'hp',title:'生命值',text:'上方是AI的生命值，下方是你的。绿色血条显示当前HP，受伤时会减少变红。',target:'player-hp-fill',pos:'above',waitFor:null},
     {id:'draw',title:'抽牌阶段',text:'每回合开始时自动抽牌。第一回合抽4张，之后每回合抽1张，手牌上限9张。\n\n你的手牌显示在下方。',target:'player-hand',pos:'above',waitFor:null},
     {id:'dice_roll',title:'掷骰阶段',text:'系统自动掷出4个D6骰子。骰子显示在右侧/底部面板。\n\n如果对骰子不满意，可以点击「全部重掷」重新投掷一次（每回合限一次）。',target:'dice-container',pos:'left',waitFor:null},
