@@ -3145,7 +3145,7 @@ const ALL_CARDS=[
 {id:'chimney_golem',type:'creature',name:'烟囱魔像',emoji:'🗿',base:3,slots:2,
   effectDesc:'胜出:回复3生命',timing:'win',
   effect(ctx){ctx.owner.hp=Math.min(ctx.owner.maxHp||30,ctx.owner.hp+3);log('魔像效果:回复3HP','effect')}},
-{id:'furnace_phoenix',type:'creature',name:'熔炉凤凰',emoji:'🔥',base:5,slots:3,
+{id:'furnace_phoenix',type:'creature',name:'熔炉凤凰',emoji:'🦅',base:5,slots:3,
   effectDesc:'胜出:若骰子只含6,伤害翻倍',timing:'win',
   effect(ctx){if((ctx.myDice||[]).length>0&&(ctx.myDice||[]).every(d=>d===6)){ctx.doubleDmg=true;log('凤凰效果:伤害翻倍!','effect')}}},
 {id:'magnet_puppet',type:'creature',name:'磁力傀儡',emoji:'🧲',base:6,slots:3,
@@ -7032,7 +7032,7 @@ const TutorialGuide={
       const steps=[
         {target:'.zzz-levels-content .title',text:'这是对决模式界面，选择一个难度关卡开始对战'},
         {target:'.zzz-levels-btns',text:'6个难度逐步解锁，击败当前关卡解锁下一个'},
-        {target:'.zzz-levels-bottom-btns',text:'解锁后可在这里挑战Boss：铁面·机械领主和骰魔·维克多'},
+        {target:'.zzz-right-strip',text:'右侧功能栏包含Boss挑战入口：🤖铁面·机械领主 和 🎲骰魔·维克多，解锁后可点击挑战'},
         {target:null,text:'选择一个关卡开始对战吧！点击任意关卡按钮即可开始。'}
       ];
       TutorialGuide._runMiniGuide(steps);
