@@ -6490,8 +6490,6 @@ function showBossEndDialogue(type,dialogueText,callback){
   overlay.id='boss-end-dlg';
   const isWin=type==='win';
   const label=isWin?'SYSTEM FAILURE':'MISSION COMPLETE';
-  const icon=isWin?'💥':'🤖';
-  const resultText=isWin?'铁面·机械领主 已被击败':'铸炉师 已被击败';
   const resultCls=isWin?'win':'lose';
   const bossIcon=G.isVictorFight()?'🎲':'🤖';
   const bossName=G.isVictorFight()?'骰魔·维克多':'铁面·机械领主';
