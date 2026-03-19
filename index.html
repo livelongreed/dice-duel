@@ -6,8 +6,9 @@
 <title>骰值对决 — Dice Duel v2</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<link rel="preload" href="https://cdn.jsdelivr.net/gh/penghuo258/-dice-duel-assets@main/main%20Screen.mp3" as="fetch" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=ZCOOL+KuaiLe&family=Baloo+2:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=ZCOOL+KuaiLe&family=Baloo+2:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=ZCOOL+KuaiLe&family=Baloo+2:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet"></noscript>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--rust:#e0245e;--rust-light:#ff3e7a;--rust-dark:#a01040;--gold:#ff6b9d;--gold-dim:#cc4070;
@@ -1920,9 +1921,9 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
     <div class="zzz-strip-icon">🎴</div>
     <div class="zzz-strip-text">PLAY</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings" onclick="showScreen('screen-settings')">⚙</div>
-    <div class="zzz-strip-settings" onclick="showScreen('screen-wiki')">📖</div>
-    <div class="zzz-strip-settings" onclick="showScreen('screen-deck')">🃏</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label">
@@ -7806,21 +7807,44 @@ const BgMgr={
 };
 BgMgr.init();
 
-/* Start BGM preloading immediately during loading screen */
-AudioMgr.preloadCommon();
+/* Defer BGM preloading to first user interaction to avoid blocking page load */
+document.addEventListener('click',function _preloadOnce(){AudioMgr.preloadCommon();document.removeEventListener('click',_preloadOnce)},{once:true});
 
 /* ===== LOADING SCREEN ===== */
 (function(){
   const fill=$('load-fill'),pct=$('load-pct'),scr=$('loading-screen');
   if(!fill||!scr)return;
-  const imgs=document.querySelectorAll('.screen-bg');
-  const totalSteps=imgs.length+4;let loaded=0;
-  function tick(){loaded++;const p=Math.min(100,Math.round(loaded/totalSteps*100));
+  let done=false;
+  function finish(){
+    if(done)return;done=true;
+    fill.style.width='100%';pct.textContent='100%';
+    setTimeout(()=>{scr.classList.add('fade-out');setTimeout(()=>scr.remove(),700)},300);
+  }
+  /* Only preload the menu background (the first screen the user sees) */
+  const menuBg=document.querySelector('#screen-menu .screen-bg');
+  const menuSrc=menuBg?menuBg.style.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/):'';
+  let progress=0;
+  const totalSteps=5;/* menu bg + 4 synthetic ticks */
+  function tick(){
+    progress++;const p=Math.min(100,Math.round(progress/totalSteps*100));
     fill.style.width=p+'%';pct.textContent=p+'%';
-    if(p>=100)setTimeout(()=>{scr.classList.add('fade-out');setTimeout(()=>scr.remove(),700)},400)}
-  imgs.forEach(el=>{const src=el.style.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/);
-    if(src&&src[1]){const img=new Image();img.onload=img.onerror=tick;img.src=src[1]}else tick()});
-  setTimeout(tick,200);setTimeout(tick,500);setTimeout(tick,800);setTimeout(tick,1100);
+    if(p>=100)finish();
+  }
+  if(menuSrc&&menuSrc[1]){
+    const img=new Image();img.onload=img.onerror=tick;img.src=menuSrc[1];
+  } else {tick()}
+  /* Synthetic progress ticks */
+  setTimeout(tick,100);setTimeout(tick,250);setTimeout(tick,400);setTimeout(tick,550);
+  /* Hard timeout: dismiss loading screen after 4s max no matter what */
+  setTimeout(finish,4000);
+  /* Lazy-load other screen backgrounds after menu is visible */
+  setTimeout(()=>{
+    document.querySelectorAll('.screen-bg').forEach(el=>{
+      if(el===menuBg)return;
+      const src=el.style.backgroundImage.match(/url\(['"]?(.+?)['"]?\)/);
+      if(src&&src[1]){const img=new Image();img.src=src[1]}
+    });
+  },1500);
 })();
 
 /* ===== SFX SYSTEM ===== */
