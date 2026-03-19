@@ -4824,10 +4824,24 @@ const G={
   },
 
   makeAiDeck(){
-    // AI always gets 10 unique cards × 2 = 20 cards
-    const pool=[...ALL_CARDS];
-    shuffle(pool);
-    const picked=pool.slice(0,10);
+    // AI gets 10 unique cards × 2 = 20 cards
+    // Rare card ratio depends on level
+    const lv=Settings.level;
+    // lv1: 10% rare, lv2: 30%, lv3: 50%, lv4: 60%, lv5: 70%, lv6: 80%
+    const rareChance={1:0.1,2:0.3,3:0.5,4:0.6,5:0.7,6:0.8}[lv]||0.5;
+    const commons=shuffle([...getCommonCards()]);
+    const rares=shuffle([...getRareCards()]);
+    const picked=[];
+    const usedIds=new Set();
+    // Pick 10 unique cards based on rarity chance
+    for(let i=0;i<10;i++){
+      const useRare=Math.random()<rareChance;
+      const src=useRare?rares:commons;
+      const fallback=useRare?commons:rares;
+      let card=src.find(c=>!usedIds.has(c.id));
+      if(!card)card=fallback.find(c=>!usedIds.has(c.id));
+      if(card){usedIds.add(card.id);picked.push(card)}
+    }
     let d=[];
     picked.forEach(c=>{d.push(makeCardInstance(c));d.push(makeCardInstance(c))});
     return shuffle(d);
@@ -5231,9 +5245,14 @@ const G={
       });
     }
 
-    // --- Pick creature (always pick strongest) ---
+    // --- Pick creature (level-based strategy) ---
     if(creatures.length>0){
-      let pick=creatures[0]; // creatures already sorted by base desc
+      let pick;
+      const lv=this.adventureMode?3:Settings.level; // adventure/boss always smart
+      if(this.bossChallenge){}// skip level logic, use strongest
+      if(this.bossChallenge||lv>=3){pick=creatures[0]}
+      else if(lv===1){pick=creatures[creatures.length-1]}
+      else{pick=creatures[Math.floor(Math.random()*Math.min(3,creatures.length))]}
       pick.assignedDice=[];pick.tempBonus=0;
       this.ai.deployedCreature=pick;
       this.ai.hand=this.ai.hand.filter(c=>c!==pick);
