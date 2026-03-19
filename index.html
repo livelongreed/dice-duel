@@ -4986,8 +4986,8 @@ const G={
 
   // Boss challenge from construction mode
   bossChallenge:false,
-  isBossFight(){return (this.adventureMode&&this.adventureBattleType==='boss')||this.bossChallenge},
-  isVictorFight(){return this.adventureMode&&this.adventureBattleType==='boss2'},
+  isBossFight(){return (this.adventureMode&&this.adventureBattleType==='boss')||(this.bossChallenge&&!this.boss2Challenge)},
+  isVictorFight(){return (this.adventureMode&&this.adventureBattleType==='boss2')||this.boss2Challenge},
   startBossDuel(){
     const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
@@ -6142,6 +6142,32 @@ const G={
     }
     // Boss challenge from construction mode
     if(this.bossChallenge){
+      // Victor challenge
+      if(this.boss2Challenge){
+        if(this.p.hp<=0){setPhase((this.aiName||'对手')+'胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
+          showBossEndDialogue('lose',typeof VictorDialogue!=='undefined'?VictorDialogue.bossWin():'',()=>{
+            showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;G.boss2Challenge=false;showScreen('screen-levels')})});
+          return true}
+        if(this.ai.hp<=0){
+          setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);
+          if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');
+          spawnVictoryParticles();setTimeout(spawnVictoryParticles,400);setTimeout(spawnVictoryParticles,800);
+          let dlgText=typeof VictorDialogue!=='undefined'?(VictorDialogue.playerWin()||''):'';
+          let rewardMsg='击败了骰魔·维克多!';
+          if(!PlayerData.boss2RewardClaimed){
+            PlayerData.boss2RewardClaimed=true;
+            PlayerData.addGold(1500);
+            rewardMsg+=' 首次击败奖励: +1500金币!';
+          } else {
+            rewardMsg+=' (奖励已领取)';
+          }
+          showBossEndDialogue('win',dlgText,()=>{
+            showOverlay(rewardMsg,[{label:'返回'}],()=>{G.bossChallenge=false;G.boss2Challenge=false;showScreen('screen-levels')})});
+          return true;
+        }
+        return false;
+      }
+      // Mechanical Lord challenge
       if(this.p.hp<=0){setPhase((this.aiName||'对手')+'胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
         showBossEndDialogue('lose',BossDialogue.bossWin(),()=>{
           showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;showScreen('screen-levels')})});
