@@ -337,31 +337,48 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none}
 .boss-bubble.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .boss-bubble.victor{background:linear-gradient(135deg,rgba(80,30,120,0.95),rgba(50,20,80,0.95));border-left:3px solid #a855f7;box-shadow:0 4px 24px rgba(130,60,220,0.4)}
-/* Boss end dialogue overlay */
+/* Boss end dialogue overlay — ZZZ style */
 #boss-end-dlg{position:fixed;inset:0;z-index:9997;display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity 0.5s;pointer-events:none}
+  opacity:0;transition:opacity 0.5s;pointer-events:none;overflow:hidden}
 #boss-end-dlg.show{opacity:1;pointer-events:auto}
-#boss-end-dlg .bed-bg{position:absolute;inset:0;background:rgba(5,5,15,0.92)}
-#boss-end-dlg .bed-content{position:relative;z-index:1;text-align:center;max-width:400px;padding:24px 30px}
+#boss-end-dlg .bed-bg{position:absolute;inset:0;background:rgba(5,5,15,0.94)}
+#boss-end-dlg .bed-bg::before{content:'';position:absolute;left:-8%;top:0;width:4px;height:100%;
+  background:linear-gradient(180deg,transparent,#ff3e7a,transparent);box-shadow:0 0 20px rgba(255,62,122,0.5);
+  opacity:0;transition:opacity 0.4s 0.2s}
+#boss-end-dlg.show .bed-bg::before{opacity:1}
+#boss-end-dlg .bed-bg::after{content:'';position:absolute;right:-8%;top:0;width:4px;height:100%;
+  background:linear-gradient(180deg,transparent,rgba(0,200,255,0.6),transparent);box-shadow:0 0 20px rgba(0,200,255,0.3);
+  opacity:0;transition:opacity 0.4s 0.3s}
+#boss-end-dlg.show .bed-bg::after{opacity:1}
+#boss-end-dlg .bed-content{position:relative;z-index:1;text-align:center;max-width:480px;width:90%;
+  padding:32px 36px;transform:skewX(-5deg);
+  background:linear-gradient(135deg,rgba(26,26,46,0.9),rgba(16,16,36,0.95));
+  border:1px solid rgba(255,62,122,0.2);border-radius:4px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 40px rgba(255,62,122,0.06)}
+#boss-end-dlg .bed-content>*{transform:skewX(5deg)}
+#boss-end-dlg .bed-content::before{content:'';position:absolute;left:0;top:24px;bottom:24px;width:3px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 10px rgba(255,62,122,0.5)}
+#boss-end-dlg .bed-content::after{content:'';position:absolute;right:12px;bottom:12px;width:40px;height:40px;
+  border-right:2px solid rgba(255,62,122,0.2);border-bottom:2px solid rgba(255,62,122,0.2)}
 #boss-end-dlg .bed-icon{font-size:64px;margin-bottom:12px;
   animation:bedPulse 1.2s ease-in-out infinite alternate}
 @keyframes bedPulse{from{transform:scale(1);filter:drop-shadow(0 0 10px rgba(255,62,122,0.3))}
   to{transform:scale(1.08);filter:drop-shadow(0 0 24px rgba(255,62,122,0.6))}}
-#boss-end-dlg .bed-label{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:5px;
+#boss-end-dlg .bed-label{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:6px;
   color:#ff3e7a;text-transform:uppercase;margin-bottom:10px;
   animation:biFlash 0.8s ease-in-out infinite alternate}
 #boss-end-dlg .bed-text{font-size:16px;color:#e8e0f0;font-style:italic;line-height:1.6;
-  padding:16px 20px;background:rgba(255,62,122,0.06);border:1px solid rgba(255,62,122,0.2);
-  border-radius:8px;margin:12px 0;opacity:0;transform:translateY(12px);
+  padding:16px 20px;background:rgba(255,62,122,0.05);border:none;border-left:3px solid rgba(255,62,122,0.3);
+  border-radius:0;margin:12px 0;opacity:0;transform:translateY(12px);
   transition:opacity 0.6s 0.3s,transform 0.6s 0.3s}
 #boss-end-dlg.show .bed-text{opacity:1;transform:translateY(0)}
-#boss-end-dlg .bed-result{font-family:'Baloo 2','Fredoka',sans-serif;font-size:24px;font-weight:800;
-  letter-spacing:3px;margin-top:16px;opacity:0;transform:scale(0.8);
+#boss-end-dlg .bed-result{font-family:'Baloo 2','Fredoka',sans-serif;font-size:26px;font-weight:800;
+  letter-spacing:4px;margin-top:16px;opacity:0;transform:scale(0.8) skewX(-3deg);
   transition:opacity 0.5s 0.8s,transform 0.5s 0.8s}
-#boss-end-dlg.show .bed-result{opacity:1;transform:scale(1)}
-#boss-end-dlg .bed-result.win{color:#48bb78;text-shadow:0 0 20px rgba(72,187,120,0.4)}
-#boss-end-dlg .bed-result.lose{color:#f56565;text-shadow:0 0 20px rgba(245,101,101,0.4)}
-#boss-end-dlg .bed-line{width:50%;height:2px;margin:8px auto 0;
+#boss-end-dlg.show .bed-result{opacity:1;transform:scale(1) skewX(-3deg)}
+#boss-end-dlg .bed-result.win{color:#48bb78;text-shadow:0 0 20px rgba(72,187,120,0.4),2px 0 rgba(0,200,255,0.3),-2px 0 rgba(255,0,50,0.3)}
+#boss-end-dlg .bed-result.lose{color:#f56565;text-shadow:0 0 20px rgba(245,101,101,0.4),2px 0 rgba(0,200,255,0.3),-2px 0 rgba(255,0,50,0.3)}
+#boss-end-dlg .bed-line{width:60%;height:2px;margin:8px auto 0;
   background:linear-gradient(90deg,transparent,#ff3e7a,transparent);
   opacity:0;transition:opacity 0.5s 0.6s}
 #boss-end-dlg.show .bed-line{opacity:1}
@@ -547,19 +564,32 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* Card back */
 .card-back{width:48px;height:64px;background:linear-gradient(135deg,#2a1838,#1a1028);border:2px solid var(--gold-dim);
   border-radius:3px;display:inline-flex;align-items:center;justify-content:center;font-size:16px;color:var(--gold-dim);margin:0 2px}
-/* Overlay */
-#overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;display:flex;align-items:center;justify-content:center}
+/* Overlay — ZZZ style */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:200;display:flex;align-items:center;justify-content:center;
+  backdrop-filter:blur(6px)}
 #overlay.hidden{display:none}
 .hidden{display:none!important}
-#overlay-content{background:linear-gradient(135deg,#1e1d32,#16152a);border:2px solid var(--gold-dim);border-radius:6px;
-  padding:16px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;transform:skewX(-4deg)}
-#overlay-content>*{transform:skewX(4deg)}
-#overlay-content h3{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);margin-bottom:8px;font-size:15px}
-#overlay-content .ov-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-#overlay-content .ov-btn{padding:6px 14px;border:2px solid var(--metal);background:var(--card-bg);color:var(--text);
-  cursor:pointer;border-radius:3px;font-size:12px;transition:all 0.2s}
-#overlay-content .ov-btn:hover{border-color:var(--rust-light);color:#fff;transform:translateY(-2px);
-  box-shadow:0 4px 15px rgba(255,62,122,0.3),0 0 6px rgba(255,107,157,0.2)}
+#overlay-content{background:linear-gradient(135deg,#1a1a2e,#12122a);border:1px solid rgba(255,62,122,0.2);border-radius:4px;
+  padding:28px 24px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;transform:skewX(-5deg);
+  position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 40px rgba(255,62,122,0.05)}
+#overlay-content>*{transform:skewX(5deg)}
+#overlay-content::before{content:'';position:absolute;left:0;top:20px;bottom:20px;width:3px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 10px rgba(255,62,122,0.4)}
+#overlay-content::after{content:'';position:absolute;right:10px;bottom:10px;width:32px;height:32px;
+  border-right:2px solid rgba(255,62,122,0.15);border-bottom:2px solid rgba(255,62,122,0.15)}
+#overlay-content h3{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);margin-bottom:10px;font-size:16px;
+  letter-spacing:1px}
+#overlay-content .ov-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#overlay-content .ov-btn{padding:10px 22px 10px 28px;border:none;background:#1a1a2e;color:#fff;
+  cursor:pointer;border-radius:4px;font-size:13px;transition:all 0.25s;position:relative;
+  overflow:hidden;transform:skewX(-7deg);letter-spacing:1px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+#overlay-content .ov-btn::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 6px rgba(255,62,122,0.4);transition:all 0.2s}
+#overlay-content .ov-btn:hover{background:#22223a;transform:skewX(-7deg) translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.4),0 0 12px rgba(255,62,122,0.1)}
+#overlay-content .ov-btn:hover::before{width:4px;top:4px;bottom:4px;box-shadow:0 0 10px rgba(255,62,122,0.6)}
+#overlay-content .ov-btn:active{transform:skewX(-7deg) scale(0.97)}
 /* Animations */
 /* --- Card shimmer on hover --- */
 @keyframes cardShimmer{0%{left:-100%}100%{left:200%}}
@@ -687,12 +717,17 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 @keyframes dmgPopup{0%{opacity:1;transform:translateY(0) scale(1.2)}60%{opacity:1;transform:translateY(-30px) scale(1)}100%{opacity:0;transform:translateY(-60px) scale(0.8)}}
 .dmg-popup{position:fixed;font-family:'Baloo 2','Fredoka',sans-serif;font-size:32px;font-weight:900;color:var(--hp-red);
   text-shadow:0 0 10px rgba(245,101,101,0.5),0 2px 4px rgba(0,0,0,0.8);pointer-events:none;z-index:500;animation:dmgPopup 1s ease-out forwards}
-@keyframes cinematicIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
-#overlay-content.cinematic{background:radial-gradient(ellipse at center,rgba(30,29,50,0.95),rgba(10,10,24,0.98));
-  border:3px solid var(--gold);box-shadow:0 0 60px rgba(255,107,157,0.3),0 0 120px rgba(255,107,157,0.1);
-  text-align:center;animation:cinematicIn 0.6s ease-out}
-#overlay-content.cinematic h3{font-size:28px;letter-spacing:6px;
-  background:linear-gradient(180deg,#e8d0f0,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+@keyframes cinematicIn{from{opacity:0;transform:skewX(-5deg) scale(0.85) translateY(20px)}to{opacity:1;transform:skewX(-5deg) scale(1) translateY(0)}}
+#overlay-content.cinematic{background:linear-gradient(135deg,rgba(26,26,46,0.97),rgba(12,12,28,0.98));
+  border:1px solid rgba(255,62,122,0.25);
+  box-shadow:0 20px 80px rgba(0,0,0,0.7),0 0 60px rgba(255,62,122,0.1);
+  text-align:center;padding:36px 32px;animation:cinematicIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards}
+#overlay-content.cinematic::before{top:16px;bottom:16px;width:4px;
+  background:linear-gradient(180deg,transparent,#ff3e7a,transparent);box-shadow:0 0 14px rgba(255,62,122,0.5)}
+#overlay-content.cinematic h3{font-size:30px;letter-spacing:6px;margin-bottom:16px;
+  background:linear-gradient(180deg,#e8d0f0,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 8px rgba(255,107,157,0.3))}
+#overlay-content.cinematic .ov-btn{padding:12px 28px 12px 32px;font-size:14px;letter-spacing:2px}
 /* ============ CHROMATIC ABERRATION SYSTEM ============ */
 /* Base chromatic aberration keyframes */
 @keyframes chromaticPulse{
@@ -817,8 +852,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   box-shadow:0 0 20px rgba(255,62,122,0.06) inset,0 2px 8px rgba(255,0,50,0.08),0 -2px 8px rgba(0,200,255,0.08)}
 
 /* === OVERLAY CINEMATIC chromatic === */
-#overlay-content.cinematic{box-shadow:0 0 60px rgba(255,107,157,0.3),0 0 120px rgba(255,107,157,0.1),
-  6px 0 30px rgba(255,0,50,0.15),-6px 0 30px rgba(0,200,255,0.15)}
+#overlay-content.cinematic{box-shadow:0 20px 80px rgba(0,0,0,0.7),0 0 60px rgba(255,107,157,0.15),
+  4px 0 20px rgba(255,0,50,0.12),-4px 0 20px rgba(0,200,255,0.12)}
 #overlay-content.cinematic h3{animation:chromaticGlitch 4s linear infinite}
 
 /* === SCREEN GAME scanline + chromatic overlay === */
@@ -3102,10 +3137,23 @@ function delay(ms){return new Promise(r=>setTimeout(r,ms*Settings.speed))}
 function showOverlay(title,opts,cb){
   const o=$('overlay'),c=$('overlay-content');
   const oc=$('overlay-content');oc.classList.remove('cinematic');
-  let h=`<h3>${title}</h3><div class="ov-opts">`;
+  const isCinematic=title.includes('胜利')||title.includes('失败')||title.includes('战斗')||title.includes('败北');
+  let h='';
+  if(isCinematic){
+    const isWin=title.includes('胜利');
+    const sub=isWin?'BATTLE COMPLETE':'BATTLE OVER';
+    const icon=isWin?'⚔️':'💀';
+    h+=`<div style="font-size:13px;letter-spacing:5px;color:#ff3e7a;font-family:'Share Tech Mono',monospace;margin-bottom:6px;opacity:0.8">${sub}</div>`;
+    h+=`<div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(255,107,157,0.3))">${icon}</div>`;
+    h+=`<h3>${title}</h3>`;
+    h+=`<div style="width:50%;height:2px;margin:8px auto 16px;background:linear-gradient(90deg,transparent,#ff3e7a,transparent)"></div>`;
+  } else {
+    h+=`<h3>${title}</h3>`;
+  }
+  h+=`<div class="ov-opts">`;
   opts.forEach((op,i)=>{h+=`<button class="ov-btn" data-i="${i}">${op.label}</button>`});
   h+=`</div>`;c.innerHTML=h;o.classList.remove('hidden');
-  if(title.includes('胜利')||title.includes('失败')||title.includes('战斗')||title.includes('败北'))oc.classList.add('cinematic');
+  if(isCinematic)oc.classList.add('cinematic');
   c.querySelectorAll('.ov-btn').forEach(b=>b.onclick=()=>{o.classList.add('hidden');cb(+b.dataset.i)});
 }
 function hideOverlay(){$('overlay').classList.add('hidden')}
@@ -4579,7 +4627,7 @@ const Adventure={
     this.active=false;
     const p=$('adv-panel');
     const bossName=this.currentLayer===2?'骰魔·维克多的赌场':'锈蚀平原';
-    p.innerHTML=`<h3>💀 冒险失败</h3><p>你在${bossName}倒下了...</p><button class="adv-btn" onclick="Adventure.closeOverlay();showScreen('screen-menu')">返回主菜单</button>`;
+    p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#f56565;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE FAILED</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(245,101,101,0.3))">💀</div><h3 style="color:#f56565">冒险失败</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#f56565,transparent)"></div><p style="color:#ccc">你在${bossName}倒下了...</p><button class="adv-btn" onclick="Adventure.closeOverlay();showScreen('screen-menu')">返回主菜单</button>`;
     advShowOverlay();
     showScreen('screen-map');
   },
@@ -4589,7 +4637,7 @@ const Adventure={
       this.showLayerTransition();
     } else {
       const p=$('adv-panel');
-      p.innerHTML=`<h3>👑 冒险完全胜利!</h3><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
+      p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE COMPLETE</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">👑</div><h3 style="color:#48bb78">冒险完全胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
       advShowOverlay();
     }
   },
@@ -4597,7 +4645,7 @@ const Adventure={
   showLayerTransition(){
     const p=$('adv-panel');
     const healAmt=Math.ceil(this.maxHp*0.3);
-    p.innerHTML=`<h3>🎉 第一层通关!</h3>
+    p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#ff3e7a;font-family:'Share Tech Mono',monospace;margin-bottom:6px">LAYER CLEARED</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(255,62,122,0.3))">🎉</div><h3>第一层通关!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#ff3e7a,transparent)"></div>
       <p>选择你的奖励:</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin:12px 0">
         <button class="adv-btn" onclick="Adventure.pickLayerReward('heal')">❤️ 恢复${healAmt}HP + 选择一张牌升级</button>
@@ -4665,7 +4713,7 @@ const Adventure={
     const shuffled=shuffle([...pool]);
     const picks=shuffled.slice(0,Math.min(3,shuffled.length));
     const p=$('adv-panel');
-    let html=`<h3>⚔️ 战斗胜利!</h3><p>获得 ${gold} 💰</p><p>选择一张卡牌加入牌组 (或跳过):</p><div class="zzz-reward-picks">`;
+    let html=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">BATTLE COMPLETE</div><div style="font-size:36px;margin-bottom:6px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">⚔️</div><h3 style="color:#48bb78">战斗胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>获得 ${gold} 💰</p><p>选择一张卡牌加入牌组 (或跳过):</p><div class="zzz-reward-picks">`;
     picks.forEach((c,i)=>{
       const isRare=!COMMON_CARDS.includes(c.id);
       html+=`<div class="zzz-reward-row" style="margin-left:${i*30}px">
@@ -6445,10 +6493,13 @@ function showBossEndDialogue(type,dialogueText,callback){
   const icon=isWin?'💥':'🤖';
   const resultText=isWin?'铁面·机械领主 已被击败':'铸炉师 已被击败';
   const resultCls=isWin?'win':'lose';
+  const bossIcon=G.isVictorFight()?'🎲':'🤖';
+  const bossName=G.isVictorFight()?'骰魔·维克多':'铁面·机械领主';
+  const resultText=isWin?`${bossName} 已被击败`:'铸炉师 已被击败';
   overlay.innerHTML=`<div class="bed-bg"></div>
     <div class="bed-content">
       <div class="bed-label">${label}</div>
-      <div class="bed-icon">${icon}</div>
+      <div class="bed-icon">${isWin?'💥':bossIcon}</div>
       <div class="bed-text">${dialogueText||'……'}</div>
       <div class="bed-line"></div>
       <div class="bed-result ${resultCls}">${resultText}</div>
