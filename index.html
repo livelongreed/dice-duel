@@ -336,6 +336,34 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   box-shadow:0 4px 24px rgba(0,0,0,0.5);max-width:360px;text-align:center;
   opacity:0;transition:opacity 0.3s,transform 0.3s;pointer-events:none}
 .boss-bubble.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Boss end dialogue overlay */
+#boss-end-dlg{position:fixed;inset:0;z-index:9997;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.5s;pointer-events:none}
+#boss-end-dlg.show{opacity:1;pointer-events:auto}
+#boss-end-dlg .bed-bg{position:absolute;inset:0;background:rgba(5,5,15,0.92)}
+#boss-end-dlg .bed-content{position:relative;z-index:1;text-align:center;max-width:400px;padding:24px 30px}
+#boss-end-dlg .bed-icon{font-size:64px;margin-bottom:12px;
+  animation:bedPulse 1.2s ease-in-out infinite alternate}
+@keyframes bedPulse{from{transform:scale(1);filter:drop-shadow(0 0 10px rgba(255,62,122,0.3))}
+  to{transform:scale(1.08);filter:drop-shadow(0 0 24px rgba(255,62,122,0.6))}}
+#boss-end-dlg .bed-label{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:5px;
+  color:#ff3e7a;text-transform:uppercase;margin-bottom:10px;
+  animation:biFlash 0.8s ease-in-out infinite alternate}
+#boss-end-dlg .bed-text{font-size:16px;color:#e8e0f0;font-style:italic;line-height:1.6;
+  padding:16px 20px;background:rgba(255,62,122,0.06);border:1px solid rgba(255,62,122,0.2);
+  border-radius:8px;margin:12px 0;opacity:0;transform:translateY(12px);
+  transition:opacity 0.6s 0.3s,transform 0.6s 0.3s}
+#boss-end-dlg.show .bed-text{opacity:1;transform:translateY(0)}
+#boss-end-dlg .bed-result{font-family:'Baloo 2','Fredoka',sans-serif;font-size:24px;font-weight:800;
+  letter-spacing:3px;margin-top:16px;opacity:0;transform:scale(0.8);
+  transition:opacity 0.5s 0.8s,transform 0.5s 0.8s}
+#boss-end-dlg.show .bed-result{opacity:1;transform:scale(1)}
+#boss-end-dlg .bed-result.win{color:#48bb78;text-shadow:0 0 20px rgba(72,187,120,0.4)}
+#boss-end-dlg .bed-result.lose{color:#f56565;text-shadow:0 0 20px rgba(245,101,101,0.4)}
+#boss-end-dlg .bed-line{width:50%;height:2px;margin:8px auto 0;
+  background:linear-gradient(90deg,transparent,#ff3e7a,transparent);
+  opacity:0;transition:opacity 0.5s 0.6s}
+#boss-end-dlg.show .bed-line{opacity:1}
 /* Game layout */
 #screen-game{display:none;background:linear-gradient(180deg,#08081a 0%,#10102a 40%,#14122a 60%,#08081a 100%)}
 #screen-game.active{display:flex;position:relative;background:
@@ -5736,28 +5764,41 @@ const G={
       log('♻️ 重生符文: 免于死亡! 保留1点生命, 符文碎裂!','effect');render();return false}
     if(this.adventureMode){
       if(this.p.hp<=0){setPhase('战斗失败!');SFX.play('clash_lose');StatsTracker.recordGame(false);
-        if(this.adventureBattleType==='boss')setTimeout(()=>bossSay(BossDialogue.bossWin()),300);
-        showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()});return true}
+        if(this.adventureBattleType==='boss'){
+          showBossEndDialogue('lose',BossDialogue.bossWin(),()=>{
+            showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()})});
+        } else {
+          showOverlay('败北!',[{label:'确定'}],()=>{Adventure.onBattleLose()});
+        }
+        return true}
       if(this.ai.hp<=0){setPhase('战斗胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');spawnVictoryParticles();
         if(this.adventureBattleType==='boss'){
-          setTimeout(()=>bossSay(BossDialogue.playerWin()),300);
-          // Easter egg: mech kill mech
-          if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.eggMechKill()),1200);
+          let dlgText=BossDialogue.playerWin()||'';
+          if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id)){
+            const egg=BossDialogue.eggMechKill();if(egg)dlgText+='\n'+egg;
+          }
+          showBossEndDialogue('win',dlgText,()=>{
+            showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)})});
+        } else {
+          showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});
         }
-        showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)});return true}
+        return true}
       return false;
     }
     // Boss challenge from construction mode
     if(this.bossChallenge){
       if(this.p.hp<=0){setPhase('机械领主胜利!');SFX.play('clash_lose');StatsTracker.recordGame(false);
-        setTimeout(()=>bossSay(BossDialogue.bossWin()),300);
-        showOverlay('败北!',[{label:'返回'}],()=>{this.bossChallenge=false;showScreen('screen-levels')});return true}
+        showBossEndDialogue('lose',BossDialogue.bossWin(),()=>{
+          showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;showScreen('screen-levels')})});
+        return true}
       if(this.ai.hp<=0){
         setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);
         if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');
         spawnVictoryParticles();setTimeout(spawnVictoryParticles,400);setTimeout(spawnVictoryParticles,800);
-        setTimeout(()=>bossSay(BossDialogue.playerWin()),300);
-        if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id))setTimeout(()=>bossSay(BossDialogue.eggMechKill()),1200);
+        let dlgText=BossDialogue.playerWin()||'';
+        if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id)){
+          const egg=BossDialogue.eggMechKill();if(egg)dlgText+='\n'+egg;
+        }
         let rewardMsg='击败了铁面·机械领主!';
         if(!PlayerData.bossRewardClaimed){
           PlayerData.bossRewardClaimed=true;
@@ -5766,7 +5807,8 @@ const G={
         } else {
           rewardMsg+=' (奖励已领取)';
         }
-        showOverlay(rewardMsg,[{label:'返回'}],()=>{this.bossChallenge=false;showScreen('screen-levels')});
+        showBossEndDialogue('win',dlgText,()=>{
+          showOverlay(rewardMsg,[{label:'返回'}],()=>{G.bossChallenge=false;showScreen('screen-levels')})});
         return true;
       }
       return false;
@@ -5901,6 +5943,36 @@ function _bossSayNow(text){
   const gameEl=document.getElementById('screen-game');
   if(gameEl){gameEl.appendChild(el);setTimeout(()=>el.classList.add('show'),10);
     setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400)},3500)}
+}
+
+function showBossEndDialogue(type,dialogueText,callback){
+  // type: 'win' (player wins) or 'lose' (player loses)
+  // Clear any queued boss dialogue
+  _bossSayQueue.length=0;
+  if(_bossSayTimer){clearInterval(_bossSayTimer);_bossSayTimer=null}
+  const overlay=document.createElement('div');
+  overlay.id='boss-end-dlg';
+  const isWin=type==='win';
+  const label=isWin?'SYSTEM FAILURE':'MISSION COMPLETE';
+  const icon=isWin?'💥':'🤖';
+  const resultText=isWin?'铁面·机械领主 已被击败':'铸炉师 已被击败';
+  const resultCls=isWin?'win':'lose';
+  overlay.innerHTML=`<div class="bed-bg"></div>
+    <div class="bed-content">
+      <div class="bed-label">${label}</div>
+      <div class="bed-icon">${icon}</div>
+      <div class="bed-text">${dialogueText||'……'}</div>
+      <div class="bed-line"></div>
+      <div class="bed-result ${resultCls}">${resultText}</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>overlay.classList.add('show')));
+  // Auto-dismiss after 3s then proceed to result overlay
+  setTimeout(()=>{
+    overlay.style.transition='opacity 0.5s';
+    overlay.style.opacity='0';
+    setTimeout(()=>{overlay.remove();if(callback)callback()},500);
+  },3000);
 }
 
 function showBossIntro(callback){
