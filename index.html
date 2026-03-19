@@ -253,17 +253,10 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* Card grid */
 .pack-cards-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:680px;margin:10px auto;padding:10px}
 /* Individual card */
-.pack-card{width:120px;height:170px;perspective:800px;cursor:default;opacity:0;transform:translateY(40px) scale(0.8);
+.pack-card{width:120px;height:170px;cursor:default;opacity:0;transform:translateY(40px) scale(0.6);
   transition:opacity 0.4s ease,transform 0.5s cubic-bezier(0.22,1,0.36,1)}
 .pack-card.pack-visible{opacity:1;transform:translateY(0) scale(1)}
-.pack-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1)}
-.pack-card.flipped .pack-card-inner{transform:rotateY(180deg);-webkit-transform:rotateY(180deg)}
-.pack-card-back{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(135deg,#2a1838,#1a1028);
-  border:2px solid var(--gold-dim);border-radius:8px;display:flex;align-items:center;justify-content:center;
-  font-size:32px;color:var(--gold-dim);overflow:hidden}
-.pack-card-back::after{content:'';position:absolute;inset:0;
-  background:repeating-linear-gradient(135deg,transparent,transparent 8px,rgba(255,107,157,0.04) 8px,rgba(255,107,157,0.04) 10px)}
-.pack-card-front{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;transform:rotateY(180deg);
+.pack-card-front{width:100%;height:100%;position:relative;
   background:linear-gradient(145deg,#1e1d32,#16152a);border:2px solid var(--card-border);border-radius:8px;
   display:flex;flex-direction:column;align-items:center;padding:8px 6px;overflow:hidden}
 .pack-card-front.spell{border-color:var(--spell-border)}
@@ -3349,7 +3342,7 @@ const Shop={
     const o=$('pack-overlay');o.classList.remove('hidden');
     const container=$('pack-cards');container.innerHTML='';
     const info=$('pack-info');info.textContent='点击卡包开启!';
-    const packEl=$('pack-box');packEl.classList.remove('hidden');packEl.classList.remove('pack-open');
+    const packEl=$('pack-box');packEl.classList.remove('hidden');packEl.classList.remove('pack-open');packEl._clicked=false;
     $('pack-done-btn').classList.add('hidden');
     // Remove old summary if any
     const oldSummary=o.querySelector('.pack-summary');if(oldSummary)oldSummary.remove();
@@ -3357,6 +3350,8 @@ const Shop={
     cards.forEach(c=>{if(!PlayerData.hasCard(c.id))newCards.push(c.id)});
     const rareCards=cards.filter(c=>!COMMON_CARDS.includes(c.id));
     packEl.onclick=()=>{
+      if(packEl._clicked)return; // prevent double click
+      packEl._clicked=true;
       packEl.classList.add('pack-open');
       // Spawn burst particles from pack center
       const rect=packEl.getBoundingClientRect();
@@ -3378,7 +3373,7 @@ const Shop={
     };
   },
   revealCards(cards,container,newCardIds){
-    // Create all card elements first (hidden), then stagger fly-in + flip
+    container.innerHTML='';
     const cardEls=[];
     cards.forEach((c,i)=>{
       const isNew=newCardIds.includes(c.id);
@@ -3387,9 +3382,7 @@ const Shop={
       const div=document.createElement('div');
       div.className='pack-card'+(isNew?' pack-new':'')+(isRare?' pack-rare':'');
       const slotsHtml=c.type==='creature'?Array.from({length:c.slots},()=>'<span></span>').join(''):'';
-      div.innerHTML=`<div class="pack-card-inner">
-        <div class="pack-card-back">?</div>
-        <div class="pack-card-front ${c.type==='spell'?'spell':''}">
+      div.innerHTML=`<div class="pack-card-front ${c.type==='spell'?'spell':''}">
           <div class="pcf-tag">${isNew?'NEW ✦':'已有'}</div>
           <div class="pcf-emoji">${c.emoji}</div>
           <div class="pcf-name">${c.name}</div>
@@ -3397,16 +3390,13 @@ const Shop={
           <div class="pcf-stats">${c.type==='creature'?`<span>基础 <b>${c.base}</b></span><span>槽位 <b>${c.slots}</b></span>`:`<span>槽位 <b>${c.slots}</b></span>`}</div>
           ${slotsHtml?`<div class="pcf-slots">${slotsHtml}</div>`:''}
           ${c.effectDesc?`<div class="pcf-effect">${kwHL(c.effectDesc)}</div>`:''}
-        </div></div>`;
+        </div>`;
       container.appendChild(div);
       cardEls.push(div);
     });
-    // Stagger: fly-in then flip
+    // Stagger fly-in
     cardEls.forEach((div,i)=>{
-      setTimeout(()=>{
-        div.classList.add('pack-visible');
-        setTimeout(()=>div.classList.add('flipped'),200);
-      },i*120);
+      setTimeout(()=>div.classList.add('pack-visible'),i*120);
     });
     // Show done button after all revealed
     setTimeout(()=>{
