@@ -1318,6 +1318,17 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   .tg-flow{gap:4px}
   .tg-flow-step{padding:3px 6px;font-size:10px}
   .tg-flow-arrow{font-size:12px}
+  /* Mobile: reward card picks — compact vertical layout */
+  .adv-panel{max-width:95vw;padding:18px 14px;max-height:90vh}
+  .zzz-reward-picks{grid-template-columns:repeat(3,1fr);gap:6px;margin:10px 0}
+  .reward-card-detail{padding:10px 8px}
+  .rcd-emoji{font-size:28px;margin-bottom:4px}
+  .rcd-name{font-size:11px;letter-spacing:0}
+  .rcd-type{font-size:7px;letter-spacing:1px;margin:1px 0}
+  .rcd-stats{gap:4px;margin:2px 0}
+  .rcd-stat{font-size:9px}
+  .rcd-slots span{width:6px;height:6px}
+  .rcd-effect{font-size:8px;padding:3px 5px;margin-top:4px;line-height:1.4}
 }
 /* ============ ADVENTURE MAP ============ */
 .adventure-map-card{background:linear-gradient(135deg,#18162e,#1e1d32);border:1.5px solid rgba(122,90,205,0.35);border-radius:4px;
@@ -1438,7 +1449,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .adv-overlay{position:fixed;inset:0;background:rgba(5,5,15,0.92);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(12px);
   opacity:0;transition:opacity 0.3s ease;pointer-events:none}
 .adv-overlay.adv-show{opacity:1;pointer-events:auto}
-.adv-panel{background:#12122a;border:1px solid rgba(255,62,122,0.2);border-radius:8px;padding:28px 24px;max-width:460px;width:92%;text-align:center;max-height:82vh;overflow-y:auto;
+.adv-panel{background:#12122a;border:1px solid rgba(255,62,122,0.2);border-radius:8px;padding:28px 24px;max-width:580px;width:94%;text-align:center;max-height:85vh;overflow-y:auto;
   box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 40px rgba(255,62,122,0.06);position:relative;transform:skewX(-5deg) translateY(30px) scale(0.95);
   transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),opacity 0.3s ease;opacity:0}
 .adv-overlay.adv-show .adv-panel{transform:skewX(-5deg) translateY(0) scale(1);opacity:1}
@@ -1472,37 +1483,41 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .zzz-widget-card:active,.zzz-screen-info .zzz-widget-card:active{
   transform:skewX(5deg) translateY(-1px) scale(0.98);
   transition-duration:0.1s}
-/* Reward card detail style */
-.reward-card-detail{display:flex;align-items:flex-start;gap:14px;padding:14px 18px 14px 24px;margin:8px 0;
-  background:#1a1a2e;border:none;border-radius:4px;position:relative;overflow:hidden;
-  box-shadow:0 2px 8px rgba(0,0,0,0.4);transform:skewX(-7deg);cursor:pointer;
-  transition:all 0.25s cubic-bezier(0.22,1,0.36,1)}
-.reward-card-detail>*{transform:skewX(7deg)}
-.reward-card-detail::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
-  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 8px rgba(255,62,122,0.5);transition:all 0.25s}
-.reward-card-detail:hover{background:#22223a;transform:skewX(-7deg) translateX(8px) scale(1.03);
-  box-shadow:0 4px 20px rgba(0,0,0,0.5),0 0 15px rgba(255,62,122,0.15)}
-.reward-card-detail:hover::before{width:5px;top:4px;bottom:4px;box-shadow:0 0 12px rgba(255,62,122,0.7)}
-.reward-card-detail:active{transform:skewX(-7deg) scale(0.97)}
-.reward-card-detail.rare-reward{border-left:none}
+/* Reward card detail style — ZZZ vertical card layout */
+.reward-card-detail{display:flex;flex-direction:column;align-items:center;padding:16px 14px;margin:0;
+  background:linear-gradient(135deg,#1a1a2e,#14122a);border:1px solid rgba(255,62,122,0.15);border-radius:4px;
+  position:relative;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  cursor:pointer;transition:all 0.25s cubic-bezier(0.22,1,0.36,1);text-align:center;min-width:0}
+.reward-card-detail>*{position:relative;z-index:1}
+.reward-card-detail::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:#ff3e7a;box-shadow:0 0 8px rgba(255,62,122,0.5);transition:all 0.25s}
+.reward-card-detail::after{content:'';position:absolute;right:8px;bottom:8px;width:24px;height:24px;
+  border-right:2px solid rgba(255,62,122,0.12);border-bottom:2px solid rgba(255,62,122,0.12);transition:all 0.25s}
+.reward-card-detail:hover{background:linear-gradient(135deg,#22223a,#1a1830);
+  transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.5),0 0 20px rgba(255,62,122,0.1)}
+.reward-card-detail:hover::before{width:4px;box-shadow:0 0 14px rgba(255,62,122,0.7)}
+.reward-card-detail:hover::after{border-color:rgba(255,62,122,0.25)}
+.reward-card-detail:active{transform:translateY(0) scale(0.97)}
+.reward-card-detail.rare-reward{border-color:rgba(192,132,252,0.2)}
 .reward-card-detail.rare-reward::before{background:rgba(192,132,252,0.8);box-shadow:0 0 8px rgba(192,132,252,0.5)}
-.reward-card-detail.rare-reward:hover::before{box-shadow:0 0 12px rgba(192,132,252,0.7)}
-.reward-card-detail.rare-reward:hover{box-shadow:0 4px 20px rgba(192,132,252,0.2),0 0 15px rgba(192,132,252,0.12)}
-.rcd-emoji{font-size:36px;line-height:1;flex-shrink:0;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.4))}
-.rcd-body{flex:1;min-width:0;text-align:left}
-.rcd-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:15px;color:var(--gold);letter-spacing:1px;line-height:1.2}
-.rcd-name .rcd-rare{color:#c084fc;font-size:10px;margin-left:4px;letter-spacing:0}
-.rcd-type{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;margin:2px 0}
-.rcd-stats{display:flex;gap:10px;margin:4px 0}
+.reward-card-detail.rare-reward::after{border-color:rgba(192,132,252,0.12)}
+.reward-card-detail.rare-reward:hover::before{box-shadow:0 0 14px rgba(192,132,252,0.7)}
+.reward-card-detail.rare-reward:hover{box-shadow:0 8px 24px rgba(192,132,252,0.15),0 0 20px rgba(192,132,252,0.08)}
+.rcd-emoji{font-size:40px;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4));margin-bottom:8px}
+.rcd-body{width:100%;min-width:0;text-align:center}
+.rcd-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;color:var(--gold);letter-spacing:1px;line-height:1.2}
+.rcd-name .rcd-rare{color:#c084fc;font-size:9px;margin-left:4px;letter-spacing:0}
+.rcd-type{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin:2px 0}
+.rcd-stats{display:flex;gap:8px;justify-content:center;margin:4px 0}
 .rcd-stat{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text-dim)}
 .rcd-stat b{color:var(--rust-light);font-weight:700}
-.rcd-slots{display:flex;gap:3px;align-items:center;margin:3px 0}
-.rcd-slots span{width:10px;height:10px;border-radius:50%;border:2px solid var(--gold-dim);display:inline-block}
-.rcd-effect{font-size:11px;color:var(--text-dim);line-height:1.5;margin-top:4px;padding:6px 8px;
-  background:rgba(0,0,0,0.25);border-radius:3px;border-left:2px solid rgba(255,62,122,0.3)}
-/* Reward picks staggered layout */
-.zzz-reward-picks{display:flex;flex-direction:column;gap:0;margin:14px 0;width:100%}
-.zzz-reward-row{margin-bottom:6px}
+.rcd-slots{display:flex;gap:3px;align-items:center;justify-content:center;margin:3px 0}
+.rcd-slots span{width:8px;height:8px;border-radius:50%;border:2px solid var(--gold-dim);display:inline-block}
+.rcd-effect{font-size:10px;color:var(--text-dim);line-height:1.5;margin-top:6px;padding:5px 8px;
+  background:rgba(0,0,0,0.25);border-radius:3px;border-left:2px solid rgba(255,62,122,0.3);text-align:left}
+/* Reward picks — horizontal 3-column grid */
+.zzz-reward-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;width:100%}
+.zzz-reward-row{margin:0}
 .adv-shop-item.rare-reward{border-color:rgba(192,132,252,0.3)}
 .adv-shop-item.rare-reward::before{background:rgba(192,132,252,0.6)}
 .adv-shop-item.rare-reward:hover{box-shadow:0 4px 16px rgba(192,132,252,0.3)}
@@ -3296,10 +3311,10 @@ const ALL_CARDS=[
     ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+bonus+(straight?3:0);
     log(`混沌骰魔:${unique.size}种不同点数×2=${bonus}${straight?' +顺子+3':''},总加成${bonus+(straight?3:0)}`,'effect')}},
 {id:'leopard_king',type:'creature',name:'豹子之王',emoji:'🐆',base:0,slots:4,
-  effectDesc:'3个骰子相同:基础值10;4个全同:基础值15',timing:'duel_start',
+  effectDesc:'3个骰子相同:基础值7;4个全同:基础值10',timing:'duel_start',
   effect(ctx){const dice=ctx.myCreature.assignedDice||[];const freq={};dice.forEach(v=>freq[v]=(freq[v]||0)+1);const maxCount=Math.max(0,...Object.values(freq));
-    if(maxCount>=4){ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+15;Achievements.unlock('leopard_trigger');log(`豹子之王:4个相同! 基础值+15!`,'effect')}
-    else if(maxCount>=3){ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+10;Achievements.unlock('leopard_trigger');log(`豹子之王:3个相同! 基础值+10!`,'effect')}
+    if(maxCount>=4){ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+10;Achievements.unlock('leopard_trigger');log(`豹子之王:4个相同! 基础值+10!`,'effect')}
+    else if(maxCount>=3){ctx.myCreature.tempBonus=(ctx.myCreature.tempBonus||0)+7;Achievements.unlock('leopard_trigger');log(`豹子之王:3个相同! 基础值+7!`,'effect')}
     else{log('豹子之王:未达成3个相同','effect')}}},
 {id:'doom_prophet',type:'creature',name:'末日预言者',emoji:'🔮',base:1,slots:1,
   effectDesc:'部署时预言下张牌类型,抽一张牌;预言正确则总值翻倍',timing:'deploy',
@@ -4338,7 +4353,7 @@ const Adventure={
     const p=$('adv-panel');
     let html=`<h3>🌟 初始天赋</h3><p>冒险开始前，选择一张稀有卡加入你的牌组:</p><div class="zzz-reward-picks">`;
     picks.forEach((c,i)=>{
-      html+=`<div class="zzz-reward-row" style="margin-left:${i*30}px">
+      html+=`<div class="zzz-reward-row">
         ${renderCardDetail(c,"Adventure.pickStarterCard('"+c.id+"')",true)}
       </div>`;
     });
@@ -4717,7 +4732,7 @@ const Adventure={
     let html=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">BATTLE COMPLETE</div><div style="font-size:36px;margin-bottom:6px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">⚔️</div><h3 style="color:#48bb78">战斗胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>获得 ${gold} 💰</p><p>选择一张卡牌加入牌组 (或跳过):</p><div class="zzz-reward-picks">`;
     picks.forEach((c,i)=>{
       const isRare=!COMMON_CARDS.includes(c.id);
-      html+=`<div class="zzz-reward-row" style="margin-left:${i*30}px">
+      html+=`<div class="zzz-reward-row">
         ${renderCardDetail(c,"Adventure.pickRewardCard('"+c.id+"',"+i+")",isRare)}
       </div>`;
     });
@@ -4769,7 +4784,7 @@ const Adventure={
     let html=`<h3>🔥 选择升级的生物</h3><p>基础值+2 (每张卡最多升级1次)</p><div class="zzz-reward-picks">`;
     creatures.forEach((c,i)=>{
       const upgraded={...c,base:c.base+2,effectDesc:`基础值: ${c.base} → ${c.base+2}`};
-      html+=`<div class="zzz-reward-row" style="margin-left:${i*25}px">
+      html+=`<div class="zzz-reward-row">
         ${renderCardDetail(upgraded,"Adventure.doUpgrade('"+c.id+"')",false)}
       </div>`;
     });
@@ -7807,8 +7822,9 @@ const BgMgr={
 };
 BgMgr.init();
 
-/* Defer BGM preloading to first user interaction to avoid blocking page load */
-document.addEventListener('click',function _preloadOnce(){AudioMgr.preloadCommon();document.removeEventListener('click',_preloadOnce)},{once:true});
+/* BGM preload strategy: menu track immediately, rest on first interaction */
+AudioMgr.preload('menu');
+document.addEventListener('click',function _preloadRest(){AudioMgr.preloadCommon();document.removeEventListener('click',_preloadRest)},{once:true});
 
 /* ===== LOADING SCREEN ===== */
 (function(){
