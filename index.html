@@ -4701,12 +4701,10 @@ const Adventure={
     node.visited=true;
     this.renderMap();
     const nodeType=node.type;
-    // Boss types have their own cinematic intros
-    if(nodeType==='boss'||nodeType==='boss2'){
-      switch(nodeType){
-        case'boss':this.handleBattle('boss',node);break;
-        case'boss2':this.handleBattle('boss2',node);break;
-      }
+    // Battle types (including boss) have their own cinematic intros in handleBattle
+    if(nodeType==='battle'||nodeType==='elite'||nodeType==='boss'||nodeType==='boss2'){
+      const t=nodeType==='battle'?'normal':nodeType;
+      this.handleBattle(t,node);
       return;
     }
     // Campfire gets its own mountain-icon cinematic
@@ -4714,11 +4712,9 @@ const Adventure={
       showCampfireIntro(()=>this.handleCampfire());
       return;
     }
-    // All other nodes get the level entry cinematic
+    // Non-combat nodes get the level entry cinematic
     showLevelEntryIntro(floor,nodeType,()=>{
       switch(nodeType){
-        case'battle':this.handleBattle('normal',node);break;
-        case'elite':this.handleBattle('elite',node);break;
         case'shop':this.handleShop();break;
         case'chest':this.handleChest();break;
         case'event':this.handleEvent();break;
@@ -4742,8 +4738,10 @@ const Adventure={
         G.startAdventure(type,enemyCreature);
       });
     } else {
-      showScreen('screen-game');
-      G.startAdventure(type,enemyCreature);
+      showBattleIntro(type,enemyCreature,()=>{
+        showScreen('screen-game');
+        G.startAdventure(type,enemyCreature);
+      });
     }
   },
 
@@ -6730,6 +6728,56 @@ function showLevelEntryIntro(floorNum,nodeType,callback){
 }
 
 /* Campfire cinematic — Mountain icon with warm glow */
+/* Normal/Elite battle cinematic — Navigate background + enemy info */
+function showBattleIntro(type,enemyCreature,callback){
+  const isElite=type==='elite';
+  const enemyName=enemyCreature?enemyCreature.name:(isElite?'精英敌人':'未知敌人');
+  const enemyEmoji=enemyCreature?enemyCreature.emoji:(isElite?'💀':'⚔');
+  const enemyBase=enemyCreature&&enemyCreature.type==='creature'?enemyCreature.base:'—';
+  const enemySlots=enemyCreature?enemyCreature.slots:'—';
+  const enemyEffect=enemyCreature&&enemyCreature.effectDesc?enemyCreature.effectDesc:'';
+  const bgImg=isElite?'icon-navigate2.jpg':'icon-navigate1.jpg';
+  const accentColor=isElite?'#c084fc':'#ff3e7a';
+  const accentGlow=isElite?'rgba(192,132,252,':'rgba(255,62,122,';
+  const labelText=isElite?'💀 ELITE ENCOUNTER 💀':'⚔ BATTLE ⚔';
+  const subtitleText=isElite?'DANGEROUS ENEMY AHEAD':'PREPARE FOR COMBAT';
+  const bgRadial=isElite
+    ?'background:radial-gradient(ellipse at center,rgba(80,30,120,0.3) 0%,rgba(5,5,15,0.97) 65%)'
+    :'background:radial-gradient(ellipse at center,rgba(120,30,30,0.25) 0%,rgba(5,5,15,0.97) 65%)';
+  const marqueeL=isElite?['ELITE','DANGER','THREAT','SKULL']:['BATTLE','COMBAT','FIGHT','STRIKE'];
+  const marqueeR=isElite?['POWER','HUNTER','ELITE','PREY']:['ATTACK','DEFEND','DICE','DUEL'];
+  // Build stats line
+  let statsHtml='';
+  if(enemyCreature&&enemyCreature.type==='creature'){
+    statsHtml=`<div style="display:flex;gap:12px;justify-content:center;margin:6px 0;font-family:'Share Tech Mono',monospace;font-size:12px;color:${accentGlow}0.7)">
+      <span>基础值: <b style="color:${accentColor}">${enemyBase}</b></span>
+      <span>槽位: <b style="color:${accentColor}">${enemySlots}</b></span>
+    </div>`;
+  }
+  // Build effect description
+  let effectHtml='';
+  if(enemyEffect){
+    effectHtml=`<div class="aio-mech-card${isElite?' purple':''}" style="margin-top:8px;text-align:center">
+      <span class="aio-mech-label" style="${isElite?'background:#a855f7':''}">效果</span>${enemyEffect}</div>`;
+  }
+  const o=_createAdvIntro({
+    bgStyle:bgRadial,
+    marqueeWords:marqueeL,
+    marqueeWordsR:marqueeR,
+    extraLayers:`<div style="position:absolute;inset:0;z-index:0;
+      background:url('assets/${bgImg}') no-repeat center;background-size:cover;
+      opacity:0;animation:aioGlobeBgIn 1.2s 0.15s ease forwards;mix-blend-mode:screen"></div>
+      <div class="aio-goldgeo"></div>`,
+    centerHTML:`<div class="aio-label" style="color:${accentColor}">${labelText}</div>
+      <div class="aio-emoji-icon" style="filter:drop-shadow(0 0 20px ${accentGlow}0.5))">${enemyEmoji}</div>
+      <div class="aio-title" style="color:${isElite?'#c084fc':'#fff'}">${enemyName}</div>
+      <div class="aio-subtitle" style="color:${accentGlow}0.85)">${subtitleText}</div>
+      ${statsHtml}
+      ${effectHtml}`
+  });
+  _showAdvIntro(o,isElite?2400:2000,callback);
+}
+
 function showCampfireIntro(callback){
   const o=_createAdvIntro({
     bgStyle:'background:radial-gradient(ellipse at center,rgba(80,40,10,0.4) 0%,rgba(5,5,15,0.97) 65%)',
