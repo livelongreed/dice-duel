@@ -1603,12 +1603,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   animation:bgBreathe 10s ease-in-out infinite alternate;will-change:transform}
 @keyframes bgBreathe{0%{transform:scale(1)}100%{transform:scale(1.05)}}
 @keyframes bgBreatheRotated{0%{transform:rotate(-90deg) scale(1)}100%{transform:rotate(-90deg) scale(1.05)}}
-.screen-bg.bg-rotated{animation-name:bgBreatheRotated;
-  position:fixed !important;top:0 !important;left:0 !important;right:auto !important;bottom:auto !important;
-  width:100vh !important;height:100vw !important;
-  margin-left:calc((100vw - 100vh) / 2);
-  margin-top:calc((100vh - 100vw) / 2);
-  transform-origin:center center}
+.screen-bg.bg-rotated{animation-name:bgBreatheRotated;transform-origin:center center}
 /* Desktop: contain to show full image */
 @media (min-width:769px){.screen-bg{background-size:contain;background-position:center center}}
 /* Inner: edge vignette gradients only (no gray overlay) */
@@ -7809,7 +7804,7 @@ const BgMgr={
   },
   /* Detect image vs screen orientation and rotate if mismatched */
   _checkRotation(bgEl,url){
-    if(!this._autoRotate){bgEl.classList.remove('bg-rotated');bgEl.style.backgroundSize='';return}
+    if(!this._autoRotate){bgEl.classList.remove('bg-rotated');this._clearRotateStyles(bgEl);return}
     const img=new Image();
     img.onload=()=>{
       const imgW=img.naturalWidth,imgH=img.naturalHeight;
@@ -7817,15 +7812,28 @@ const BgMgr={
       const imgIsPortrait=imgH>imgW;
       const scrIsPortrait=scrH>scrW;
       if(imgIsPortrait!==scrIsPortrait){
-        /* Mismatch: apply rotated class */
+        /* Mismatch: apply rotated class + inline styles to beat ID selectors */
         bgEl.classList.add('bg-rotated');
-        bgEl.style.backgroundSize='cover';
+        const s=bgEl.style;
+        s.setProperty('position','fixed','important');
+        s.setProperty('top','0','important');
+        s.setProperty('left','0','important');
+        s.setProperty('right','auto','important');
+        s.setProperty('bottom','auto','important');
+        s.setProperty('width','100vh','important');
+        s.setProperty('height','100vw','important');
+        s.setProperty('margin-left','calc((100vw - 100vh) / 2)','important');
+        s.setProperty('margin-top','calc((100vh - 100vw) / 2)','important');
+        s.setProperty('background-size','cover','important');
       }else{
         bgEl.classList.remove('bg-rotated');
-        bgEl.style.backgroundSize='';
+        this._clearRotateStyles(bgEl);
       }
     };
     img.src=url;
+  },
+  _clearRotateStyles(bgEl){
+    ['position','top','left','right','bottom','width','height','margin-left','margin-top','background-size'].forEach(p=>bgEl.style.removeProperty(p));
   },
   /* Re-check all backgrounds on resize (orientation change) */
   _recheck(){
@@ -7833,8 +7841,9 @@ const BgMgr={
       const info=this._slots[slot];
       const screen=document.getElementById(info.screen);if(!screen)continue;
       const bg=screen.querySelector('.screen-bg');if(!bg)continue;
-      const cur=bg.style.backgroundImage;
-      const m=cur.match(/url\(['"]?([^'")\s]+)['"]?\)/);
+      /* Try inline style first, then computed style for default bg */
+      const cur=bg.style.backgroundImage||getComputedStyle(bg).backgroundImage;
+      const m=cur.match(/url\(["']?([^"')\s]+)["']?\)/);
       if(m)this._checkRotation(bg,m[1]);
     }
   },
