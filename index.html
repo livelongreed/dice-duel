@@ -1602,6 +1602,11 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   background-color:#1a1a2e;
   animation:bgBreathe 10s ease-in-out infinite alternate;will-change:transform}
 @keyframes bgBreathe{0%{transform:scale(1)}100%{transform:scale(1.05)}}
+@keyframes bgBreatheRotated{0%{transform:rotate(-90deg) scale(1)}100%{transform:rotate(-90deg) scale(1.05)}}
+.screen-bg.bg-rotated{animation-name:bgBreatheRotated;
+  width:100vh;height:100vw;top:50%;left:50%;
+  transform-origin:center center;
+  margin-top:calc(-50vw);margin-left:calc(-50vh)}
 /* Desktop: contain to show full image */
 @media (min-width:769px){.screen-bg{background-size:contain;background-position:center center}}
 /* Inner: edge vignette gradients only (no gray overlay) */
@@ -1939,6 +1944,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
     <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
     <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
     <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-story')">📜</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label">
@@ -1962,7 +1968,6 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-adventure')">🗺 开始冒险</button></div>
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-tutorial')">📘 新手教程</button></div>
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-wiki')">📖 百科</button></div>
-          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-story')">📜 剧情</button></div>
         </div>
       </div>
     </div>
@@ -1972,6 +1977,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
         <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
         <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
         <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
+        <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-story')">📜</div>
       </div>
       <div class="zzz-bottom-accent">
         <div class="ba-icon">🎰</div>
@@ -2405,6 +2411,9 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
       </div>
       <input type="file" id="music-file-input" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" style="display:none">
       <div class="setting-section">背景图片设置</div>
+      <div class="setting-row"><label>自动适配横竖屏</label>
+        <input type="checkbox" id="set-bg-autorotate" checked onchange="BgMgr.setAutoRotate(this.checked)">
+      </div>
       <div class="upload-row"><label>主菜单</label>
         <div class="upload-info">
           <span class="upload-status" id="bg-status-menu">默认</span>
@@ -7097,8 +7106,8 @@ const TutorialGuide={
     showScreen('screen-menu');
     setTimeout(()=>{
       const steps=[
-        {target:'.zzz-left-strip',text:'这是左侧功能栏，包含设置(⚙)、百科(📖)、构筑(🃏)快捷入口'},
-        {target:'.zzz-menu-btns',text:'这是主菜单按钮区：开始对决、冒险、教程、百科、剧情'},
+        {target:'.zzz-left-strip',text:'这是左侧功能栏，包含设置(⚙)、百科(📖)、构筑(🃏)、剧情(📜)快捷入口'},
+        {target:'.zzz-menu-btns',text:'这是主菜单按钮区：开始对决、冒险、教程、百科'},
         {target:'.zzz-info-widget',text:'底部信息栏显示日期、天气等装饰信息'},
         {target:'.zzz-menu-label',text:'右上角标签显示当前界面名称和编号'}
       ];
@@ -7191,13 +7200,12 @@ const TutorialGuide={
     <b>⚔ 开始对决</b> — 选择难度进行快速对战<br>
     <b>🗺 开始冒险</b> — 进入冒险模式，挑战层层关卡<br>
     <b>📘 新手教程</b> — 就是你现在所在的页面<br>
-    <b>📖 百科</b> — 查看卡牌、遗物、Boss、事件等图鉴<br>
-    <b>📜 剧情</b> — 阅读锈蚀世界的背景故事</div></div>
+    <b>📖 百科</b> — 查看卡牌、遗物、Boss、事件等图鉴</div></div>
   <div class="tg-card"><div class="tg-card-title"><span class="tg-emoji">📊</span>左侧功能栏</div>
     <div class="tg-card-body">每个界面左侧的彩色竖条包含快捷按钮：<br>
     <b>⚙</b> — 打开设置（音乐、音效、背景等）<br>
     <b>↩</b> — 返回上一个界面<br>
-    部分界面还有 <b>📖 百科</b> 和 <b>🃏 构筑</b> 快捷入口</div></div>
+    部分界面还有 <b>📖 百科</b>、<b>🃏 构筑</b> 和 <b>📜 剧情</b> 快捷入口</div></div>
   <div class="tg-card"><div class="tg-card-title"><span class="tg-emoji">💰</span>资源系统</div>
     <div class="tg-card-body"><b>金币</b> — 通过对战和冒险获取，用于购买卡包解锁新卡牌<br>
     <b>卡牌</b> — 在商店购买卡包获得，用于构筑你的牌组<br>
@@ -7757,6 +7765,7 @@ NewsMatrix.init();
 const BgMgr={
   _db:null,
   _pendingSlot:null,
+  _autoRotate:true,
   /* slot → {screenId, defaultUrl} */
   _slots:{
     menu:{screen:'screen-menu',url:'assets/bg-menu.png'},
@@ -7794,6 +7803,43 @@ const BgMgr={
     const screen=document.getElementById(info.screen);if(!screen)return;
     const bg=screen.querySelector('.screen-bg');if(!bg)return;
     bg.style.backgroundImage="url('"+url+"')";
+    this._checkRotation(bg,url);
+  },
+  /* Detect image vs screen orientation and rotate if mismatched */
+  _checkRotation(bgEl,url){
+    if(!this._autoRotate){bgEl.classList.remove('bg-rotated');bgEl.style.backgroundSize='';return}
+    const img=new Image();
+    img.onload=()=>{
+      const imgW=img.naturalWidth,imgH=img.naturalHeight;
+      const scrW=window.innerWidth,scrH=window.innerHeight;
+      const imgIsPortrait=imgH>imgW;
+      const scrIsPortrait=scrH>scrW;
+      if(imgIsPortrait!==scrIsPortrait){
+        /* Mismatch: apply rotated class */
+        bgEl.classList.add('bg-rotated');
+        bgEl.style.backgroundSize='cover';
+      }else{
+        bgEl.classList.remove('bg-rotated');
+        bgEl.style.backgroundSize='';
+      }
+    };
+    img.src=url;
+  },
+  /* Re-check all backgrounds on resize (orientation change) */
+  _recheck(){
+    for(const slot of Object.keys(this._slots)){
+      const info=this._slots[slot];
+      const screen=document.getElementById(info.screen);if(!screen)continue;
+      const bg=screen.querySelector('.screen-bg');if(!bg)continue;
+      const cur=bg.style.backgroundImage;
+      const m=cur.match(/url\(['"]?([^'")\s]+)['"]?\)/);
+      if(m)this._checkRotation(bg,m[1]);
+    }
+  },
+  setAutoRotate(on){
+    this._autoRotate=on;
+    try{localStorage.setItem('dd_bg_autorotate',on?'1':'0')}catch(e){}
+    this._recheck();
   },
   _updateUI(slot,name,isCustom){
     const status=$('bg-status-'+slot);
@@ -7803,6 +7849,13 @@ const BgMgr={
     if(resetBtn)resetBtn.style.display=isCustom?'':'none';
   },
   async init(){
+    /* Restore auto-rotate setting */
+    try{const saved=localStorage.getItem('dd_bg_autorotate');
+      if(saved!==null)this._autoRotate=saved!=='0';
+      const cb=$('set-bg-autorotate');if(cb)cb.checked=this._autoRotate;
+    }catch(e){}
+    /* Listen for orientation / resize changes */
+    window.addEventListener('resize',()=>{clearTimeout(this._resizeTimer);this._resizeTimer=setTimeout(()=>this._recheck(),300)});
     const input=$('bg-file-input');
     if(input)input.addEventListener('change',async e=>{
       const f=e.target.files[0];if(!f||!this._pendingSlot)return;
@@ -7822,6 +7875,8 @@ const BgMgr={
         this._updateUI(slot,data.name,true);
       }
     }
+    /* Check default backgrounds for rotation too */
+    setTimeout(()=>this._recheck(),500);
   },
   pickFile(slot){
     this._pendingSlot=slot;
