@@ -1427,9 +1427,15 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   .rcd-slots span{width:6px;height:6px}
   .rcd-effect{font-size:10px;padding:4px 6px;margin-top:4px;line-height:1.5;max-height:none;overflow:visible;
     -webkit-line-clamp:unset;display:block}
-  /* Mobile: keyword tooltip inside reward cards — position below and don't clip */
-  .rcd-effect .kw .kw-tip{bottom:auto;top:calc(100% + 4px);left:0;transform:none;max-width:70vw;z-index:1000}
-  .rcd-effect .kw .kw-tip::after{top:auto;bottom:100%;left:12px;transform:none;border-top-color:transparent;border-bottom-color:rgba(255,107,157,0.35)}
+  /* Mobile: keyword descriptions show inline as expanding blocks instead of floating tooltips */
+  .rcd-effect .kw{display:inline;position:relative}
+  .rcd-effect .kw .kw-tip{position:static;display:none;width:100%;max-width:100%;
+    margin:4px 0 2px;padding:6px 8px;border-radius:4px;font-size:10px;line-height:1.5;
+    background:rgba(14,12,30,0.96);border:1px solid rgba(255,107,157,0.35);
+    box-shadow:0 2px 8px rgba(0,0,0,0.4);white-space:normal;
+    transform:none;animation:none;pointer-events:auto}
+  .rcd-effect .kw .kw-tip::after{display:none}
+  .rcd-effect .kw.kw-show .kw-tip{display:block;animation:none}
 }
 /* ============ ADVENTURE MAP ============ */
 .adventure-map-card{background:linear-gradient(135deg,#18162e,#1e1d32);border:1.5px solid rgba(122,90,205,0.35);border-radius:4px;
