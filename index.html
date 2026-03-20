@@ -306,6 +306,101 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .pcf-effect .kw .kw-tip::after,.c-effect .kw .kw-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:rgba(255,107,157,0.35)}
 .rcd-effect .kw .kw-tip{bottom:auto;top:calc(100% + 6px)}
 .rcd-effect .kw .kw-tip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:rgba(255,107,157,0.35)}
+/* ============ ADVENTURE CINEMATIC TRANSITIONS ============ */
+/* -- Shared fullscreen intro overlay -- */
+.adv-intro-overlay{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity 0.5s;pointer-events:none;overflow:hidden}
+.adv-intro-overlay.show{opacity:1;pointer-events:auto}
+.adv-intro-overlay.fade-out{opacity:0;pointer-events:none}
+.adv-intro-overlay .aio-bg{position:absolute;inset:0;background:rgba(5,5,15,0.96)}
+/* Halftone dot texture layers */
+.aio-dots-top{position:absolute;top:-5%;left:-5%;width:110%;height:60%;
+  background:url('assets/texture-stardots2.png') repeat;background-size:220px;
+  opacity:0.08;mix-blend-mode:screen;animation:aioDotsScroll 12s linear infinite}
+.aio-dots-ball{position:absolute;bottom:-10%;right:-10%;width:80%;height:80%;
+  background:url('assets/texture-balldot2.png') no-repeat center;background-size:contain;
+  opacity:0.06;mix-blend-mode:screen;animation:aioDotsPulse 4s ease-in-out infinite alternate}
+@keyframes aioDotsScroll{from{background-position:0 0}to{background-position:220px 220px}}
+@keyframes aioDotsPulse{from{opacity:0.04;transform:scale(0.95)}to{opacity:0.08;transform:scale(1.05)}}
+/* Gold geometric overlay */
+.aio-goldgeo{position:absolute;inset:0;background:url('assets/texture-goldgeo.png') no-repeat center;background-size:cover;
+  opacity:0;mix-blend-mode:screen;animation:aioGeoFade 2s 0.3s ease forwards}
+@keyframes aioGeoFade{from{opacity:0;transform:scale(1.1)}to{opacity:0.12;transform:scale(1)}}
+/* KEEP OUT tape decoration */
+.aio-tape{position:absolute;width:160%;height:48px;
+  background:url('assets/transition-keepout.png') repeat-x;background-size:auto 48px;
+  opacity:0;pointer-events:none;z-index:2}
+.aio-tape.tape-top{top:12%;left:-20%;transform:rotate(-8deg);animation:aioTapeIn 0.6s 0.2s cubic-bezier(0.22,1,0.36,1) forwards}
+.aio-tape.tape-bot{bottom:15%;left:-20%;transform:rotate(5deg);animation:aioTapeIn 0.6s 0.35s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes aioTapeIn{from{opacity:0;transform:rotate(var(--tape-rot,0deg)) translateX(-40%)}to{opacity:0.7;transform:rotate(var(--tape-rot,0deg)) translateX(0)}}
+.aio-tape.tape-top{--tape-rot:-8deg}.aio-tape.tape-bot{--tape-rot:5deg}
+/* Central icon container */
+.aio-center{position:relative;z-index:3;text-align:center;
+  animation:aioCenterIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards}
+@keyframes aioCenterIn{from{transform:translateY(40px) scale(0.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+.aio-icon-img{width:220px;height:auto;max-width:60vw;
+  filter:drop-shadow(0 0 30px rgba(255,62,122,0.3));
+  animation:aioIconPulse 2s ease-in-out infinite alternate}
+@keyframes aioIconPulse{from{filter:drop-shadow(0 0 20px rgba(255,62,122,0.2))}to{filter:drop-shadow(0 0 40px rgba(255,62,122,0.5))}}
+.aio-title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:28px;font-weight:800;color:#fff;
+  letter-spacing:4px;text-shadow:0 0 20px rgba(255,62,122,0.4);margin-top:12px}
+.aio-subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,107,157,0.7);
+  letter-spacing:5px;margin-top:6px;text-transform:uppercase}
+.aio-label{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:6px;color:#ff3e7a;
+  margin-bottom:14px;animation:biFlash 0.8s ease-in-out infinite alternate}
+/* Scrolling text marquee left/right sides */
+.aio-marquee{position:absolute;z-index:1;overflow:hidden;pointer-events:none;opacity:0.15}
+.aio-marquee.left{left:0;top:0;bottom:0;width:80px;writing-mode:vertical-rl}
+.aio-marquee.right{right:0;top:0;bottom:0;width:80px;writing-mode:vertical-lr}
+.aio-marquee-inner{display:inline-block;white-space:nowrap;
+  font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:900;letter-spacing:4px;
+  text-transform:uppercase;color:#ff3e7a}
+.aio-marquee.left .aio-marquee-inner{animation:aioMarqueeUp 8s linear infinite}
+.aio-marquee.right .aio-marquee-inner{animation:aioMarqueeDown 8s linear infinite;color:#c084fc}
+@keyframes aioMarqueeUp{from{transform:translateY(100%)}to{transform:translateY(-100%)}}
+@keyframes aioMarqueeDown{from{transform:translateY(-100%)}to{transform:translateY(100%)}}
+/* Arrow decoration for navigate */
+.aio-arrow{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);z-index:3;
+  font-size:24px;color:rgba(255,255,255,0.4);letter-spacing:6px;
+  animation:aioArrowBounce 1.5s ease-in-out infinite}
+@keyframes aioArrowBounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
+/* Campfire glow effect */
+.aio-campfire-glow{position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(255,140,50,0.15) 0%,transparent 60%);
+  animation:aioCampGlow 3s ease-in-out infinite alternate;z-index:0}
+@keyframes aioCampGlow{from{opacity:0.6;transform:scale(0.95)}to{opacity:1;transform:scale(1.05)}}
+/* Boss globe special effects */
+.aio-boss-vortex{position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,transparent 55%);
+  animation:aioBossVortex 4s ease-in-out infinite alternate;z-index:0}
+@keyframes aioBossVortex{from{opacity:0.5;transform:rotate(0deg) scale(0.9)}to{opacity:1;transform:rotate(3deg) scale(1.1)}}
+.aio-icon-img.boss-globe{animation:aioBossGlobeRotate 6s linear infinite}
+@keyframes aioBossGlobeRotate{from{filter:drop-shadow(0 0 20px rgba(168,85,247,0.4)) hue-rotate(0deg)}to{filter:drop-shadow(0 0 40px rgba(168,85,247,0.6)) hue-rotate(15deg)}}
+/* Mechanic info cards for boss */
+.aio-mechanics{display:flex;flex-direction:column;gap:8px;margin:12px 0;max-width:380px;text-align:left}
+.aio-mech-card{font-size:13px;color:var(--text);line-height:1.6;padding:10px 16px;
+  background:rgba(255,62,122,0.08);border:1px solid rgba(255,62,122,0.2);border-radius:6px}
+.aio-mech-card .aio-mech-label{display:inline-block;background:#ff3e7a;color:#fff;font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:3px;margin-right:8px;letter-spacing:1px}
+.aio-mech-card.purple{background:rgba(168,85,247,0.08);border-color:rgba(168,85,247,0.25)}
+.aio-mech-card.purple .aio-mech-label{background:#a855f7}
+/* Boss deck display */
+.aio-deck{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+.aio-deck-card{font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,107,157,0.2);border-radius:4px}
+.aio-hp{font-family:'Share Tech Mono',monospace;font-size:12px;color:#ff6b9d;margin-top:10px;letter-spacing:2px}
+.aio-quote{font-style:italic;color:var(--text-dim);font-size:12px;margin:8px 0}
+/* Mobile adjustments */
+@media(max-width:768px){
+  .aio-icon-img{width:160px}
+  .aio-title{font-size:22px;letter-spacing:2px}
+  .aio-subtitle{font-size:10px;letter-spacing:3px}
+  .aio-marquee.left,.aio-marquee.right{width:40px}
+  .aio-marquee-inner{font-size:10px}
+  .aio-tape{height:32px;background-size:auto 32px}
+  .aio-mech-card{font-size:11px;padding:8px 12px}
+  .aio-deck-card{font-size:18px;width:30px;height:30px}
+}
 /* Boss intro overlay */
 #boss-intro{position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.4s}
 #boss-intro.show{opacity:1}
@@ -4356,9 +4451,11 @@ const Adventure={
     this.bonusDiceNextBattle=0;
     this.currentFloor=-1;this.visitedNode=null;this.currentLayer=1;
     this.map=this.generateMap();
-    showScreen('screen-map');
-    // Starter event: pick 1 of 3 random rare cards
-    this.showStarterCardPick();
+    // Cinematic adventure entry
+    showAdventureEntryIntro(()=>{
+      showScreen('screen-map');
+      this.showStarterCardPick();
+    });
   },
 
   showStarterCardPick(){
@@ -4599,16 +4696,30 @@ const Adventure={
     const node=this.map[floor][idx];
     node.visited=true;
     this.renderMap();
-    switch(node.type){
-      case'battle':this.handleBattle('normal',node);break;
-      case'elite':this.handleBattle('elite',node);break;
-      case'boss':this.handleBattle('boss',node);break;
-      case'boss2':this.handleBattle('boss2',node);break;
-      case'campfire':this.handleCampfire();break;
-      case'shop':this.handleShop();break;
-      case'chest':this.handleChest();break;
-      case'event':this.handleEvent();break;
+    const nodeType=node.type;
+    // Boss types have their own cinematic intros
+    if(nodeType==='boss'||nodeType==='boss2'){
+      switch(nodeType){
+        case'boss':this.handleBattle('boss',node);break;
+        case'boss2':this.handleBattle('boss2',node);break;
+      }
+      return;
     }
+    // Campfire gets its own mountain-icon cinematic
+    if(nodeType==='campfire'){
+      showCampfireIntro(()=>this.handleCampfire());
+      return;
+    }
+    // All other nodes get the level entry cinematic
+    showLevelEntryIntro(floor,nodeType,()=>{
+      switch(nodeType){
+        case'battle':this.handleBattle('normal',node);break;
+        case'elite':this.handleBattle('elite',node);break;
+        case'shop':this.handleShop();break;
+        case'chest':this.handleChest();break;
+        case'event':this.handleEvent();break;
+      }
+    });
   },
 
   // --- BATTLE ---
@@ -6556,28 +6667,126 @@ function showBossEndDialogue(type,dialogueText,callback){
   },3000);
 }
 
-function showBossIntro(callback){
-  const overlay=document.createElement('div');
-  overlay.id='boss-intro';
-  overlay.innerHTML=`<div class="bi-bg"></div>
-    <div class="bi-content">
-      <div class="bi-warning">⚠ WARNING ⚠</div>
-      <div class="bi-icon">🤖</div>
-      <div class="bi-name">铁面 · 机械领主</div>
-      <div class="bi-title">IRONFACE — MECHANICAL LORD</div>
-      <div class="bi-divider"></div>
-      <div class="bi-mechanic"><span class="bi-label">战斗机制</span>每回合可"校准"你的一个骰子（将点数改为4）</div>
-      <div class="bi-quote">"4是完美的平均数，其他点数都是异常值。"</div>
-      <div class="bi-deck-label">卡组构成</div>
-      <div class="bi-deck">${BOSS_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="bi-card" title="${c.name}">${c.emoji}</span>`:''}).join('')}</div>
-      <div class="bi-hp">HP: 40 | 难度: ★★★★★</div>
-    </div>`;
+/* ============ ADVENTURE CINEMATIC INTRO SYSTEM ============ */
+function _createAdvIntro(opts){
+  const o=document.createElement('div');
+  o.className='adv-intro-overlay';
+  const marqueeL=opts.marqueeWords||['ADVENTURE','SIGNAL','DATA','EXPLORE'];
+  const marqueeR=opts.marqueeWordsR||['TERMINAL','GEO','NAVIGATE','SYSTEM'];
+  const mlText=Array(4).fill(marqueeL.join(' · ')).join(' · ');
+  const mrText=Array(4).fill(marqueeR.join(' · ')).join(' · ');
+  let bgStyle=opts.bgStyle||'';
+  let extraLayers=opts.extraLayers||'';
+  let centerHTML=opts.centerHTML||'';
+  o.innerHTML=`<div class="aio-bg" style="${bgStyle}"></div>
+    <div class="aio-dots-top"></div><div class="aio-dots-ball"></div>
+    ${extraLayers}
+    <div class="aio-marquee left"><span class="aio-marquee-inner">${mlText}</span></div>
+    <div class="aio-marquee right"><span class="aio-marquee-inner">${mrText}</span></div>
+    <div class="aio-tape tape-top"></div>
+    <div class="aio-tape tape-bot"></div>
+    <div class="aio-center">${centerHTML}</div>`;
+  return o;
+}
+function _showAdvIntro(overlay,duration,callback){
   document.body.appendChild(overlay);
-  setTimeout(()=>overlay.classList.add('show'),50);
+  setTimeout(()=>overlay.classList.add('show'),30);
   setTimeout(()=>{
     overlay.classList.add('fade-out');
     setTimeout(()=>{overlay.remove();if(callback)callback()},600);
-  },3500);
+  },duration);
+}
+
+/* Adventure entry cinematic — Navigate arrow icon */
+function showAdventureEntryIntro(callback){
+  const o=_createAdvIntro({
+    marqueeWords:['NAVIGATE','SYSTEM','OUTDOOR','ACTIVE'],
+    marqueeWordsR:['ALTITUDE','STATUS','4040N','NAVIGATE'],
+    centerHTML:`<div class="aio-label">◆ ADVENTURE START ◆</div>
+      <img src="assets/icon-navigate1.jpg" class="aio-icon-img" alt="navigate">
+      <div class="aio-title">冒险开始</div>
+      <div class="aio-subtitle">ENTERING THE UNKNOWN</div>
+      <div class="aio-arrow">▼ ▼ ▼</div>`
+  });
+  _showAdvIntro(o,2800,callback);
+}
+
+/* Level/floor entry cinematic — Navigate arrow icon 2 */
+function showLevelEntryIntro(floorNum,nodeType,callback){
+  const typeLabels={battle:'⚔ BATTLE',elite:'💀 ELITE BATTLE',event:'✨ EVENT',
+    campfire:'🔥 CAMPFIRE',shop:'🛒 SHOP',chest:'📦 TREASURE',boss:'👹 BOSS',boss2:'🎲 FINAL BOSS'};
+  const label=typeLabels[nodeType]||'ADVENTURE';
+  const o=_createAdvIntro({
+    marqueeWords:['NAVIGATE','OUTDOOR','SYSTEM','ACTIVE'],
+    marqueeWordsR:['STATUS','ALTITUDE','NAVIGATE','SYSTEM'],
+    centerHTML:`<div class="aio-label">◆ FLOOR ${floorNum+1} ◆</div>
+      <img src="assets/icon-navigate2.jpg" class="aio-icon-img" alt="navigate">
+      <div class="aio-title">${label}</div>
+      <div class="aio-subtitle">PROCEEDING TO NEXT NODE</div>`
+  });
+  _showAdvIntro(o,1800,callback);
+}
+
+/* Campfire cinematic — Mountain icon with warm glow */
+function showCampfireIntro(callback){
+  const o=_createAdvIntro({
+    bgStyle:'background:radial-gradient(ellipse at center,rgba(80,40,10,0.4) 0%,rgba(5,5,15,0.97) 65%)',
+    marqueeWords:['EXPLORE','DATA','TERMINAL','EXPLORE'],
+    marqueeWordsR:['DATA','TERMINAL','EXPLORE','DATA'],
+    extraLayers:'<div class="aio-campfire-glow"></div><div class="aio-goldgeo"></div>',
+    centerHTML:`<div class="aio-label">🔥 CAMPFIRE 🔥</div>
+      <img src="assets/icon-mountain.jpg" class="aio-icon-img" alt="campfire">
+      <div class="aio-title">篝火营地</div>
+      <div class="aio-subtitle">REST · UPGRADE · PREPARE</div>`
+  });
+  _showAdvIntro(o,2200,callback);
+}
+
+/* Boss battle cinematic — Globe icon with vortex */
+function showBossIntro(callback){
+  const o=_createAdvIntro({
+    bgStyle:'background:radial-gradient(ellipse at center,rgba(120,20,40,0.35) 0%,rgba(5,5,15,0.97) 60%)',
+    marqueeWords:['WARNING','DANGER','BOSS','ALERT'],
+    marqueeWordsR:['THREAT','MAXIMUM','ENGAGE','WARNING'],
+    extraLayers:'<div class="aio-boss-vortex" style="background:radial-gradient(ellipse at center,rgba(255,62,122,0.2) 0%,transparent 55%)"></div><div class="aio-goldgeo"></div>',
+    centerHTML:`<div class="aio-label">⚠ WARNING ⚠</div>
+      <img src="assets/icon-globe.jpg" class="aio-icon-img boss-globe" alt="boss">
+      <div class="aio-title">铁面 · 机械领主</div>
+      <div class="aio-subtitle">IRONFACE — MECHANICAL LORD</div>
+      <div class="aio-mechanics">
+        <div class="aio-mech-card"><span class="aio-mech-label">战斗机制</span>每回合可"校准"你的一个骰子（将点数改为4）</div>
+      </div>
+      <div class="aio-quote">"4是完美的平均数，其他点数都是异常值。"</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,107,157,0.6);letter-spacing:2px;margin:8px 0 4px">卡组构成</div>
+      <div class="aio-deck">${BOSS_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="aio-deck-card" title="${c.name}">${c.emoji}</span>`:''}).join('')}</div>
+      <div class="aio-hp">HP: 40 | 难度: ★★★★★</div>`
+  });
+  _showAdvIntro(o,3800,callback);
+}
+
+/* Victor (Boss 2) cinematic — Globe icon with purple vortex */
+function showVictorIntro(callback){
+  const deckHtml=VICTOR_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="aio-deck-card" style="border-color:rgba(168,85,247,0.3)" title="${c.name}">${c.emoji}</span>`:''}).join('');
+  const o=_createAdvIntro({
+    bgStyle:'background:radial-gradient(ellipse at center,rgba(80,30,120,0.45) 0%,rgba(10,10,20,0.97) 65%)',
+    marqueeWords:['CASINO','GAMBLE','VICTOR','DICE'],
+    marqueeWordsR:['CHIPS','WAGER','ROULETTE','JACKPOT'],
+    extraLayers:'<div class="aio-boss-vortex"></div><div class="aio-goldgeo"></div>',
+    centerHTML:`<div class="aio-label" style="color:#a855f7">♠ CASINO BOSS ♠</div>
+      <img src="assets/icon-globe.jpg" class="aio-icon-img boss-globe" style="filter:drop-shadow(0 0 30px rgba(168,85,247,0.4)) hue-rotate(60deg)" alt="boss">
+      <div class="aio-title" style="color:#c084fc">骰魔 · 维克多</div>
+      <div class="aio-subtitle" style="color:rgba(192,132,252,0.7)">VICTOR — THE DICE DEMON</div>
+      <div class="aio-mechanics">
+        <div class="aio-mech-card purple"><span class="aio-mech-label">筹码机制</span>玩家掷骰后，维克多获得等于玩家最大骰值的筹码</div>
+        <div class="aio-mech-card purple"><span class="aio-mech-label">被动</span>生物基础值+1，额外+floor(筹码/3) (最高+3)</div>
+        <div class="aio-mech-card purple"><span class="aio-mech-label">技能</span>换牌(3) | 双倍赌注(5) | 轮盘(6)</div>
+      </div>
+      <div class="aio-quote" style="color:rgba(192,132,252,0.6)">"欢迎来到我的赌场。庄家永远赢。"</div>
+      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(168,85,247,0.6);letter-spacing:2px;margin:8px 0 4px">卡组构成</div>
+      <div class="aio-deck">${deckHtml}</div>
+      <div class="aio-hp" style="color:#c084fc">HP: 45 | 难度: ★★★★★★</div>`
+  });
+  _showAdvIntro(o,4200,callback);
 }
 
 const VictorDialogue={
@@ -6685,33 +6894,7 @@ function _victorSayNow(text){
     setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),400)},3500)}
 }
 
-function showVictorIntro(callback){
-  const overlay=document.createElement('div');
-  overlay.id='boss-intro';
-  overlay.style.cssText='--bi-accent:#a855f7;--bi-glow:rgba(130,60,220,0.5)';
-  const deckHtml=VICTOR_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="bi-card" title="${c.name}">${c.emoji}</span>`:''}).join('');
-  overlay.innerHTML=`<div class="bi-bg" style="background:radial-gradient(ellipse at center,rgba(80,30,120,0.55) 0%,rgba(10,10,20,0.97) 70%)"></div>
-    <div class="bi-content">
-      <div class="bi-warning" style="color:#a855f7">♠ CASINO BOSS ♠</div>
-      <div class="bi-icon">🎲</div>
-      <div class="bi-name" style="color:#a855f7">骰魔 · 维克多</div>
-      <div class="bi-title" style="color:#c084fc">VICTOR — THE DICE DEMON</div>
-      <div class="bi-divider" style="border-color:rgba(130,60,220,0.3)"></div>
-      <div class="bi-mechanic"><span class="bi-label" style="color:#a855f7">筹码机制</span>玩家掷骰后，维克多获得等于玩家最大骰值的筹码</div>
-      <div class="bi-mechanic"><span class="bi-label" style="color:#a855f7">被动</span>生物基础值+1，额外+floor(筹码/3) (最高+3)</div>
-      <div class="bi-mechanic"><span class="bi-label" style="color:#a855f7">技能</span>换牌(3筹码) | 双倍赌注(5筹码) | 轮盘(6筹码)</div>
-      <div class="bi-quote" style="border-color:rgba(130,60,220,0.3)">"欢迎来到我的赌场。庄家永远赢。"</div>
-      <div class="bi-deck-label">卡组构成</div>
-      <div class="bi-deck">${deckHtml}</div>
-      <div class="bi-hp">HP: 45 | 难度: ★★★★★★</div>
-    </div>`;
-  document.body.appendChild(overlay);
-  setTimeout(()=>overlay.classList.add('show'),50);
-  setTimeout(()=>{
-    overlay.classList.add('fade-out');
-    setTimeout(()=>{overlay.remove();if(callback)callback()},600);
-  },4000);
-}
+/* showVictorIntro is now defined above in the cinematic system */
 
 // ============================================================
 // RENDERING
