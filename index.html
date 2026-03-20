@@ -3608,7 +3608,7 @@ const ALL_CARDS=[
     log(`诅咒爆发:移除${removed}层诅咒,造成${dmg}伤害!`,'effect')}else{log('诅咒爆发:对手无诅咒可移除','effect')}}},
 ];
 
-const COMMON_CARDS=['shadow_rat','swift_bird','steam_sentinel','gear_hound','chimney_golem','magnet_puppet','boiler_spider','slime','time_traveler','greedy_mimic','crystal_guard','even_absorb','overload_pulse','steam_burst','emergency_repair','metal_shield','doom_prophet','soul_thief','double_pair','curse_sacrifice','gourd_contract','pair_amplify','iron_giant','clock_prophet','curse_venom','blood_beast','life_reaper','fear_chimera','curse_spread','blood_curse_resonance'];
+const COMMON_CARDS=['shadow_rat','swift_bird','steam_sentinel','gear_hound','chimney_golem','magnet_puppet','boiler_spider','slime','time_traveler','greedy_mimic','crystal_guard','even_absorb','overload_pulse','steam_burst','emergency_repair','metal_shield','doom_prophet','soul_thief','double_pair','curse_sacrifice','gourd_contract','pair_amplify','iron_giant','clock_prophet','curse_venom','blood_beast','life_reaper','fear_chimera','curse_spread','blood_curse_resonance','gear_boost'];
 
 const ALL_RELICS=[
   {id:'lucky_dice',name:'幸运骰子',emoji:'🎲',rarity:'common',desc:'第一回合多获得1个骰子，但该回合必须使用该骰子，否则失去遗物'},
@@ -3693,30 +3693,34 @@ const PlayerData={
   unlockedCards:[],
   bossRewardClaimed:false,
   boss2RewardClaimed:false,
-  VERSION:3,
+  deck2Unlocked:false,
+  adventureCompleted:false,
+  VERSION:4,
   init(){
     try{
       const savedVer=parseInt(localStorage.getItem('dd_version'))||0;
       if(savedVer<this.VERSION){
-        localStorage.removeItem('dd_playerdata');
-        localStorage.removeItem('dd_deck');
+        // Migrate: keep existing data but add new fields
+        const s=localStorage.getItem('dd_playerdata');
+        if(s){const d=JSON.parse(s);this.gold=d.gold||0;this.unlockedCards=d.unlockedCards||[...STARTER_CARDS];this.bossRewardClaimed=!!d.bossRewardClaimed;this.boss2RewardClaimed=!!d.boss2RewardClaimed;this.deck2Unlocked=!!d.deck2Unlocked;this.adventureCompleted=!!d.adventureCompleted}
+        else{this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.deck2Unlocked=false;this.adventureCompleted=false}
         localStorage.setItem('dd_version',String(this.VERSION));
-        this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.save();return;
+        this.save();return;
       }
       const s=localStorage.getItem('dd_playerdata');
-      if(s){const d=JSON.parse(s);this.gold=d.gold||0;this.unlockedCards=d.unlockedCards||[...STARTER_CARDS];this.bossRewardClaimed=!!d.bossRewardClaimed;this.boss2RewardClaimed=!!d.boss2RewardClaimed}
-      else{this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.save()}
-    }catch(e){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.save()}
+      if(s){const d=JSON.parse(s);this.gold=d.gold||0;this.unlockedCards=d.unlockedCards||[...STARTER_CARDS];this.bossRewardClaimed=!!d.bossRewardClaimed;this.boss2RewardClaimed=!!d.boss2RewardClaimed;this.deck2Unlocked=!!d.deck2Unlocked;this.adventureCompleted=!!d.adventureCompleted}
+      else{this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.deck2Unlocked=false;this.adventureCompleted=false;this.save()}
+    }catch(e){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.deck2Unlocked=false;this.adventureCompleted=false;this.save()}
   },
   save(){
-    localStorage.setItem('dd_playerdata',JSON.stringify({gold:this.gold,unlockedCards:this.unlockedCards,bossRewardClaimed:this.bossRewardClaimed,boss2RewardClaimed:this.boss2RewardClaimed}));
+    localStorage.setItem('dd_playerdata',JSON.stringify({gold:this.gold,unlockedCards:this.unlockedCards,bossRewardClaimed:this.bossRewardClaimed,boss2RewardClaimed:this.boss2RewardClaimed,deck2Unlocked:this.deck2Unlocked,adventureCompleted:this.adventureCompleted}));
   },
   hasCard(id){return this.unlockedCards.includes(id)},
   addCard(id){if(!this.unlockedCards.includes(id))this.unlockedCards.push(id);this.save()},
   addGold(n){this.gold+=n;this.save()},
   spendGold(n){if(this.gold>=n){this.gold-=n;this.save();return true}return false},
   getOwnedCards(){return ALL_CARDS.filter(c=>this.unlockedCards.includes(c.id))},
-  reset(){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.save()}
+  reset(){this.gold=0;this.unlockedCards=[...STARTER_CARDS];this.bossRewardClaimed=false;this.boss2RewardClaimed=false;this.deck2Unlocked=false;this.adventureCompleted=false;this.save()}
 };
 
 // ============================================================
@@ -4332,6 +4336,13 @@ const Story={
 // ADVENTURE MODE (Slay the Spire-style)
 // ============================================================
 const ADVENTURE_STARTER_DECK=['swift_bird','gear_hound','chimney_golem','magnet_puppet','steam_burst','overload_pulse','wisdom_tree'];
+const ADVENTURE_STARTER_DECK_2=['shadow_rat','clock_prophet','rift_walker','pair_amplify','blood_beast','spark_inspiration','slime'];
+const ADV_DECK_INFO=[
+  {id:'deck1',name:'热血笨蛋',cards:ADVENTURE_STARTER_DECK,emoji:'🔥',
+   desc:'以蒸汽机械为核心的正面进攻型牌组，擅长稳定输出和增益叠加。'},
+  {id:'deck2',name:'阴险策士',cards:ADVENTURE_STARTER_DECK_2,emoji:'🐀',
+   desc:'以窥视、操控和对子联动为核心的策略型牌组，擅长信息差和连锁效果。',locked:true}
+];
 
 const RANDOM_EVENTS=[
   {id:'mystic_merchant',name:'神秘商人',emoji:'🎭',desc:'一个戴面具的商人拦住了你...',skippable:true,
@@ -4445,10 +4456,44 @@ const Adventure={
 
   // --- MAP GENERATION ---
   selectMap(id){
-    this.mapId=id;
+    this._pendingMapId=id;
+    // If deck2 is unlocked, show deck selection; otherwise use default deck1
+    if(PlayerData.deck2Unlocked){
+      this.showDeckSelection(id);
+    } else {
+      this._startWithDeck(id,ADVENTURE_STARTER_DECK);
+    }
+  },
+
+  showDeckSelection(mapId){
+    const p=$('adv-panel');
+    let html=`<h3>🎴 选择初始卡组</h3><p>选择本次冒险使用的初始牌组:</p><div class="zzz-reward-picks" style="margin:16px 0">`;
+    ADV_DECK_INFO.forEach(d=>{
+      const isLocked=d.locked&&!PlayerData.deck2Unlocked;
+      const cards=d.cards.map(cid=>{const c=getCardDef(cid);return c?c.emoji:''}).join(' ');
+      html+=`<div class="reward-card-detail${isLocked?' locked-deck':''}" style="cursor:${isLocked?'not-allowed':'pointer'};padding:14px 12px"
+        onclick="${isLocked?'':`Adventure._startWithDeck('${mapId}',${d.id==='deck1'?'ADVENTURE_STARTER_DECK':'ADVENTURE_STARTER_DECK_2'})`}">
+        <div class="rcd-emoji" style="font-size:36px">${d.emoji}</div>
+        <div class="rcd-body" style="text-align:center">
+          <div class="rcd-name" style="font-size:16px;margin-bottom:4px">${d.name}</div>
+          <div class="rcd-type" style="font-size:9px;margin-bottom:6px">${d.id==='deck1'?'STARTER DECK':'STRATEGY DECK'}</div>
+          <div style="font-size:18px;letter-spacing:2px;margin:6px 0">${cards}</div>
+          <div class="rcd-effect" style="font-size:11px;text-align:center;border-left:none">${d.desc}</div>
+          ${isLocked?'<div style="color:#f56565;font-size:11px;margin-top:6px">🔒 完成一次冒险解锁</div>':''}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+    p.innerHTML=html;
+    advShowOverlay();
+  },
+
+  _startWithDeck(mapId,deckCards){
+    advHideOverlay();
+    this.mapId=mapId;
     this.active=true;
     this.hp=30;this.maxHp=30;this.gold=50;
-    this.deck=[...ADVENTURE_STARTER_DECK];
+    this.deck=[...deckCards];
     this.upgradedCards=new Set();
     this.relics=[];
     this.removeCount=0;
@@ -4456,10 +4501,12 @@ const Adventure={
     this.currentFloor=-1;this.visitedNode=null;this.currentLayer=1;
     this.map=this.generateMap();
     // Cinematic adventure entry
-    showAdventureEntryIntro(()=>{
-      showScreen('screen-map');
-      this.showStarterCardPick();
-    });
+    setTimeout(()=>{
+      showAdventureEntryIntro(()=>{
+        showScreen('screen-map');
+        this.showStarterCardPick();
+      });
+    },400);
   },
 
   showStarterCardPick(){
@@ -4776,11 +4823,24 @@ const Adventure={
   },
 
   showBossVictory(){
+    // Unlock deck2 on first adventure completion (layer 1 boss defeated)
+    if(!PlayerData.adventureCompleted){
+      PlayerData.adventureCompleted=true;
+      PlayerData.deck2Unlocked=true;
+      PlayerData.save();
+      // Show unlock notification after the victory screen
+      this._pendingDeckUnlock=true;
+    }
     if(this.currentLayer===1){
       this.showLayerTransition();
     } else {
       const p=$('adv-panel');
-      p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE COMPLETE</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">👑</div><h3 style="color:#48bb78">冒险完全胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
+      let extraMsg='';
+      if(this._pendingDeckUnlock){
+        extraMsg='<div style="margin:12px 0;padding:10px 14px;background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:6px"><div style="color:#ffd700;font-size:14px;font-weight:700">🎴 新卡组已解锁!</div><div style="color:var(--text);font-size:12px;margin-top:4px">「🐀 阴险策士」初始卡组现已可用！<br>下次冒险时可在两套卡组中选择。</div></div>';
+        this._pendingDeckUnlock=false;
+      }
+      p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE COMPLETE</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">👑</div><h3 style="color:#48bb78">冒险完全胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p>${extraMsg}<button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
       advShowOverlay();
     }
   },
@@ -4788,7 +4848,13 @@ const Adventure={
   showLayerTransition(){
     const p=$('adv-panel');
     const healAmt=Math.ceil(this.maxHp*0.3);
+    let unlockMsg='';
+    if(this._pendingDeckUnlock){
+      unlockMsg='<div style="margin:12px 0;padding:10px 14px;background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:6px"><div style="color:#ffd700;font-size:14px;font-weight:700">🎴 新卡组已解锁!</div><div style="color:var(--text);font-size:12px;margin-top:4px">「🐀 阴险策士」初始卡组现已可用！<br>下次冒险时可在两套卡组中选择。</div></div>';
+      this._pendingDeckUnlock=false;
+    }
     p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#ff3e7a;font-family:'Share Tech Mono',monospace;margin-bottom:6px">LAYER CLEARED</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(255,62,122,0.3))">🎉</div><h3>第一层通关!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#ff3e7a,transparent)"></div>
+      ${unlockMsg}
       <p>选择你的奖励:</p>
       <div style="display:flex;flex-direction:column;gap:10px;margin:12px 0">
         <button class="adv-btn" onclick="Adventure.pickLayerReward('heal')">❤️ 恢复${healAmt}HP + 选择一张牌升级</button>
