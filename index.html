@@ -326,28 +326,29 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .aio-goldgeo{position:absolute;inset:0;background:url('assets/texture-goldgeo.png') no-repeat center;background-size:cover;
   opacity:0;mix-blend-mode:screen;animation:aioGeoFade 2s 0.3s ease forwards}
 @keyframes aioGeoFade{from{opacity:0;transform:scale(1.1)}to{opacity:0.12;transform:scale(1)}}
-/* KEEP OUT tape decoration */
-.aio-tape{position:absolute;width:160%;height:48px;
-  background:url('assets/transition-keepout.png') repeat-x;background-size:auto 48px;
-  opacity:0;pointer-events:none;z-index:2}
-.aio-tape.tape-top{top:12%;left:-20%;transform:rotate(-8deg);animation:aioTapeIn 0.6s 0.2s cubic-bezier(0.22,1,0.36,1) forwards}
-.aio-tape.tape-bot{bottom:15%;left:-20%;transform:rotate(5deg);animation:aioTapeIn 0.6s 0.35s cubic-bezier(0.22,1,0.36,1) forwards}
-@keyframes aioTapeIn{from{opacity:0;transform:rotate(var(--tape-rot,0deg)) translateX(-40%)}to{opacity:0.7;transform:rotate(var(--tape-rot,0deg)) translateX(0)}}
-.aio-tape.tape-top{--tape-rot:-8deg}.aio-tape.tape-bot{--tape-rot:5deg}
+/* Globe background layer for boss intros */
+.aio-globe-bg{position:absolute;inset:0;z-index:0;
+  background:url('assets/icon-globe.jpg') no-repeat center;background-size:cover;
+  opacity:0;animation:aioGlobeBgIn 1.5s 0.2s ease forwards}
+@keyframes aioGlobeBgIn{from{opacity:0;transform:scale(1.15)}to{opacity:0.18;transform:scale(1)}}
 /* Central icon container */
 .aio-center{position:relative;z-index:3;text-align:center;
+  padding:24px 20px;border-radius:8px;
+  background:rgba(5,5,15,0.65);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
   animation:aioCenterIn 0.6s cubic-bezier(0.22,1,0.36,1) forwards}
 @keyframes aioCenterIn{from{transform:translateY(40px) scale(0.8);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 .aio-icon-img{width:220px;height:auto;max-width:60vw;
   filter:drop-shadow(0 0 30px rgba(255,62,122,0.3));
   animation:aioIconPulse 2s ease-in-out infinite alternate}
 @keyframes aioIconPulse{from{filter:drop-shadow(0 0 20px rgba(255,62,122,0.2))}to{filter:drop-shadow(0 0 40px rgba(255,62,122,0.5))}}
+/* Boss emoji icon */
+.aio-emoji-icon{font-size:72px;margin:8px 0;filter:drop-shadow(0 0 20px rgba(255,62,122,0.5));line-height:1}
 .aio-title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:28px;font-weight:800;color:#fff;
-  letter-spacing:4px;text-shadow:0 0 20px rgba(255,62,122,0.4);margin-top:12px}
-.aio-subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,107,157,0.7);
-  letter-spacing:5px;margin-top:6px;text-transform:uppercase}
+  letter-spacing:4px;text-shadow:0 2px 12px rgba(0,0,0,0.8),0 0 20px rgba(255,62,122,0.4);margin-top:12px}
+.aio-subtitle{font-family:'Share Tech Mono',monospace;font-size:12px;color:rgba(255,200,220,0.85);
+  letter-spacing:5px;margin-top:6px;text-transform:uppercase;text-shadow:0 1px 6px rgba(0,0,0,0.8)}
 .aio-label{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:6px;color:#ff3e7a;
-  margin-bottom:14px;animation:biFlash 0.8s ease-in-out infinite alternate}
+  margin-bottom:14px;animation:biFlash 0.8s ease-in-out infinite alternate;text-shadow:0 1px 8px rgba(0,0,0,0.8)}
 /* Scrolling text marquee left/right sides */
 .aio-marquee{position:absolute;z-index:1;overflow:hidden;pointer-events:none;opacity:0.15}
 .aio-marquee.left{left:0;top:0;bottom:0;width:80px;writing-mode:vertical-rl}
@@ -369,13 +370,11 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   background:radial-gradient(ellipse at center,rgba(255,140,50,0.15) 0%,transparent 60%);
   animation:aioCampGlow 3s ease-in-out infinite alternate;z-index:0}
 @keyframes aioCampGlow{from{opacity:0.6;transform:scale(0.95)}to{opacity:1;transform:scale(1.05)}}
-/* Boss globe special effects */
+/* Boss vortex radial glow */
 .aio-boss-vortex{position:absolute;inset:0;
   background:radial-gradient(ellipse at center,rgba(168,85,247,0.2) 0%,transparent 55%);
   animation:aioBossVortex 4s ease-in-out infinite alternate;z-index:0}
 @keyframes aioBossVortex{from{opacity:0.5;transform:rotate(0deg) scale(0.9)}to{opacity:1;transform:rotate(3deg) scale(1.1)}}
-.aio-icon-img.boss-globe{animation:aioBossGlobeRotate 6s linear infinite}
-@keyframes aioBossGlobeRotate{from{filter:drop-shadow(0 0 20px rgba(168,85,247,0.4)) hue-rotate(0deg)}to{filter:drop-shadow(0 0 40px rgba(168,85,247,0.6)) hue-rotate(15deg)}}
 /* Mechanic info cards for boss */
 .aio-mechanics{display:flex;flex-direction:column;gap:8px;margin:12px 0;max-width:380px;text-align:left}
 .aio-mech-card{font-size:13px;color:var(--text);line-height:1.6;padding:10px 16px;
@@ -397,7 +396,6 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   .aio-subtitle{font-size:10px;letter-spacing:3px}
   .aio-marquee.left,.aio-marquee.right{width:40px}
   .aio-marquee-inner{font-size:10px}
-  .aio-tape{height:32px;background-size:auto 32px}
   .aio-mech-card{font-size:11px;padding:8px 12px}
   .aio-deck-card{font-size:18px;width:30px;height:30px}
 }
@@ -6683,8 +6681,6 @@ function _createAdvIntro(opts){
     ${extraLayers}
     <div class="aio-marquee left"><span class="aio-marquee-inner">${mlText}</span></div>
     <div class="aio-marquee right"><span class="aio-marquee-inner">${mrText}</span></div>
-    <div class="aio-tape tape-top"></div>
-    <div class="aio-tape tape-bot"></div>
     <div class="aio-center">${centerHTML}</div>`;
   return o;
 }
@@ -6748,9 +6744,9 @@ function showBossIntro(callback){
     bgStyle:'background:radial-gradient(ellipse at center,rgba(120,20,40,0.35) 0%,rgba(5,5,15,0.97) 60%)',
     marqueeWords:['WARNING','DANGER','BOSS','ALERT'],
     marqueeWordsR:['THREAT','MAXIMUM','ENGAGE','WARNING'],
-    extraLayers:'<div class="aio-boss-vortex" style="background:radial-gradient(ellipse at center,rgba(255,62,122,0.2) 0%,transparent 55%)"></div><div class="aio-goldgeo"></div>',
+    extraLayers:'<div class="aio-globe-bg"></div><div class="aio-boss-vortex" style="background:radial-gradient(ellipse at center,rgba(255,62,122,0.2) 0%,transparent 55%)"></div><div class="aio-goldgeo"></div>',
     centerHTML:`<div class="aio-label">⚠ WARNING ⚠</div>
-      <img src="assets/icon-globe.jpg" class="aio-icon-img boss-globe" alt="boss">
+      <div class="aio-emoji-icon">🤖</div>
       <div class="aio-title">铁面 · 机械领主</div>
       <div class="aio-subtitle">IRONFACE — MECHANICAL LORD</div>
       <div class="aio-mechanics">
@@ -6764,18 +6760,18 @@ function showBossIntro(callback){
   _showAdvIntro(o,3800,callback);
 }
 
-/* Victor (Boss 2) cinematic — Globe icon with purple vortex */
+/* Victor (Boss 2) cinematic — Globe background with purple vortex */
 function showVictorIntro(callback){
   const deckHtml=VICTOR_DECK_IDS.map(id=>{const c=getCardDef(id);return c?`<span class="aio-deck-card" style="border-color:rgba(168,85,247,0.3)" title="${c.name}">${c.emoji}</span>`:''}).join('');
   const o=_createAdvIntro({
     bgStyle:'background:radial-gradient(ellipse at center,rgba(80,30,120,0.45) 0%,rgba(10,10,20,0.97) 65%)',
     marqueeWords:['CASINO','GAMBLE','VICTOR','DICE'],
     marqueeWordsR:['CHIPS','WAGER','ROULETTE','JACKPOT'],
-    extraLayers:'<div class="aio-boss-vortex"></div><div class="aio-goldgeo"></div>',
+    extraLayers:'<div class="aio-globe-bg" style="opacity:0;animation:aioGlobeBgIn 1.5s 0.2s ease forwards;filter:hue-rotate(60deg)"></div><div class="aio-boss-vortex"></div><div class="aio-goldgeo"></div>',
     centerHTML:`<div class="aio-label" style="color:#a855f7">♠ CASINO BOSS ♠</div>
-      <img src="assets/icon-globe.jpg" class="aio-icon-img boss-globe" style="filter:drop-shadow(0 0 30px rgba(168,85,247,0.4)) hue-rotate(60deg)" alt="boss">
+      <div class="aio-emoji-icon">🎲</div>
       <div class="aio-title" style="color:#c084fc">骰魔 · 维克多</div>
-      <div class="aio-subtitle" style="color:rgba(192,132,252,0.7)">VICTOR — THE DICE DEMON</div>
+      <div class="aio-subtitle" style="color:rgba(192,132,252,0.85)">VICTOR — THE DICE DEMON</div>
       <div class="aio-mechanics">
         <div class="aio-mech-card purple"><span class="aio-mech-label">筹码机制</span>玩家掷骰后，维克多获得等于玩家最大骰值的筹码</div>
         <div class="aio-mech-card purple"><span class="aio-mech-label">被动</span>生物基础值+1，额外+floor(筹码/3) (最高+3)</div>
