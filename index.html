@@ -163,8 +163,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 @keyframes gearSpin{to{transform:rotate(360deg)}}
 .menu-wrap{text-align:center;position:relative;z-index:2}
 .title{font-family:'Baloo 2','Fredoka',sans-serif;font-size:40px;letter-spacing:6px;
-  background:linear-gradient(180deg,#ffffff 0%,#d0d0d0 40%,#999999 60%,#d0d0d0 80%,#ffffff 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  color:#fff;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 12px rgba(0,0,0,0.15))}
 .subtitle{font-family:'Share Tech Mono';font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:8px;margin-top:4px}
 .divider{width:200px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,62,122,0.4),transparent);margin:20px auto}
@@ -187,13 +186,13 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .deck-builder{width:100%;height:100%;padding:12px;display:flex;flex-direction:column;position:relative;z-index:2}
 .deck-header{display:flex;align-items:center;gap:16px;padding-bottom:8px;border-bottom:1px solid var(--gold-dim);transform:skewX(-4deg)}
 .deck-header>*{transform:skewX(4deg)}
-.deck-header h2{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:20px}
+.deck-header h2{font-family:'Baloo 2','Fredoka',sans-serif;color:#fff;font-size:20px}
 #deck-count{font-family:'Share Tech Mono';color:var(--rust-light);font-size:14px}
 .deck-body{display:flex;flex:1;gap:12px;margin-top:8px;overflow:hidden}
 .card-grid{flex:1;display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;overflow-y:auto;padding:4px}
 .deck-list-wrap{width:240px;background:rgba(20,18,30,0.8);border:1px solid var(--card-border);border-radius:4px;padding:8px;
   display:flex;flex-direction:column;transform:skewX(-3deg)}
-.deck-list-wrap h3{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:13px;margin-bottom:6px}
+.deck-list-wrap h3{font-family:'Baloo 2','Fredoka',sans-serif;color:#fff;font-size:13px;margin-bottom:6px}
 #deck-list{flex:1;overflow-y:auto;font-size:12px}
 #deck-list .dl-item{padding:3px 6px;border-bottom:1px solid rgba(255,255,255,0.05);cursor:pointer;display:flex;justify-content:space-between}
 #deck-list .dl-item:hover{background:rgba(255,62,122,0.15)}
@@ -202,7 +201,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* Settings */
 .settings-wrap{width:360px;padding:24px;background:var(--bg2);border:2px solid var(--gold-dim);border-radius:6px;max-height:80vh;overflow-y:auto;transform:skewX(-5deg)}
 .settings-wrap>*{transform:skewX(5deg)}
-.settings-wrap h2{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:20px;margin-bottom:16px;text-align:center}
+.settings-wrap h2{font-family:'Baloo 2','Fredoka',sans-serif;color:#fff;font-size:20px;margin-bottom:16px;text-align:center}
 .setting-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
 .setting-row label{font-size:13px}
 .setting-row select,.setting-row input[type=checkbox],.setting-row input[type=range]{background:var(--bg);color:var(--text);border:1px solid var(--metal);
@@ -673,7 +672,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 10px rgba(255,62,122,0.4)}
 #overlay-content::after{content:'';position:absolute;right:10px;bottom:10px;width:32px;height:32px;
   border-right:2px solid rgba(255,62,122,0.15);border-bottom:2px solid rgba(255,62,122,0.15)}
-#overlay-content h3{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);margin-bottom:10px;font-size:16px;
+#overlay-content h3{font-family:'Baloo 2','Fredoka',sans-serif;color:#fff;margin-bottom:10px;font-size:16px;
   letter-spacing:1px}
 #overlay-content .ov-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 #overlay-content .ov-btn{padding:10px 22px 10px 28px;border:none;background:#1a1a2e;color:#fff;
@@ -705,8 +704,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 @keyframes turnBannerOut{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(20px) scale(0.9)}}
 .turn-banner{position:fixed;top:18%;left:50%;transform:translateX(-50%);z-index:400;pointer-events:none;
   font-family:'Baloo 2','Fredoka',sans-serif;font-size:28px;font-weight:900;letter-spacing:6px;
-  background:linear-gradient(180deg,#e8d0f0,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  text-shadow:none;filter:drop-shadow(0 2px 8px rgba(255,107,157,0.5)) drop-shadow(0 0 20px rgba(255,107,157,0.2));
+  color:#fff;
+  text-shadow:none;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6)) drop-shadow(0 0 12px rgba(0,0,0,0.15));
   animation:turnBannerIn 0.5s ease-out forwards}
 .turn-banner.out{animation:turnBannerOut 0.35s ease-in forwards}
 .turn-banner .turn-sub{display:block;font-size:12px;letter-spacing:3px;text-align:center;
@@ -821,8 +820,8 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 #overlay-content.cinematic::before{top:16px;bottom:16px;width:4px;
   background:linear-gradient(180deg,transparent,#ff3e7a,transparent);box-shadow:0 0 14px rgba(255,62,122,0.5)}
 #overlay-content.cinematic h3{font-size:30px;letter-spacing:6px;margin-bottom:16px;
-  background:linear-gradient(180deg,#e8d0f0,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 2px 8px rgba(255,107,157,0.3))}
+  color:#fff;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6))}
 #overlay-content.cinematic .ov-btn{padding:12px 28px 12px 32px;font-size:14px;letter-spacing:2px}
 /* ============ CHROMATIC ABERRATION SYSTEM ============ */
 /* Base chromatic aberration keyframes */
@@ -976,7 +975,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 /* === ADVENTURE PANEL chromatic === */
 .adv-panel{box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,107,157,0.1),
   4px 0 20px rgba(255,0,50,0.1),-4px 0 20px rgba(0,200,255,0.1)}
-.adv-panel h3{animation:chromaticPulse 4s ease-in-out infinite}
+.adv-panel h3{animation:none}
 
 /* === GLOBAL chromatic flicker === */
 body{animation:chromaticFlicker 15s steps(1) infinite}
@@ -1002,7 +1001,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   padding:16px;width:260px;max-width:90vw;text-align:center;box-shadow:0 0 30px rgba(255,107,157,0.3);transform:skewX(-5deg)}
 #card-detail-inner>*{transform:skewX(5deg)}
 #card-detail-inner .cd-emoji{font-size:48px;margin:8px 0}
-#card-detail-inner .cd-name{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:16px;font-weight:700}
+#card-detail-inner .cd-name{font-family:'Baloo 2','Fredoka',sans-serif;color:#fff;font-size:16px;font-weight:700}
 #card-detail-inner .cd-type{font-size:11px;color:var(--rust-light);margin:2px 0 8px}
 #card-detail-inner .cd-stats{font-family:'Share Tech Mono';font-size:13px;color:var(--text);margin:6px 0}
 #card-detail-inner .cd-slots{display:flex;gap:4px;justify-content:center;margin:6px 0}
@@ -1447,7 +1446,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   border-color:rgba(159,122,234,0.6);box-shadow:0 0 24px rgba(159,122,234,0.3),0 4px 16px rgba(0,0,0,0.4)}
 .adventure-map-card:hover::before{width:5px;top:4px;bottom:4px;box-shadow:0 0 12px rgba(159,122,234,0.7)}
 .adventure-map-card:active{transform:skewX(-10deg) scale(0.97)}
-.adventure-map-card h3{color:var(--gold);font-size:17px;margin:0 0 6px;font-family:'Baloo 2','Fredoka',sans-serif;
+.adventure-map-card h3{color:#fff;font-size:17px;margin:0 0 6px;font-family:'Baloo 2','Fredoka',sans-serif;
   text-shadow:0 1px 4px rgba(0,0,0,0.5);transform:skewX(10deg)}
 .adventure-map-card p{color:var(--text-dim);font-size:12px;margin:0;transform:skewX(10deg)}
 #screen-map{display:none;flex-direction:column;height:100vh;background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18);overflow:hidden;position:fixed;inset:0;z-index:10}
@@ -1458,7 +1457,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .map-top-bar{display:none}
 .map-top-bar::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#ff3e7a,#ff6b9d,#ff3e7a);box-shadow:0 0 10px rgba(255,62,122,0.4)}
 .map-top-bar::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 6px,rgba(255,255,255,0.015) 6px,rgba(255,255,255,0.015) 8px);pointer-events:none}
-.map-top-bar .map-title{color:var(--gold);font-size:17px;font-weight:bold;text-shadow:0 1px 8px rgba(255,107,157,0.3);letter-spacing:2px;
+.map-top-bar .map-title{color:#fff;font-size:17px;font-weight:bold;text-shadow:0 1px 4px rgba(0,0,0,0.4);letter-spacing:2px;
   font-family:'Baloo 2','Fredoka',sans-serif}
 .map-top-bar .map-stats{display:flex;gap:16px;font-size:13px;color:var(--text);font-family:'Share Tech Mono',monospace}
 .map-top-bar .map-stats span{display:flex;align-items:center;gap:5px;background:rgba(255,107,157,0.06);padding:4px 10px;border-radius:16px;border:1px solid rgba(255,107,157,0.12);transition:all .2s}
@@ -1562,7 +1561,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .adv-overlay.adv-show .adv-panel{transform:skewX(-5deg) translateY(0) scale(1);opacity:1}
 .adv-panel>*{transform:skewX(5deg)}
 .adv-panel::before{content:'';position:absolute;left:0;top:20px;bottom:20px;width:3px;background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 10px rgba(255,62,122,0.4)}
-.adv-panel h3{color:var(--gold);margin:0 0 16px;font-size:22px;text-shadow:0 2px 8px rgba(255,107,157,0.15);letter-spacing:1px}
+.adv-panel h3{color:#fff;margin:0 0 16px;font-size:22px;text-shadow:0 2px 8px rgba(0,0,0,0.3);letter-spacing:1px}
 .adv-panel p{color:var(--text);margin:8px 0;font-size:14px;line-height:1.7}
 .adv-panel .adv-btn{display:block;width:90%;max-width:320px;margin:8px auto;padding:13px 20px 13px 28px;border:none;
   background:#1a1a2e;color:#fff;border-radius:4px;cursor:pointer;font-size:14px;transition:all .25s;position:relative;overflow:hidden;
@@ -1612,7 +1611,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .reward-card-detail.rare-reward:hover{box-shadow:0 8px 24px rgba(192,132,252,0.15),0 0 20px rgba(192,132,252,0.08)}
 .rcd-emoji{font-size:40px;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.4));margin-bottom:8px}
 .rcd-body{width:100%;min-width:0;text-align:center}
-.rcd-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;color:var(--gold);letter-spacing:1px;line-height:1.2}
+.rcd-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;color:#fff;letter-spacing:1px;line-height:1.2}
 .rcd-name .rcd-rare{color:#c084fc;font-size:9px;margin-left:4px;letter-spacing:0}
 .rcd-type{font-family:'Share Tech Mono',monospace;font-size:9px;color:rgba(255,255,255,0.35);letter-spacing:2px;text-transform:uppercase;margin:2px 0}
 .rcd-stats{display:flex;gap:8px;justify-content:center;margin:4px 0}
@@ -1645,7 +1644,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .deck-viewer-overlay{position:fixed;inset:0;background:rgba(5,5,15,0.88);display:flex;align-items:center;justify-content:center;z-index:120;backdrop-filter:blur(8px)}
 .deck-viewer{background:rgba(20,20,40,0.95);border:2px solid var(--gold-dim);border-radius:6px;padding:20px 24px;max-width:520px;width:92%;max-height:80vh;overflow-y:auto;text-align:center;transform:skewX(-4deg)}
 .deck-viewer>*{transform:skewX(4deg)}
-.deck-viewer h3{color:var(--gold);margin:0 0 10px;font-size:18px}
+.deck-viewer h3{color:#fff;margin:0 0 10px;font-size:18px}
 .deck-viewer .dv-list{text-align:left}
 .deck-viewer .dv-item{display:flex;align-items:center;justify-content:space-between;padding:5px 10px;margin:3px 0;background:rgba(255,107,157,0.05);border:1px solid var(--glass-border);border-radius:6px;font-size:13px;color:var(--text)}
 .deck-viewer .dv-item .dv-name{display:flex;align-items:center;gap:6px}
@@ -1679,17 +1678,17 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .story-map-card:hover{background:linear-gradient(135deg,#1e1b38,#28254a);transform:skewX(-10deg) translateX(8px) scale(1.03);
   border-color:rgba(255,62,122,0.5);box-shadow:0 0 20px rgba(255,62,122,0.3),0 4px 16px rgba(0,0,0,0.4)}
 .story-map-card:hover::before{width:5px;top:3px;bottom:3px;box-shadow:0 0 12px rgba(255,62,122,0.7)}
-.story-map-card h3{color:var(--gold);font-size:16px;margin:0 0 4px;font-family:'Baloo 2','Fredoka',sans-serif;transform:skewX(10deg)}
+.story-map-card h3{color:#fff;font-size:16px;margin:0 0 4px;font-family:'Baloo 2','Fredoka',sans-serif;transform:skewX(10deg)}
 .story-map-card p{color:var(--text-dim);font-size:12px;margin:0;transform:skewX(10deg)}
 .story-chapter{background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px 20px;margin:10px 0;cursor:pointer;transition:all .25s}
 .story-chapter:hover{border-color:var(--gold-dim);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,107,157,0.12)}
-.story-chapter .sc-title{color:var(--gold);font-size:16px;font-weight:bold}
+.story-chapter .sc-title{color:#fff;font-size:16px;font-weight:bold}
 .story-chapter .sc-preview{color:var(--text-dim);font-size:12px;margin-top:4px;line-height:1.4}
 .story-reading{text-align:left;line-height:1.9;font-size:15px;color:var(--text)}
 .story-reading p{margin:0 0 12px;text-indent:2em}
 .story-reading .sr-dialogue{color:#e8d0f0;text-indent:0;padding-left:1em;border-left:2px solid rgba(255,107,157,0.2);margin:8px 0}
 .story-reading .sr-narration{color:var(--text-dim);font-style:italic;text-indent:0}
-.story-reading .sr-title{text-align:center;color:var(--gold);font-size:22px;font-weight:bold;margin:0 0 20px;text-indent:0;text-shadow:0 2px 8px rgba(255,107,157,0.2)}
+.story-reading .sr-title{text-align:center;color:#fff;font-size:22px;font-weight:bold;margin:0 0 20px;text-indent:0;text-shadow:0 2px 4px rgba(0,0,0,0.4)}
 .adv-relics{display:flex;gap:4px;flex-wrap:wrap}
 .relic-icon{font-size:18px;cursor:help;background:rgba(255,107,157,0.1);border:1px solid rgba(255,107,157,0.2);border-radius:6px;padding:2px 4px;transition:all .2s}
 .relic-icon:hover{background:rgba(255,107,157,0.25);transform:scale(1.15)}
@@ -2013,6 +2012,358 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .zzz-greeting-close{margin-top:18px;background:transparent;border:1px solid rgba(255,62,122,0.5);color:#ff6b9d;
   padding:8px 28px;border-radius:20px;cursor:pointer;font-size:12px;letter-spacing:2px;transition:all 0.2s}
 .zzz-greeting-close:hover{background:rgba(255,62,122,0.15);border-color:#ff3e7a}
+
+/* === Card Acquire Animation — ZZZ Style === */
+.card-acquire-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,15,0.7);animation:acqBgIn 0.3s ease-out}
+@keyframes acqBgIn{0%{opacity:0}100%{opacity:1}}
+.acq-card{position:relative;background:#1a1a2e;padding:16px 22px 16px 28px;text-align:left;
+  transform:skewX(-10deg) translateX(-60px);opacity:0;
+  animation:acqSlideIn 0.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);border-radius:4px;min-width:220px;max-width:320px}
+.acq-card>*{transform:skewX(10deg)}
+.acq-card::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0}
+@keyframes acqSlideIn{0%{transform:skewX(-10deg) translateX(-60px);opacity:0}
+  100%{transform:skewX(-10deg) translateX(0);opacity:1}}
+.acq-card.fly-out{animation:acqFlyOut 0.5s cubic-bezier(0.4,0,0.2,1) forwards}
+@keyframes acqFlyOut{0%{transform:skewX(-10deg) translateX(0) scale(1);opacity:1}
+  100%{transform:skewX(-5deg) translateX(40vw) translateY(30vh) scale(0.3);opacity:0}}
+.acq-tag{font-size:8px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.4);
+  text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:6px}
+.acq-row{display:flex;align-items:center;gap:14px}
+.acq-emoji{font-size:36px;line-height:1;flex-shrink:0}
+.acq-info{min-width:0}
+.acq-name{font-size:16px;color:#fff;font-weight:700;font-family:'Baloo 2','Fredoka',sans-serif;
+  letter-spacing:1px;line-height:1.2}
+.acq-type{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.35);
+  text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-top:2px}
+.acq-stats{font-size:11px;color:rgba(255,255,255,0.5);font-family:'Share Tech Mono',monospace;margin-top:2px}
+/* Deck indicator — white widget card style */
+.acq-deck-pulse{position:fixed;bottom:20px;right:20px;z-index:100000;pointer-events:none;
+  background:rgba(255,255,255,0.95);color:#1a1a2e;padding:8px 14px;
+  transform:skewX(-5deg);border-top:3px solid #ff3e7a;
+  font-size:12px;font-family:'Share Tech Mono',monospace;font-weight:700;letter-spacing:2px;
+  box-shadow:0 -2px 12px rgba(0,0,0,0.2);
+  animation:deckPulseIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards}
+.acq-deck-pulse>*{transform:skewX(5deg)}
+@keyframes deckPulseIn{0%{transform:skewX(-5deg) translateY(30px);opacity:0}
+  50%{transform:skewX(-5deg) translateY(-4px);opacity:1}
+  100%{transform:skewX(-5deg) translateY(0);opacity:0}}
+
+/* === Card Delete Animation — ZZZ Style === */
+.card-delete-overlay{position:fixed;inset:0;z-index:99999;pointer-events:none;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(5,5,15,0.7);animation:acqBgIn 0.3s ease-out}
+.del-card{position:relative;background:#1a1a2e;padding:16px 22px 16px 28px;text-align:left;
+  transform:skewX(-10deg);
+  animation:delCardIn 0.3s cubic-bezier(0.22,1,0.36,1) forwards;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);border-radius:4px;min-width:220px;max-width:320px;
+  overflow:visible}
+.del-card>*{transform:skewX(10deg)}
+.del-card::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0}
+@keyframes delCardIn{0%{transform:skewX(-10deg) scale(0.8);opacity:0}
+  100%{transform:skewX(-10deg) scale(1);opacity:1}}
+.del-content{position:relative;z-index:5}
+.del-tag{font-size:8px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.4);
+  text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:6px}
+.del-row{display:flex;align-items:center;gap:14px}
+.del-emoji{font-size:36px;line-height:1;flex-shrink:0}
+.del-name{font-size:16px;color:#fff;font-weight:700;font-family:'Baloo 2','Fredoka',sans-serif;letter-spacing:1px}
+/* Slash line */
+.del-slash{position:absolute;top:50%;left:-10%;width:120%;height:2px;
+  background:linear-gradient(90deg,transparent 0%,#fff 20%,#fff 80%,transparent 100%);
+  transform:translateY(-50%) rotate(-45deg) scaleX(0);transform-origin:center;
+  z-index:10;opacity:0}
+.del-slash.active{opacity:1;animation:slashCut 0.25s ease-out forwards}
+@keyframes slashCut{0%{transform:translateY(-50%) rotate(-45deg) scaleX(0)}
+  100%{transform:translateY(-50%) rotate(-45deg) scaleX(1)}}
+/* Split halves */
+.del-half-top,.del-half-bot{position:absolute;inset:0;background:#1a1a2e;border-radius:4px;
+  opacity:0;pointer-events:none}
+.del-half-top{clip-path:polygon(0 0,100% 0,0 100%)}
+.del-half-bot{clip-path:polygon(100% 0,100% 100%,0 100%)}
+.del-half-top.split{opacity:1;animation:splitTop 0.4s ease-in forwards}
+.del-half-bot.split{opacity:1;animation:splitBot 0.4s ease-in forwards}
+@keyframes splitTop{0%{transform:translate(0,0) rotate(0);opacity:1}
+  100%{transform:translate(-30px,-20px) rotate(-6deg);opacity:0}}
+@keyframes splitBot{0%{transform:translate(0,0) rotate(0);opacity:1}
+  100%{transform:translate(30px,20px) rotate(6deg);opacity:0}}
+.del-card.dissolving .del-content{animation:fadeContent 0.2s ease-out forwards}
+@keyframes fadeContent{0%{opacity:1}100%{opacity:0}}
+/* Particles — small white/pink dots, no glow */
+.del-particle{position:fixed;width:3px;height:3px;background:#fff;border-radius:50%;
+  z-index:100001;pointer-events:none}
+
+/* === Settlement Screen — ZZZ Main Menu Style === */
+.settlement-overlay{position:fixed;inset:0;z-index:99998;
+  background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  animation:settFadeIn 0.4s ease-out}
+@keyframes settFadeIn{0%{opacity:0}100%{opacity:1}}
+/* Left pink strip — matching .zzz-left-strip */
+.settlement-strip{position:absolute;top:0;left:0;bottom:0;width:64px;z-index:3;
+  background:linear-gradient(180deg,#ff3e7a 0%,#e0245e 50%,#ff3e7a 100%);
+  display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:16px;overflow:hidden}
+.settlement-strip::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,0,0,0.08) 18px,rgba(0,0,0,0.08) 20px);pointer-events:none}
+.settlement-strip .ss-text{writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:'Baloo 2','Fredoka',sans-serif;font-size:11px;font-weight:800;
+  letter-spacing:4px;color:rgba(255,255,255,0.7);text-transform:uppercase}
+.settlement-strip .ss-text.big{font-size:16px;color:rgba(255,255,255,0.9);letter-spacing:6px}
+.settlement-strip .ss-icon{font-size:20px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.settlement-strip .ss-divider{width:30px;height:2px;background:rgba(255,255,255,0.3);border-radius:1px}
+.settlement-strip .ss-dots{display:flex;flex-direction:column;gap:4px;align-items:center}
+.settlement-strip .ss-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.5)}
+.settlement-strip .ss-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
+/* Top-right label — matching .zzz-menu-label */
+.settlement-label{position:absolute;top:24px;right:24px;z-index:5;text-align:right;transform:skewX(-7deg)}
+.settlement-label .sl-en{font-size:9px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,0.4);text-transform:uppercase}
+.settlement-label .sl-num{font-size:52px;font-weight:900;color:rgba(255,255,255,0.08);line-height:1;font-family:'Baloo 2','Fredoka',sans-serif}
+/* Main content area */
+.settlement-main{position:relative;z-index:2;padding-left:88px;padding-right:24px;
+  width:100%;max-width:600px}
+/* Title block — like .zzz-menu-title-block */
+.settlement-title{margin-bottom:20px;transform:skewX(-6deg)}
+.settlement-title>*{transform:skewX(6deg)}
+.settlement-title .st-tag{font-size:9px;font-weight:700;letter-spacing:3px;
+  color:rgba(255,255,255,0.4);text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:4px}
+.settlement-title .st-icon{font-size:36px;line-height:1;margin-bottom:4px;filter:none}
+.settlement-title .st-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:32px;text-align:left;
+  color:#fff;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));letter-spacing:4px}
+.settlement-divider{width:200px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,62,122,0.4),transparent);margin:0 0 20px}
+/* Rows — staggered diagonal like .zzz-menu-btns */
+.settlement-rows{display:flex;flex-direction:column;gap:0;width:100%;max-width:400px}
+.settlement-row{display:flex;align-items:center;padding:11px 20px 11px 24px;
+  background:#1a1a2e;border:none;border-radius:4px;
+  transform:skewX(-10deg) translateX(-30px);opacity:0;
+  animation:settRowIn 0.4s ease-out forwards;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);margin-bottom:6px}
+.settlement-row>*{transform:skewX(10deg)}
+.settlement-row::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0}
+/* Stagger increasing margin-left like main menu buttons */
+.settlement-row:nth-child(1){margin-left:0px}
+.settlement-row:nth-child(2){margin-left:18px}
+.settlement-row:nth-child(3){margin-left:36px}
+.settlement-row:nth-child(4){margin-left:54px}
+.settlement-row:nth-child(5){margin-left:72px}
+.settlement-row:nth-child(6){margin-left:90px}
+.settlement-row:nth-child(7){margin-left:108px}
+.settlement-row:nth-child(8){margin-left:126px}
+.settlement-row .sr-label{flex:1;font-size:13px;color:#fff;font-family:'Baloo 2','Fredoka',sans-serif;letter-spacing:1px}
+.settlement-row .sr-count{width:44px;text-align:center;font-size:12px;color:rgba(255,255,255,0.5);font-family:'Share Tech Mono',monospace}
+.settlement-row .sr-score{width:50px;text-align:right;font-size:15px;color:#fff;font-weight:700;font-family:'Baloo 2','Fredoka',sans-serif}
+@keyframes settRowIn{0%{transform:skewX(-10deg) translateX(-30px);opacity:0}100%{transform:skewX(-10deg) translateX(0);opacity:1}}
+/* Total — white widget card style at bottom */
+.settlement-total{display:flex;align-items:center;justify-content:space-between;
+  margin-top:20px;margin-left:140px;
+  padding:14px 24px;background:rgba(255,255,255,0.95);color:#1a1a2e;border-radius:0;
+  transform:skewX(-5deg);position:relative;overflow:hidden;
+  border-top:4px solid #ff3e7a;box-shadow:0 -4px 24px rgba(0,0,0,0.2);
+  transition:opacity 0.3s}
+.settlement-total>*{transform:skewX(5deg)}
+.settlement-total::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#ff3e7a,#ff6b9d,#ff3e7a);z-index:1}
+.settlement-total .st-total-label{font-size:8px;font-weight:700;letter-spacing:3px;
+  color:#ff3e7a;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.settlement-total .st-total-score{font-size:32px;font-weight:900;color:#1a1a2e;line-height:1;
+  font-family:'Baloo 2','Fredoka',sans-serif;text-shadow:none}
+/* Button — matching .menu-btn style */
+.settlement-btn{display:inline-block;margin-top:16px;margin-left:155px;
+  padding:13px 26px 13px 28px;border:none;
+  background:#1a1a2e;color:#fff;cursor:pointer;border-radius:4px;
+  font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;letter-spacing:2px;
+  transform:skewX(-10deg);position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);transition:all 0.25s}
+.settlement-btn::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;transition:all 0.25s}
+.settlement-btn:hover{background:#22223a;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+  transform:skewX(-10deg) translateY(-2px)}
+.settlement-btn:hover::before{width:5px;top:4px;bottom:4px}
+.settlement-btn:active{transform:skewX(-10deg) scale(0.97)}
+/* Mobile */
+@media(max-width:480px){
+  .settlement-strip{width:48px}
+  .settlement-main{padding-left:60px;padding-right:12px}
+  .settlement-row:nth-child(1){margin-left:0}
+  .settlement-row:nth-child(2){margin-left:10px}
+  .settlement-row:nth-child(3){margin-left:20px}
+  .settlement-row:nth-child(4){margin-left:30px}
+  .settlement-row:nth-child(5){margin-left:40px}
+  .settlement-row:nth-child(6){margin-left:50px}
+  .settlement-row:nth-child(7){margin-left:60px}
+  .settlement-row:nth-child(8){margin-left:70px}
+  .settlement-total{margin-left:80px}
+  .settlement-btn{margin-left:90px}
+  .settlement-label .sl-num{font-size:36px}
+}
+
+/* === Task Screen (泰拉终端) — ZZZ Style === */
+#screen-task{position:fixed;inset:0;overflow:hidden}
+#screen-task.active{display:block}
+.task-wrap{display:flex;flex-direction:column;width:100%;height:100%;position:relative;background:linear-gradient(135deg,#0a0a18,#12102a,#0a0a18)}
+/* Right strip — matching battle UI right strip */
+.task-right-strip{position:absolute;top:0;right:0;bottom:0;width:48px;z-index:3;
+  background:linear-gradient(180deg,#ff3e7a 0%,#e0245e 50%,#ff3e7a 100%);
+  display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:14px}
+.task-right-strip::after{content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 18px,rgba(0,0,0,0.08) 18px,rgba(0,0,0,0.08) 20px);pointer-events:none}
+.task-right-strip .trs-text{writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:'Baloo 2','Fredoka',sans-serif;font-size:10px;font-weight:800;
+  letter-spacing:4px;color:rgba(255,255,255,0.7);text-transform:uppercase}
+.task-right-strip .trs-text.big{font-size:14px;color:rgba(255,255,255,0.9);letter-spacing:5px}
+.task-right-strip .trs-icon{font-size:18px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3))}
+.task-right-strip .trs-dots{display:flex;flex-direction:column;gap:3px;align-items:center}
+.task-right-strip .trs-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4)}
+.task-right-strip .trs-dots span.active{background:#fff;box-shadow:0 0 6px rgba(255,255,255,0.8)}
+.task-right-strip .trs-divider{width:30px;height:2px;background:rgba(255,255,255,0.3);border-radius:1px}
+.task-right-strip .trs-btn{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;
+  border:none;color:#fff;transition:all 0.2s}
+.task-right-strip .trs-btn:hover{background:rgba(255,255,255,0.3);transform:scale(1.1)}
+
+/* Task inner layout */
+.task-inner{display:flex;flex:1;padding:20px 68px 20px 20px;gap:16px;overflow:hidden;min-height:0}
+/* Left panel: NPC + categories */
+.task-left{width:200px;flex-shrink:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+/* NPC card */
+.task-npc{background:rgba(26,26,46,0.9);border-radius:4px;padding:14px;
+  transform:skewX(-5deg);position:relative;overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);border:1px solid rgba(255,62,122,0.15)}
+.task-npc::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0}
+.task-npc>*{transform:skewX(5deg)}
+.task-npc-avatar{font-size:40px;text-align:center;margin-bottom:6px;line-height:1}
+.task-npc-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;color:#fff;
+  text-align:center;letter-spacing:2px;margin-bottom:4px}
+.task-npc-role{font-size:9px;color:rgba(255,255,255,0.4);text-align:center;
+  letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.task-npc-bubble{background:rgba(255,255,255,0.06);border-radius:4px;padding:10px;
+  margin-top:8px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.5;
+  border-left:2px solid rgba(255,62,122,0.3);font-style:italic}
+/* Category tabs */
+.task-cats{display:flex;flex-direction:column;gap:4px}
+.task-cat-btn{display:block;width:100%;padding:10px 14px 10px 18px;
+  font-family:'Baloo 2','Fredoka',sans-serif;font-size:13px;border:none;
+  background:#1a1a2e;color:rgba(255,255,255,0.6);cursor:pointer;border-radius:4px;
+  letter-spacing:1px;transition:all 0.25s;position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,0.3);transform:skewX(-5deg);text-align:left}
+.task-cat-btn::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;
+  background:rgba(255,62,122,0.3);border-radius:0 2px 2px 0;transition:all 0.25s}
+.task-cat-btn:hover{background:#22223a;transform:skewX(-5deg) translateX(4px)}
+.task-cat-btn.active{background:#22223a;color:#fff;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4),0 0 8px rgba(255,62,122,0.1)}
+.task-cat-btn.active::before{background:#ff3e7a;width:4px;
+  box-shadow:0 0 8px rgba(255,62,122,0.5)}
+.task-cat-badge{display:inline-block;background:#ff3e7a;color:#fff;font-size:9px;
+  font-weight:700;padding:1px 6px;border-radius:8px;margin-left:6px;
+  font-family:'Share Tech Mono',monospace;vertical-align:middle}
+
+/* Right panel: task list */
+.task-list-panel{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;
+  padding-right:4px;scrollbar-width:thin;scrollbar-color:rgba(255,62,122,0.3) transparent}
+.task-list-panel::-webkit-scrollbar{width:4px}
+.task-list-panel::-webkit-scrollbar-thumb{background:rgba(255,62,122,0.3);border-radius:2px}
+
+/* Individual task row */
+.task-row{display:flex;align-items:center;padding:12px 16px 12px 20px;
+  background:#1a1a2e;border-radius:4px;transform:skewX(-6deg);
+  position:relative;box-shadow:0 2px 8px rgba(0,0,0,0.3);
+  transition:all 0.25s;cursor:pointer;gap:12px}
+.task-row::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;
+  background:rgba(255,62,122,0.3);border-radius:0 2px 2px 0;transition:all 0.25s}
+.task-row:hover{background:#22223a;transform:skewX(-6deg) translateX(4px)}
+.task-row:hover::before{width:4px;background:#ff3e7a}
+.task-row>*{transform:skewX(6deg)}
+.task-row.completed{opacity:0.5}
+.task-row.completed::before{background:#4ade80}
+.task-row.claimable{
+  box-shadow:0 2px 12px rgba(255,62,122,0.2);
+  animation:taskPulse 2s ease-in-out infinite}
+.task-row.claimable::before{background:#ff3e7a;width:4px;
+  box-shadow:0 0 8px rgba(255,62,122,0.6)}
+@keyframes taskPulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,0.3)}50%{box-shadow:0 2px 16px rgba(255,62,122,0.3)}}
+.task-row-icon{font-size:24px;flex-shrink:0;line-height:1}
+.task-row-info{flex:1;min-width:0}
+.task-row-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:13px;color:#fff;
+  letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.task-row-desc{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;
+  font-family:'Share Tech Mono',monospace;letter-spacing:0.5px}
+.task-row-reward{font-size:10px;color:var(--gold);margin-top:2px}
+/* "Go to tutorial" button */
+.task-goto-btn{padding:5px 12px;background:rgba(255,255,255,0.08);
+  color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:3px;
+  font-size:10px;font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;
+  letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
+.task-goto-btn:hover{background:rgba(255,62,122,0.15);border-color:rgba(255,62,122,0.4);color:#fff}
+/* Red dot badge — inline span approach (menu-btn has overflow:hidden) */
+.red-dot-badge{display:inline-block;width:8px;height:8px;border-radius:50%;
+  background:#ff3e7a;box-shadow:0 0 6px rgba(255,62,122,0.8);
+  margin-left:8px;vertical-align:middle;
+  animation:redDotPulse 1.5s ease-in-out infinite}
+.menu-btn .red-dot-badge{transform:skewX(10deg)}
+@keyframes redDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.7;transform:scale(1.3)}}
+/* Red dot on category tab */
+.task-cat-btn.has-red-dot::after{content:'';display:inline-block;
+  width:6px;height:6px;border-radius:50%;background:#ff3e7a;
+  box-shadow:0 0 4px rgba(255,62,122,0.8);margin-left:6px;vertical-align:middle;
+  animation:redDotPulse 1.5s ease-in-out infinite}
+/* Progress bar in task row */
+.task-progress{width:80px;flex-shrink:0}
+.task-prog-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.task-prog-fill{height:100%;background:linear-gradient(90deg,#ff3e7a,#ff6b9d);border-radius:2px;
+  transition:width 0.3s ease}
+.task-prog-text{font-size:9px;color:rgba(255,255,255,0.4);text-align:right;margin-top:2px;
+  font-family:'Share Tech Mono',monospace}
+/* Claim button */
+.task-claim-btn{padding:5px 12px;background:linear-gradient(135deg,#ff3e7a,#e0245e);
+  color:#fff;border:none;border-radius:3px;font-size:10px;font-weight:700;
+  font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;letter-spacing:1px;
+  transition:all 0.2s;white-space:nowrap}
+.task-claim-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(255,62,122,0.4)}
+.task-claimed-tag{font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:1px;
+  font-family:'Share Tech Mono',monospace}
+/* Bottom claim-all bar */
+.task-bottom-bar{position:absolute;bottom:0;left:0;right:48px;
+  padding:10px 20px;background:rgba(10,10,24,0.95);
+  border-top:1px solid rgba(255,62,122,0.15);display:flex;align-items:center;
+  justify-content:space-between;z-index:4;backdrop-filter:blur(8px)}
+.task-bottom-bar .tbb-info{font-size:11px;color:rgba(255,255,255,0.5);
+  font-family:'Share Tech Mono',monospace}
+.task-claim-all-btn{padding:8px 24px;background:#1a1a2e;color:#fff;border:none;
+  border-radius:4px;font-size:13px;font-family:'Baloo 2','Fredoka',sans-serif;
+  cursor:pointer;letter-spacing:2px;transform:skewX(-5deg);position:relative;
+  overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.4);transition:all 0.25s}
+.task-claim-all-btn::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:4px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;transition:all 0.25s}
+.task-claim-all-btn:hover{background:#22223a;transform:skewX(-5deg) translateY(-2px)}
+.task-claim-all-btn:hover::before{width:5px}
+.task-claim-all-btn:disabled{opacity:0.3;cursor:not-allowed}
+/* Title */
+.task-title{margin-bottom:12px;transform:skewX(-6deg)}
+.task-title>*{transform:skewX(6deg)}
+.task-title .tt-tag{font-size:8px;font-weight:700;letter-spacing:3px;
+  color:rgba(255,255,255,0.35);text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+.task-title .tt-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:22px;
+  color:#fff;
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));letter-spacing:3px}
+/* Mobile */
+@media(max-width:600px){
+  .task-inner{flex-direction:column;padding:12px 56px 60px 12px}
+  .task-left{width:100%;flex-direction:row;flex-wrap:wrap;gap:6px}
+  .task-npc{flex:1;min-width:140px}
+  .task-cats{flex-direction:row;flex-wrap:wrap;flex:1}
+  .task-cat-btn{font-size:11px;padding:7px 10px}
+  .task-row{padding:10px 12px 10px 16px}
+  .task-progress{width:60px}
+}
 </style>
 </head>
 <body>
@@ -2070,7 +2421,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
         <div class="zzz-menu-btns">
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-levels')">⚔ 开始对决</button></div>
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-adventure')">🗺 开始冒险</button></div>
-          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-tutorial')">📘 新手教程</button></div>
+          <div class="zbtn-row"><button class="menu-btn" id="menu-task-btn" onclick="showScreen('screen-task')">📋 任务</button></div>
           <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-wiki')">📖 百科</button></div>
         </div>
       </div>
@@ -2619,6 +2970,50 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   <button id="pack-done-btn" class="menu-btn primary hidden" onclick="Shop.closePack()" style="margin-top:20px">确定</button>
 </div>
 
+<!-- TASK SCREEN (泰拉终端) -->
+<div id="screen-task" class="screen">
+  <div class="screen-particles" data-colors="#ff3e7a,#ff6b9d,#e0245e,#ffffff" data-count="18"></div>
+  <div class="zzz-geo-bg"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><defs><pattern id="zzztriTask" width="60" height="52" patternUnits="userSpaceOnUse"><polygon points="30,0 60,52 0,52" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#zzztriTask)"/></svg></div>
+  <div class="task-wrap">
+    <!-- Right strip like battle UI -->
+    <div class="task-right-strip">
+      <div class="trs-icon">📋</div>
+      <div class="trs-text big">TASK</div>
+      <div class="trs-dots"><span class="active"></span><span></span><span class="active"></span></div>
+      <div class="trs-text">TERRA</div>
+      <div class="trs-icon">🔖</div>
+      <div class="trs-text">TERMINAL</div>
+      <div class="trs-divider"></div>
+      <button class="trs-btn" onclick="event.stopPropagation();goBackScreen()" title="返回">↩</button>
+    </div>
+    <div class="task-inner">
+      <!-- Left: NPC + categories -->
+      <div class="task-left">
+        <div class="task-npc">
+          <div class="task-npc-avatar">👩‍💼</div>
+          <div class="task-npc-name">晴子</div>
+          <div class="task-npc-role">TASK COORDINATOR</div>
+          <div class="task-npc-bubble" id="task-npc-line">欢迎来到泰拉终端！有什么任务想做吗？</div>
+        </div>
+        <div class="task-cats" id="task-cats"></div>
+      </div>
+      <!-- Right: task list -->
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+        <div class="task-title">
+          <div class="tt-tag">TERRA TERMINAL</div>
+          <div class="tt-name" id="task-cat-title">泰拉终端</div>
+        </div>
+        <div class="task-list-panel" id="task-list"></div>
+      </div>
+    </div>
+    <!-- Bottom claim all bar -->
+    <div class="task-bottom-bar">
+      <div class="tbb-info" id="task-summary">0 个任务可领取</div>
+      <button class="task-claim-all-btn" id="task-claim-all" onclick="TaskSystem.claimAll()">一键领取</button>
+    </div>
+  </div>
+</div>
+
 <!-- TUTORIAL SCREEN -->
 <div id="screen-tutorial" class="screen">
   <div class="screen-particles" data-colors="#8b5cf6,#a78bfa,#7c3aed,#ffffff" data-count="18"></div>
@@ -3099,7 +3494,8 @@ function showScreen(id,isBack){
     if(id==='screen-wiki'){Wiki.showTab(Wiki.currentTab);try{$('wiki-total-cards').textContent=ALL_CARDS.length;$('wiki-total-relics').textContent=ALL_RELICS.length}catch(e){}}
     if(id==='screen-story')Story.init();
     if(id==='screen-tutorial')TutorialGuide.init();
-    if(id==='screen-menu'){NewsMatrix.resume()}else{NewsMatrix.stop()}
+    if(id==='screen-task')TaskSystem.render();
+    if(id==='screen-menu'){NewsMatrix.resume();if(typeof TaskSystem!=='undefined')TaskSystem.updateRedDot()}else{NewsMatrix.stop()}
     ZZZGreeting.tryShow(id);
     slide.classList.remove(inCls);
     void slide.offsetWidth;
@@ -3680,7 +4076,7 @@ function makeCardInstance(def){return{...def,assignedDice:[],growth:0,tempBonus:
 function getCreatureValue(c){if(!c)return 0;const frozen=new Set(c.frozenDice||[]);let val=c.base+(c.growth||0)+(c.tempBonus||0)+(c.assignedDice||[]).reduce((a,b,i)=>a+(frozen.has(i)?0:b),0);if(c.id==='greedy_mimic')val+=(c.assignedDice||[]).filter(d=>d===5).length;if(typeof G!=='undefined'&&G.adventureMode&&Adventure.hasRelic('double_blade')&&c.type==='creature')val+=3;return val}
 function discardCard(p,card){if(card&&card.id)p.discard.push(card.id)}
 function reshuffleDeck(p){if(!p.discard.length)return;const d=p.discard.map(id=>{const def=getCardDef(id);return makeCardInstance(def)});shuffle(d);p.deck=d;p.discard=[];log((p.isPlayer?'铸炉师':(G.aiName||'对手'))+'的弃牌堆已洗入牌库! ('+d.length+'张)','phase')}
-function drawCards(p,n){for(let i=0;i<n;i++){if(p.hand.length>=9)break;if(!p.deck.length){reshuffleDeck(p);if(!p.deck.length)break}const card=p.deck.pop();p.hand.push(card);if(card.id==='magnet_puppet'){card._magnetPending=true}}}
+function drawCards(p,n){let drawn=0;for(let i=0;i<n;i++){if(p.hand.length>=9)break;if(!p.deck.length){reshuffleDeck(p);if(!p.deck.length)break}const card=p.deck.pop();p.hand.push(card);drawn++;if(card.id==='magnet_puppet'){card._magnetPending=true}}if(p.isPlayer&&drawn>0)StatsTracker.recordDraw(drawn)}
 
 // ============================================================
 // PLAYER DATA — gold, unlocked cards, persistence
@@ -4057,7 +4453,7 @@ const Wiki={
     html+=`</div></div>`;
     // Boss mechanic
     html+=`<div style="background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left">`;
-    html+=`<div style="color:var(--gold);font-size:16px;font-weight:bold;margin-bottom:10px">⚙ 特殊机制</div>`;
+    html+=`<div style="color:#fff;font-size:16px;font-weight:bold;margin-bottom:10px">⚙ 特殊机制</div>`;
     html+=`<div style="display:flex;align-items:flex-start;gap:12px;padding:10px;background:rgba(0,0,0,0.2);border-radius:8px;margin-bottom:8px">`;
     html+=`<span style="font-size:28px;flex-shrink:0">🔧</span>`;
     html+=`<div><div style="color:var(--text);font-size:14px;font-weight:bold">校准协议</div><div style="color:var(--text-dim);font-size:12px;margin-top:2px">每回合掷骰后，铁面会将你的一个骰子「校准」为4点。无法回避，无法抵抗。</div></div>`;
@@ -4068,7 +4464,7 @@ const Wiki={
     html+=`</div></div>`;
     // Boss deck — creatures
     html+=`<div style="background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left">`;
-    html+=`<div style="color:var(--gold);font-size:16px;font-weight:bold;margin-bottom:10px">🃏 Boss牌组 — 生物 (${creatures.length})</div>`;
+    html+=`<div style="color:#fff;font-size:16px;font-weight:bold;margin-bottom:10px">🃏 Boss牌组 — 生物 (${creatures.length})</div>`;
     html+=`<div class="wiki-grid">`;
     creatures.forEach(c=>{
       html+=`<div class="wiki-card rarity-rare" style="cursor:default">
@@ -4081,7 +4477,7 @@ const Wiki={
     html+=`</div></div>`;
     // Boss deck — spells
     html+=`<div style="background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left">`;
-    html+=`<div style="color:var(--gold);font-size:16px;font-weight:bold;margin-bottom:10px">✨ Boss牌组 — 法术 (${spells.length})</div>`;
+    html+=`<div style="color:#fff;font-size:16px;font-weight:bold;margin-bottom:10px">✨ Boss牌组 — 法术 (${spells.length})</div>`;
     html+=`<div class="wiki-grid">`;
     spells.forEach(c=>{
       html+=`<div class="wiki-card rarity-rare" style="cursor:default;border-left-color:var(--spell-border)">
@@ -4094,7 +4490,7 @@ const Wiki={
     html+=`</div></div>`;
     // Boss dialogue samples
     html+=`<div style="background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px;margin-bottom:16px;text-align:left">`;
-    html+=`<div style="color:var(--gold);font-size:16px;font-weight:bold;margin-bottom:10px">💬 语录摘录</div>`;
+    html+=`<div style="color:#fff;font-size:16px;font-weight:bold;margin-bottom:10px">💬 语录摘录</div>`;
     quotes.forEach(q=>{
       html+=`<div style="padding:8px 12px;margin-bottom:6px;background:rgba(0,0,0,0.2);border-radius:8px;border-left:3px solid rgba(255,62,122,0.5)">`;
       html+=`<span style="color:var(--text-dim);font-size:12px;font-style:italic">${q}</span>`;
@@ -4308,7 +4704,7 @@ const Story={
     this.currentView='chapters';this.currentMap=mapId;
     const map=this.data[mapId];if(!map)return;
     const el=$('story-content');
-    let html=`<h3 style="color:var(--gold);text-align:center;margin:0 0 16px">${map.emoji} ${map.name}</h3>`;
+    let html=`<h3 style="color:#fff;text-align:center;margin:0 0 16px">${map.emoji} ${map.name}</h3>`;
     map.chapters.forEach((ch,i)=>{
       html+=`<div class="story-chapter" onclick="Story.showChapter('${mapId}',${i})">
         <div class="sc-title">${ch.title}</div>
@@ -4449,7 +4845,7 @@ const Adventure={
   bonusDiceNextBattle:0, mapId:null, relics:[],
 
   hasRelic(id){return this.relics.includes(id)},
-  addRelic(id){if(!this.hasRelic(id)){this.relics.push(id);if(this.relics.length>=3)Achievements.unlock('relic_collector');
+  addRelic(id){if(!this.hasRelic(id)){this.relics.push(id);if(this._stats)this._stats.relicsGained++;StatsTracker.recordRelic();if(this.relics.length>=3)Achievements.unlock('relic_collector');
     // 腐化心脏: max HP -5 on acquire
     if(id==='corrupted_heart'){this.maxHp=(this.maxHp||30)-6;this.hp=Math.min(this.hp,this.maxHp);log('🖤 腐化心脏:最大生命-6!','effect')}}},
   removeRelic(id){const i=this.relics.indexOf(id);if(i>=0)this.relics.splice(i,1)},
@@ -4499,6 +4895,7 @@ const Adventure={
     this.removeCount=0;
     this.bonusDiceNextBattle=0;
     this.currentFloor=-1;this.visitedNode=null;this.currentLayer=1;
+    this._stats={cardsGained:0,relicsGained:0,battlesWon:0,elitesWon:0,cardsUpgraded:0,eventsCompleted:0,bossDefeated:0,floorsCleared:0};
     this.map=this.generateMap();
     // Cinematic adventure entry
     setTimeout(()=>{
@@ -4794,6 +5191,11 @@ const Adventure={
 
   onBattleWin(type){
     G.adventureMode=false;
+    if(this._stats){
+      if(type==='boss'||type==='boss2')this._stats.bossDefeated++;
+      else if(type==='elite'){this._stats.elitesWon++;this._stats.battlesWon++}
+      else this._stats.battlesWon++;
+    }
     if(type==='boss'||type==='boss2'){
       this.hp=G.p.hp;
       showScreen('screen-map');
@@ -4817,7 +5219,7 @@ const Adventure={
     this.active=false;
     const p=$('adv-panel');
     const bossName=this.currentLayer===2?'骰魔·维克多的赌场':'锈蚀平原';
-    p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#f56565;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE FAILED</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(245,101,101,0.3))">💀</div><h3 style="color:#f56565">冒险失败</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#f56565,transparent)"></div><p style="color:#ccc">你在${bossName}倒下了...</p><button class="adv-btn" onclick="Adventure.closeOverlay();showScreen('screen-menu')">返回主菜单</button>`;
+    p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#f56565;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE FAILED</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(245,101,101,0.3))">💀</div><h3 style="color:#f56565">冒险失败</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#f56565,transparent)"></div><p style="color:#ccc">你在${bossName}倒下了...</p><button class="adv-btn" onclick="showSettlementScreen(false)">查看结算</button>`;
     advShowOverlay();
     showScreen('screen-map');
   },
@@ -4832,15 +5234,17 @@ const Adventure={
       this._pendingDeckUnlock=true;
     }
     if(this.currentLayer===1){
+      if(this._stats)this._stats.floorsCleared=1;
       this.showLayerTransition();
     } else {
+      if(this._stats)this._stats.floorsCleared=2;
       const p=$('adv-panel');
       let extraMsg='';
       if(this._pendingDeckUnlock){
         extraMsg='<div style="margin:12px 0;padding:10px 14px;background:rgba(255,200,50,0.1);border:1px solid rgba(255,200,50,0.3);border-radius:6px"><div style="color:#ffd700;font-size:14px;font-weight:700">🎴 新卡组已解锁!</div><div style="color:var(--text);font-size:12px;margin-top:4px">「🐀 阴险策士」初始卡组现已可用！<br>下次冒险时可在两套卡组中选择。</div></div>';
         this._pendingDeckUnlock=false;
       }
-      p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE COMPLETE</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">👑</div><h3 style="color:#48bb78">冒险完全胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p>${extraMsg}<button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>`;
+      p.innerHTML=`<div style="font-size:12px;letter-spacing:5px;color:#48bb78;font-family:'Share Tech Mono',monospace;margin-bottom:6px">ADVENTURE COMPLETE</div><div style="font-size:42px;margin-bottom:8px;filter:drop-shadow(0 0 12px rgba(72,187,120,0.3))">👑</div><h3 style="color:#48bb78">冒险完全胜利!</h3><div style="width:40%;height:2px;margin:8px auto 14px;background:linear-gradient(90deg,transparent,#48bb78,transparent)"></div><p>你击败了骰魔·维克多!<br>征服了全部两层冒险!</p>${extraMsg}<button class="adv-btn" onclick="showSettlementScreen(true)">查看结算</button>`;
       advShowOverlay();
     }
   },
@@ -4900,6 +5304,7 @@ const Adventure={
   },
   doLayerUpgrade(id){
     this.upgradedCards.add(id);
+    if(this._stats)this._stats.cardsUpgraded++;
     this.closeOverlay();
     this.startLayer2('卡牌已升级!');
   },
@@ -4937,8 +5342,9 @@ const Adventure={
   pickRewardCard(cardId){
     this.deck.push(cardId);
     const def=getCardDef(cardId);
+    if(this._stats)this._stats.cardsGained++;
     advMsg(`获得「${def.name}」!`);
-    setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    playCardAcquireAnimation(def,()=>{this.closeOverlay();this.renderMap()});
   },
 
   // --- CAMPFIRE ---
@@ -4987,6 +5393,7 @@ const Adventure={
 
   doUpgrade(cardId){
     this.upgradedCards.add(cardId);
+    if(this._stats)this._stats.cardsUpgraded++;
     const def=getCardDef(cardId);
     advMsg(`升级「${def.name}」! 基础值+2`);
     setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
@@ -5086,9 +5493,10 @@ const Adventure={
       this.gold-=c.price;
       this.deck.push(c.id);
       c.sold=true;
+      if(this._stats)this._stats.cardsGained++;
       SFX.play('coin');
-      advMsg(`购买了「${c.name}」!`);
-      setTimeout(()=>this.renderShop(),800);
+      const def=getCardDef(c.id);
+      playCardAcquireAnimation(def||c,()=>this.renderShop());
     });
   },
 
@@ -5126,7 +5534,7 @@ const Adventure={
       this.removeCount++;
       SFX.play('coin');
       advMsg(`花费${removePrice}💰 删除了「${def?def.name:cardId}」!`);
-      setTimeout(()=>this.renderShop(),800);
+      playCardDeleteAnimation(def||{name:cardId,emoji:'🃏'},()=>this.renderShop());
     });
   },
 
@@ -5148,9 +5556,12 @@ const Adventure={
   },
 
   doEvent(evtId,optIdx){
+    if(this._stats)this._stats.eventsCompleted++;
     const evt=RANDOM_EVENTS.find(e=>e.id===evtId);
     const opt=evt.options[optIdx];
+    const deckBefore=this.deck.length;
     const result=opt.action(this);
+    if(this._stats&&this.deck.length>deckBefore)this._stats.cardsGained+=(this.deck.length-deckBefore);
     if(result===false)return;
     if(result==='PICK_REMOVE_FOR_GOLD'){
       // Special: pick a card to remove for gold
@@ -5187,15 +5598,24 @@ const Adventure={
       setTimeout(()=>{this.closeOverlay();this.onBattleLose()},1000);
       return;
     }
-    setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    // If cards were gained from this event, play acquire animation for the last added card
+    const cardsAdded=this.deck.length-deckBefore;
+    if(cardsAdded>0){
+      const lastAddedId=this.deck[this.deck.length-1];
+      const def=getCardDef(lastAddedId);
+      playCardAcquireAnimation(def||{name:'卡牌',emoji:'🃏'},()=>{this.closeOverlay();this.renderMap()});
+    } else {
+      setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    }
   },
 
   eventRemoveForGold(cardId){
     const idx=this.deck.indexOf(cardId);
     if(idx>=0)this.deck.splice(idx,1);
     this.gold+=30;
-    advMsg(`献祭「${getCardDef(cardId).name}」, 获得30💰!`);
-    setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+    const def=getCardDef(cardId);
+    advMsg(`献祭「${def.name}」, 获得30💰!`);
+    playCardDeleteAnimation(def,()=>{this.closeOverlay();this.renderMap()});
   },
 
   // --- BLACK MARKET EVENT ---
@@ -5222,10 +5642,11 @@ const Adventure={
       if(this.hp<=cost)return;
       this.hp-=cost;
       this.deck.push(c.id);
+      if(this._stats)this._stats.cardsGained++;
       SFX.play('coin');
-      advMsg(`失去${cost}HP, 获得「${c.name}」!`);
       if(this.hp<=0){setTimeout(()=>{this.closeOverlay();this.onBattleLose()},800);return}
-      setTimeout(()=>{this.closeOverlay();this.renderMap()},800);
+      const def=getCardDef(c.id);
+      playCardAcquireAnimation(def||c,()=>{this.closeOverlay();this.renderMap()});
     });
   },
 
@@ -5251,23 +5672,27 @@ const Adventure={
     const idx=this.deck.indexOf(cardId);
     if(idx>=0)this.deck.splice(idx,1);
     this._altarSacrificed=cardId;
-    // Step 2: Pick a creature to upgrade
-    const seen=new Map();
-    this.deck.forEach(id=>{const def=getCardDef(id);if(def&&def.type==='creature')seen.set(id,(seen.get(id)||0)+1)});
-    if(seen.size===0){advMsg(`献祭了「${getCardDef(cardId).name}」,但没有可升级的生物!`);setTimeout(()=>{this.closeOverlay();this.renderMap()},800);return}
-    const p=$('adv-panel');
-    let html=`<h3>🗿 选择要升级的生物</h3><p>已献祭「${getCardDef(cardId).name}」</p><div style="max-height:300px;overflow-y:auto">`;
-    [...seen.entries()].forEach(([id,count],i)=>{
-      const def=getCardDef(id);
-      html+=`<div class="adv-shop-item" onclick="Adventure.altarUpgrade('${id}')" style="cursor:pointer;margin-left:${(i%5)*15}px">
-        <div class="item-info"><span class="item-name">${def.emoji} ${def.name} x${count}</span><span class="item-desc"> 基础:${def.base}</span></div>
-        <span class="item-price">⬆️</span></div>`;
+    const sacDef=getCardDef(cardId);
+    playCardDeleteAnimation(sacDef||{name:cardId,emoji:'🃏'},()=>{
+      // Step 2: Pick a creature to upgrade
+      const seen=new Map();
+      this.deck.forEach(id=>{const def=getCardDef(id);if(def&&def.type==='creature')seen.set(id,(seen.get(id)||0)+1)});
+      if(seen.size===0){advMsg(`献祭了「${(sacDef||{name:cardId}).name}」,但没有可升级的生物!`);setTimeout(()=>{this.closeOverlay();this.renderMap()},800);return}
+      const p=$('adv-panel');
+      let html=`<h3>🗿 选择要升级的生物</h3><p>已献祭「${(sacDef||{name:cardId}).name}」</p><div style="max-height:300px;overflow-y:auto">`;
+      [...seen.entries()].forEach(([id,count],i)=>{
+        const def=getCardDef(id);
+        html+=`<div class="adv-shop-item" onclick="Adventure.altarUpgrade('${id}')" style="cursor:pointer;margin-left:${(i%5)*15}px">
+          <div class="item-info"><span class="item-name">${def.emoji} ${def.name} x${count}</span><span class="item-desc"> 基础:${def.base}</span></div>
+          <span class="item-price">⬆️</span></div>`;
+      });
+      html+=`</div><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.renderMap()">取消</button>`;
+      p.innerHTML=html;
     });
-    html+=`</div><button class="adv-btn" onclick="Adventure.closeOverlay();Adventure.renderMap()">取消</button>`;
-    p.innerHTML=html;
   },
   altarUpgrade(cardId){
     this.upgradedCards.add(cardId);
+    if(this._stats)this._stats.cardsUpgraded++;
     const def=getCardDef(cardId);
     const sacName=getCardDef(this._altarSacrificed).name;
     advMsg(`献祭「${sacName}」,「${def.name}」基础值+2!`);
@@ -5300,9 +5725,9 @@ const Adventure={
 // ============================================================
 const G={
   p:{hp:30,hand:[],deck:[],dice:[],rerolled:false,isPlayer:true,
-    deployedCreature:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
+    deployedCreature:null,deployedCreature2:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
   ai:{hp:30,hand:[],deck:[],dice:[],rerolled:false,isPlayer:false,
-    deployedCreature:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
+    deployedCreature:null,deployedCreature2:null,deployedSpells:[],shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0},
   turn:0,phase:'',selectedDice:[],maxDuels:1,duelsLeft:0,firstTurn:true,aiFirstTurn:true,
   aiName:'对手',
 
@@ -5312,7 +5737,7 @@ const G={
     this.boss2Challenge=false;
     this.adventureMode=false;
     this.adventureBattleType=null;
-    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
+    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedCreature2:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
     Object.assign(this.ai,mkP(),{isPlayer:false});
@@ -5341,7 +5766,7 @@ const G={
   isBossFight(){return (this.adventureMode&&this.adventureBattleType==='boss')||(this.bossChallenge&&!this.boss2Challenge)},
   isVictorFight(){return (this.adventureMode&&this.adventureBattleType==='boss2')||this.boss2Challenge},
   startBossDuel(){
-    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
+    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedCreature2:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
     Object.assign(this.ai,mkP(),{isPlayer:false});
@@ -5369,7 +5794,7 @@ const G={
   },
 
   startBoss2Duel(){
-    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
+    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedCreature2:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
     Object.assign(this.ai,mkP(),{isPlayer:false});
@@ -5406,7 +5831,7 @@ const G={
     this.bossChallenge=false;
     this.boss2Challenge=false;
     this._spellsUsedThisGame=0;
-    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedSpells:[],
+    const mkP=()=>({hp:30,hand:[],deck:[],discard:[],dice:[],rerolled:false,deployedCreature:null,deployedCreature2:null,deployedSpells:[],
       shield:0,bankedDice:[],bonusDiceNext:0,extraCreatureNext:false,stolenDice:0,effectsSilenced:false,curseStacks:0});
     Object.assign(this.p,mkP(),{isPlayer:true});
     Object.assign(this.ai,mkP(),{isPlayer:false});
@@ -5511,11 +5936,13 @@ const G={
 
   newTurn(){
     this.turn++;
+    this._spellsThisTurn=0;
     // Discard deployed cards from last turn
     // Phantom Sprite: return to hand instead of discarding
     if(this.p.deployedCreature){
       if(this.p.deployedCreature._phantomReturning){this.p.deployedCreature._phantomReturning=false;this.p.deployedCreature.assignedDice=[];this.p.deployedCreature.tempBonus=0;this.p.hand.push(this.p.deployedCreature);log('👻 幻象精灵回到手牌!','effect')}
       else discardCard(this.p,this.p.deployedCreature)}
+    if(this.p.deployedCreature2)discardCard(this.p,this.p.deployedCreature2);
     // Element Harmonizer: remove extra dice before discard
     if(this.p.deployedCreature&&this.p.deployedCreature._harmonizerExtra){this.p.deployedCreature.assignedDice.pop();delete this.p.deployedCreature._harmonizerExtra}
     this.p.deployedSpells.forEach(s=>discardCard(this.p,s));
@@ -5524,8 +5951,8 @@ const G={
       else discardCard(this.ai,this.ai.deployedCreature)}
     if(this.ai.deployedCreature&&this.ai.deployedCreature._harmonizerExtra){this.ai.deployedCreature.assignedDice.pop();delete this.ai.deployedCreature._harmonizerExtra}
     this.ai.deployedSpells.forEach(s=>discardCard(this.ai,s));
-    this.p.deployedCreature=null;this.p.deployedSpells=[];
-    this.ai.deployedCreature=null;this.ai.deployedSpells=[];
+    this.p.deployedCreature=null;this.p.deployedCreature2=null;this.p.deployedSpells=[];
+    this.ai.deployedCreature=null;this.ai.deployedCreature2=null;this.ai.deployedSpells=[];
     // Clear per-turn flags
     if(this.p.effectsSilenced){log('封印效果解除(玩家)','effect');this.p.effectsSilenced=false}
     if(this.ai.effectsSilenced){log('封印效果解除('+(this.aiName||'对手')+')','effect');this.ai.effectsSilenced=false}
@@ -5628,7 +6055,7 @@ const G={
         const sorted=[...new Set(this.p.dice)].sort((a,b)=>a-b);
         let maxRun=1,run=1;
         for(let i=1;i<sorted.length;i++){if(sorted[i]===sorted[i-1]+1){run++;if(run>maxRun)maxRun=run}else{run=1}}
-        if(maxRun>=3){drawCards(this.p,1);log(`👁️ 大顺之眼: ${maxRun}连顺子! 抽1牌`,'effect')}
+        if(maxRun>=3){drawCards(this.p,1);log(`👁️ 大顺之眼: ${maxRun}连顺子! 抽1牌`,'effect');StatsTracker.recordStraight()}
       }
     }
 
@@ -5779,23 +6206,37 @@ const G={
       if(!this.p.deployedCreature||this.p.extraCreatureNext){
         // Deploy as creature
         card.assignedDice=[];card.tempBonus=0;
-        this.p.deployedCreature=card;StatsTracker.recordCard(card.name);SFX.play('click');
-        this.p.hand.splice(idx,1);this.p.extraCreatureNext=false;
-        log(`部署 ${card.name} (作为生物)`);render();return;
+        if(this.p.deployedCreature&&this.p.extraCreatureNext){
+          this.p.deployedCreature2=card;this.p.extraCreatureNext=false;
+          log(`部署第二个生物 ${card.name} (作为生物,裂隙行者效果)`);
+        } else {
+          this.p.deployedCreature=card;
+          log(`部署 ${card.name} (作为生物)`);
+        }
+        StatsTracker.recordCard(card.name);StatsTracker.recordCreature(card.id);SFX.play('click');
+        this.p.hand.splice(idx,1);render();return;
       } else {
         // Deploy as spell
         card.assignedDice=[];
         this.p.deployedSpells.push(card);this.p.hand.splice(idx,1);
+        StatsTracker.recordSpell();
         log(`部署 ${card.name} (作为法术)`);render();return;
       }
     }
     if(card.type==='creature'){
       if(this.p.deployedCreature&&!this.p.extraCreatureNext){log('每回合只能出1个生物');return}
-      if(this.p.deployedCreature&&this.p.extraCreatureNext){/* allow second */}
       card.assignedDice=[];card.tempBonus=0;
-      this.p.deployedCreature=card;StatsTracker.recordCard(card.name);SFX.play('click');
+      if(this.p.deployedCreature&&this.p.extraCreatureNext){
+        // Deploy as second creature
+        this.p.deployedCreature2=card;
+        this.p.extraCreatureNext=false;
+        log(`部署第二个生物 ${card.name} (裂隙行者效果)`);
+      } else {
+        // Deploy as first creature (don't reset extraCreatureNext)
+        this.p.deployedCreature=card;
+      }
+      StatsTracker.recordCard(card.name);StatsTracker.recordCreature(card.id);SFX.play('click');
       this.p.hand.splice(idx,1);
-      this.p.extraCreatureNext=false;
       log(`部署 ${card.name}`);
       // Deploy effects now trigger in doRevealAndDuel after dice are assigned
       // Exception: glutton_grum and other non-dice-dependent deploy effects trigger early
@@ -5811,6 +6252,9 @@ const G={
       this.p.deployedSpells.push(card);
       this.p.hand.splice(idx,1);
       this._spellsUsedThisGame=(this._spellsUsedThisGame||0)+1;
+      this._spellsThisTurn=(this._spellsThisTurn||0)+1;
+      if(this._spellsThisTurn>=2)StatsTracker.recordSpellCombo();
+      StatsTracker.recordSpell();
       if(this._spellsUsedThisGame>=5)Achievements.unlock('spell_master');
       log(`部署法术 ${card.name}`);
       // Relic: 魔法书 — 30% chance to copy spell to hand (once per turn)
@@ -5842,10 +6286,11 @@ const G={
   },
 
   onDeployedClick(target){
-    // target: 'creature' or 'spell-0','spell-1', etc.
+    // target: 'creature', 'creature2', or 'spell-0','spell-1', etc.
     if(this.phase!=='deploy'||this.selectedDice.length===0)return;
     let card;
     if(target==='creature'){card=this.p.deployedCreature}
+    else if(target==='creature2'){card=this.p.deployedCreature2}
     else{const i=+target.split('-')[1];card=this.p.deployedSpells[i]}
     if(!card)return;
     const totalSlots=card.slots+(this.adventureMode&&Adventure.hasRelic('overload_slot')&&card.type==='creature'?1:(card.overloadSlot||0))-(this.adventureMode&&Adventure.hasRelic('double_blade')&&card.type==='creature'?1:0);
@@ -5862,6 +6307,7 @@ const G={
     toAssign.forEach(di=>{card.assignedDice.push(this.p.dice[di]);this.p.dice[di]=-1});
     this.selectedDice=[];
     log(`分配骰子[${card.assignedDice.join(',')}]→${card.name}`);
+    if(card.type==='creature'&&card.assignedDice.length>=card.slots)StatsTracker.recordSlotsFilled();
     Tutorial.notify('assign_dice');
     render();
   },
@@ -5870,6 +6316,7 @@ const G={
     if(this.phase!=='deploy')return;
     let card;
     if(target==='creature'){card=this.p.deployedCreature;this.p.deployedCreature=null}
+    else if(target==='creature2'){card=this.p.deployedCreature2;this.p.deployedCreature2=null;this.p.extraCreatureNext=true}
     else{const i=+target.split('-')[1];card=this.p.deployedSpells.splice(i,1)[0]}
     if(!card)return;
     // Return dice
@@ -6121,11 +6568,13 @@ const G={
     // Blood Contract relic: if HP < 10, deployed creature gets +2
     if(this.adventureMode&&Adventure.hasRelic('blood_contract')&&this.p.hp<10&&this.p.deployedCreature){
       this.p.deployedCreature.tempBonus=(this.p.deployedCreature.tempBonus||0)+2;
+      if(this.p.deployedCreature2){this.p.deployedCreature2.tempBonus=(this.p.deployedCreature2.tempBonus||0)+2}
       log('🩸 血之契约: HP低于10, 生物+2基础值!','effect');
     }
     // Boiler Spider debuff from last turn: apply -3 to deployed creature
     if(this.p._spiderDebuffNext&&this.p.deployedCreature){
       this.p.deployedCreature.tempBonus=(this.p.deployedCreature.tempBonus||0)-3;
+      if(this.p.deployedCreature2){this.p.deployedCreature2.tempBonus=(this.p.deployedCreature2.tempBonus||0)-3}
       this.p._spiderDebuffNext=false;
       log('锅炉蜘蛛:上回合效果, 生物-3基础值!','effect');
     } else {this.p._spiderDebuffNext=false}
@@ -6146,20 +6595,43 @@ const G={
     render();
 
     this.maxDuels=1+extraCtx.extraDuels;
+    // Extra duel for deployedCreature2
+    const hasCreature2=!!this.p.deployedCreature2;
+    if(hasCreature2)this.maxDuels++;
     this.duelsLeft=this.maxDuels;
     if(this.maxDuels>=3)Achievements.unlock('triple_duel');
 
     if(this.p.deployedCreature&&this.ai.deployedCreature){
-      // Duel loop (base 1 + extra from time_warp etc.)
+      // Duel loop (base 1 + extra from time_warp etc. + creature2)
       for(let duelRound=0;duelRound<this.maxDuels;duelRound++){
         if(duelRound>0){log(`— 追加对拼 第${duelRound+1}次 —`,'phase');render();await delay(600)}
+        // Swap to creature2 for the last duel round if creature2 exists
+        if(hasCreature2&&duelRound===this.maxDuels-1){
+          this._savedCreature1=this.p.deployedCreature;
+          this.p.deployedCreature=this.p.deployedCreature2;
+          log(`🌀 裂隙行者效果: ${this.p.deployedCreature.name} 参与对拼!`,'effect');
+          render();await delay(300);
+        }
         await this.resolveDuel(extraCtx);
         this.duelsLeft--;
-        if(this.checkGameOver())return;
+        if(this.checkGameOver()){
+          // Restore creature1 before returning
+          if(this._savedCreature1){this.p.deployedCreature=this._savedCreature1;delete this._savedCreature1}
+          return;
+        }
       }
+      // Restore creature1 after all duels
+      if(this._savedCreature1){this.p.deployedCreature=this._savedCreature1;delete this._savedCreature1}
     } else if(this.p.deployedCreature&&!this.ai.deployedCreature){
       // Player creature attacks directly
       await this.directAttack(this.p,this.ai);
+      if(this.p.deployedCreature2&&!this.checkGameOver()){
+        const saved=this.p.deployedCreature;
+        this.p.deployedCreature=this.p.deployedCreature2;
+        log(`🌀 裂隙行者效果: ${this.p.deployedCreature.name} 也发起攻击!`,'effect');
+        await this.directAttack(this.p,this.ai);
+        this.p.deployedCreature=saved;
+      }
     } else if(!this.p.deployedCreature&&this.ai.deployedCreature){
       await this.directAttack(this.ai,this.p);
     } else {
@@ -6202,6 +6674,15 @@ const G={
       player.deployedCreature.effect({owner:player,enemy,myCreature:player.deployedCreature,
         myDice:player.deployedCreature.assignedDice,
         mySpellDice:[]});}
+    }
+    // Creature2 effects (from 裂隙行者 dual deploy)
+    if(player.deployedCreature2&&player.deployedCreature2.timing===timing){
+      if(player.deployedCreature2._deployTriggered&&timing==='deploy'){/* skip */}
+      else if(player.effectsSilenced){log(`${player.deployedCreature2.name}的效果被封印!`,'effect')}
+      else{const enemy=player===this.p?this.ai:this.p;
+      player.deployedCreature2.effect({owner:player,enemy,myCreature:player.deployedCreature2,
+        myDice:player.deployedCreature2.assignedDice,mySpellDice:[]});
+      log(`${player.deployedCreature2.name} (第二生物) 效果触发!`,'effect');}
     }
     // Spell effects
     player.deployedSpells.forEach((s,i)=>{
@@ -6433,7 +6914,7 @@ const G={
     const val=getCreatureValue(c);
     let dmg=Math.max(1,val);
     // Ancient turtle passive: halve damage
-    if((attacker.deployedCreature&&attacker.deployedCreature.id==='ancient_turtle')||(defender.deployedCreature&&defender.deployedCreature.id==='ancient_turtle')){dmg=Math.ceil(dmg/2);log('远古巨龟:伤害减半!','effect')}
+    if((attacker.deployedCreature&&attacker.deployedCreature.id==='ancient_turtle')||(attacker.deployedCreature2&&attacker.deployedCreature2.id==='ancient_turtle')||(defender.deployedCreature&&defender.deployedCreature.id==='ancient_turtle')||(defender.deployedCreature2&&defender.deployedCreature2.id==='ancient_turtle')){dmg=Math.ceil(dmg/2);log('远古巨龟:伤害减半!','effect')}
     // Response spells for defender (e.g. metal_shield, emergency_repair)
     const defSide=defender===this.p?'player':'ai';
     defender.deployedSpells.forEach((s,i)=>{if(s.timing==='response'){
@@ -6501,6 +6982,7 @@ const G={
         return true}
       if(this.ai.hp<=0){setPhase('战斗胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');spawnVictoryParticles();
         if(this.adventureBattleType==='boss'){
+          StatsTracker.recordBossWin('boss');
           let dlgText=BossDialogue.playerWin()||'';
           if(this.p.deployedCreature&&['iron_giant','steam_sentinel','magnet_puppet'].includes(this.p.deployedCreature.id)){
             const egg=BossDialogue.eggMechKill();if(egg)dlgText+='\n'+egg;
@@ -6508,6 +6990,7 @@ const G={
           showBossEndDialogue('win',dlgText,()=>{
             showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)})});
         } else if(this.adventureBattleType==='boss2'){
+          StatsTracker.recordBossWin('boss2');
           showBossEndDialogue('win',VictorDialogue.playerWin(),()=>{
             showOverlay('胜利!',[{label:'确定'}],()=>{Adventure.onBattleWin(this.adventureBattleType)})});
         } else {
@@ -6525,7 +7008,7 @@ const G={
             showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;G.boss2Challenge=false;showScreen('screen-levels')})});
           return true}
         if(this.ai.hp<=0){
-          setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);
+          setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);StatsTracker.recordBossWin('victor');
           if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');
           spawnVictoryParticles();setTimeout(spawnVictoryParticles,400);setTimeout(spawnVictoryParticles,800);
           let dlgText=typeof VictorDialogue!=='undefined'?(VictorDialogue.playerWin()||''):'';
@@ -6549,7 +7032,7 @@ const G={
           showOverlay('败北!',[{label:'返回'}],()=>{G.bossChallenge=false;showScreen('screen-levels')})});
         return true}
       if(this.ai.hp<=0){
-        setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);
+        setPhase('铸炉师胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);StatsTracker.recordBossWin('iron');
         if(this.p.hp===1)Achievements.unlock('survivor');if(this.p.hp<=5)Achievements.unlock('clutch_win');
         spawnVictoryParticles();setTimeout(spawnVictoryParticles,400);setTimeout(spawnVictoryParticles,800);
         let dlgText=BossDialogue.playerWin()||'';
@@ -7263,19 +7746,29 @@ function renderDeploy(player,isAi){
   const csEl=$(isAi?'ai-creature-slot':'player-creature-slot');
   const ssEl=$(isAi?'ai-spell-slots':'player-spell-slots');
   const c=player.deployedCreature;
+  const c2=player.deployedCreature2;
 
   if(isAi&&G.phase==='deploy'){
     // Hidden during deploy
-    csEl.innerHTML=c?'<div class="card-back" style="width:140px;height:180px;font-size:32px">?</div>':'<div style="color:var(--text-dim);font-size:11px">未部署</div>';
+    const backCards=(c?1:0)+(c2?1:0);
+    csEl.innerHTML=backCards>0?Array(backCards).fill('<div class="card-back" style="width:140px;height:180px;font-size:32px">?</div>').join(''):'<div style="color:var(--text-dim);font-size:11px">未部署</div>';
     ssEl.innerHTML=player.deployedSpells.map(()=>'<div class="card-back" style="width:100px;height:130px">?</div>').join('');
   } else {
+    let html='';
     if(c){
       const onclick=!isAi&&G.phase==='deploy'?`G.onDeployedClick('creature')`:'';
       const undoBtn=!isAi&&G.phase==='deploy'?`<div style="text-align:center"><button class="menu-btn sm" onclick="G.undeploy('creature')">收回</button></div>`:'';
-      csEl.innerHTML=renderCard(c,onclick,'','reveal-anim')+undoBtn;
-    } else {
-      csEl.innerHTML=`<div style="color:var(--text-dim);font-size:11px">${!isAi&&G.phase==='deploy'?'点击手牌部署生物':'未部署'}</div>`;
+      html+=renderCard(c,onclick,'','reveal-anim')+undoBtn;
     }
+    if(c2){
+      const onclick2=!isAi&&G.phase==='deploy'?`G.onDeployedClick('creature2')`:'';
+      const undoBtn2=!isAi&&G.phase==='deploy'?`<div style="text-align:center"><button class="menu-btn sm" onclick="G.undeploy('creature2')">收回</button></div>`:'';
+      html+=renderCard(c2,onclick2,'','reveal-anim')+undoBtn2;
+    }
+    if(!c&&!c2){
+      html=`<div style="color:var(--text-dim);font-size:11px">${!isAi&&G.phase==='deploy'?'点击手牌部署生物':'未部署'}</div>`;
+    }
+    csEl.innerHTML=html;
     ssEl.innerHTML=player.deployedSpells.map((s,i)=>{
       const onclick=!isAi&&G.phase==='deploy'?`G.onDeployedClick('spell-${i}')`:'';
       const undoBtn=!isAi&&G.phase==='deploy'?`<button class="menu-btn sm" onclick="G.undeploy('spell-${i}')" style="font-size:8px;padding:2px 4px">收回</button>`:'';
@@ -7403,10 +7896,11 @@ const TutorialGuide={
     if(!el)return;
     el.innerHTML=this['_render_'+tab]();
   },
-  init(){this.showTab('ui')},
+  init(){const tab=this._pendingTab||'ui';this._pendingTab=null;this.showTab(tab)},
 
   // --- Practice launchers ---
   practiceUI(){
+    this._currentTutType='ui';
     showScreen('screen-menu');
     setTimeout(()=>{
       const steps=[
@@ -7419,6 +7913,7 @@ const TutorialGuide={
     },500);
   },
   practiceDuel(){
+    this._currentTutType='battle';
     showScreen('screen-levels');
     setTimeout(()=>{
       const steps=[
@@ -7431,6 +7926,7 @@ const TutorialGuide={
     },500);
   },
   practiceAdventure(){
+    this._currentTutType='adventure';
     showScreen('screen-adventure');
     setTimeout(()=>{
       const steps=[
@@ -7442,6 +7938,7 @@ const TutorialGuide={
     },500);
   },
   practiceKeywords(){
+    this._currentTutType='keywords';
     showScreen('screen-wiki');
     setTimeout(()=>{
       if(typeof Wiki!=='undefined')Wiki.showTab('cards');
@@ -7494,6 +7991,8 @@ const TutorialGuide={
   _endMiniGuide(){
     const ov=document.getElementById('mini-guide-overlay');
     if(ov)ov.style.display='none';
+    /* Track tutorial completion for task system */
+    if(this._currentTutType){StatsTracker.recordTutorial(this._currentTutType);this._currentTutType=null}
   },
 
   _render_ui(){return `
@@ -8351,13 +8850,63 @@ function showTurnToast(){
 /* ===== STATS TRACKER ===== */
 const StatsTracker={
   _key:'dd_stats',
-  data:{totalGames:0,wins:0,losses:0,maxDmg:0,totalDiceRolls:0,cardUsage:{},achievements:{}},
-  init(){try{const s=localStorage.getItem(this._key);if(s)this.data=JSON.parse(s)}catch(e){}},
+  data:{totalGames:0,wins:0,losses:0,maxDmg:0,totalDiceRolls:0,cardUsage:{},achievements:{},
+    taskFlags:{},taskCounters:{},totalSixes:0},
+  init(){try{const s=localStorage.getItem(this._key);if(s){this.data=JSON.parse(s);
+    if(!this.data.taskFlags)this.data.taskFlags={};
+    if(!this.data.taskCounters)this.data.taskCounters={};
+    if(!this.data.totalSixes)this.data.totalSixes=0}}catch(e){}},
   save(){try{localStorage.setItem(this._key,JSON.stringify(this.data))}catch(e){}},
-  recordGame(won){this.data.totalGames++;if(won)this.data.wins++;else this.data.losses++;this.save();Achievements.check()},
-  recordDmg(d){if(d>this.data.maxDmg)this.data.maxDmg=d;this.save()},
+  recordGame(won){this.data.totalGames++;if(won)this.data.wins++;else this.data.losses++;this.save();Achievements.check();TaskSystem.checkAll()},
+  recordDmg(d){
+    if(d>this.data.maxDmg)this.data.maxDmg=d;
+    if(!this.data.taskCounters.totalDmgDealt)this.data.taskCounters.totalDmgDealt=0;
+    this.data.taskCounters.totalDmgDealt+=d;
+    if(d>=20)this.data.taskFlags.perfect_duel=true;
+    this.save()},
   recordDice(n){this.data.totalDiceRolls+=(n||1);this.save()},
   recordCard(name){if(!this.data.cardUsage[name])this.data.cardUsage[name]=0;this.data.cardUsage[name]++;this.save()},
+  /* New tracking methods for task system */
+  recordCreature(name){
+    if(!this.data.taskCounters.creaturesPlayed)this.data.taskCounters.creaturesPlayed=0;
+    this.data.taskCounters.creaturesPlayed++;
+    /* Check if it's a dragon */
+    const dragonIds=['copper_dragon','frost_dragon','silent_dragon'];
+    if(dragonIds.includes(name)){
+      if(!this.data.taskCounters.dragonsPlayed)this.data.taskCounters.dragonsPlayed=0;
+      this.data.taskCounters.dragonsPlayed++;
+    }
+    this.save();
+  },
+  recordSpell(){
+    if(!this.data.taskCounters.spellsUsed)this.data.taskCounters.spellsUsed=0;
+    this.data.taskCounters.spellsUsed++;
+    this.save();
+  },
+  recordDraw(n){
+    if(!this.data.taskCounters.totalCardsDrawn)this.data.taskCounters.totalCardsDrawn=0;
+    this.data.taskCounters.totalCardsDrawn+=(n||1);
+    this.save();
+  },
+  recordRelic(){
+    if(!this.data.taskCounters.relicsGained)this.data.taskCounters.relicsGained=0;
+    this.data.taskCounters.relicsGained++;
+    this.save();
+  },
+  recordBossWin(bossType){
+    if(bossType==='boss'||bossType==='iron'){
+      if(!this.data.taskCounters.boss_iron_wins)this.data.taskCounters.boss_iron_wins=0;
+      this.data.taskCounters.boss_iron_wins++;
+    }else if(bossType==='boss2'||bossType==='victor'){
+      if(!this.data.taskCounters.boss_victor_wins)this.data.taskCounters.boss_victor_wins=0;
+      this.data.taskCounters.boss_victor_wins++;
+    }
+    this.save();
+  },
+  recordSlotsFilled(){this.data.taskFlags.filled_slots=true;this.save()},
+  recordSpellCombo(){this.data.taskFlags.spell_combo=true;this.save()},
+  recordTutorial(type){this.data.taskFlags['tut_'+type]=true;this.save();if(typeof TaskSystem!=='undefined'){TaskSystem.checkAll();TaskSystem.updateRedDot()}},
+  recordStraight(){this.data.taskFlags.straight_trigger=true;this.save()},
   getFavCard(){let max=0,fav='—';for(const[k,v]of Object.entries(this.data.cardUsage))if(v>max){max=v;fav=k}return fav},
   getWinRate(){return this.data.totalGames?Math.round(this.data.wins/this.data.totalGames*100):0}
 };
@@ -8382,8 +8931,8 @@ const Achievements={
   ],
   unlock(id){if(!StatsTracker.data.achievements[id]){StatsTracker.data.achievements[id]=Date.now();StatsTracker.save();
     const def=this.defs.find(d=>d.id===id);
-    if(def&&def.reward){PlayerData.gold+=def.reward;PlayerData.save();showGameToast(`🏆 成就解锁: ${def.name} (+${def.reward}💰)`,3000)}
-    else{showGameToast('🏆 成就解锁: '+def?.name,3000)}}},
+    showGameToast('🏆 成就解锁: '+(def?def.name:id)+' (去任务界面领取奖励)',3000);
+    TaskSystem.checkAll()}},
   check(){this.defs.forEach(d=>{if(!StatsTracker.data.achievements[d.id]&&d.check())this.unlock(d.id)})},
   markTripleSix(dice){if(dice&&dice.filter(d=>d===6).length>=3)this.unlock('triple_six');
     if(dice)dice.forEach(d=>{if(d===6)StatsTracker.data.totalSixes=(StatsTracker.data.totalSixes||0)+1});StatsTracker.save()},
@@ -8403,7 +8952,7 @@ Wiki.renderStats=function(){
   const d=StatsTracker.data,wr=StatsTracker.getWinRate(),fav=StatsTracker.getFavCard();
   $('wiki-content').innerHTML=`
     <div style="text-align:center;padding:20px 0">
-      <h3 style="color:var(--gold);font-size:18px;margin-bottom:16px">📊 对局统计</h3>
+      <h3 style="color:#fff;font-size:18px;margin-bottom:16px">📊 对局统计</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:360px;margin:0 auto">
         <div class="wiki-card" style="cursor:default"><div class="wc-emoji" style="font-size:24px">⚔️</div><div class="wc-name">总对局数</div><div class="wc-stats" style="font-size:20px">${d.totalGames}</div></div>
         <div class="wiki-card" style="cursor:default"><div class="wc-emoji" style="font-size:24px">📈</div><div class="wc-name">胜率</div><div class="wc-stats" style="font-size:20px">${wr}%</div><div class="wc-type">${d.wins}胜 / ${d.losses}负</div></div>
@@ -8428,7 +8977,7 @@ Wiki.renderAchieve=function(){
     </div>`;
   }).join('');
   $('wiki-content').innerHTML=`<div style="text-align:center;padding:20px 0">
-    <h3 style="color:var(--gold);font-size:18px;margin-bottom:16px">🏆 成就</h3>
+    <h3 style="color:#fff;font-size:18px;margin-bottom:16px">🏆 成就</h3>
     <div class="wiki-grid">${html}</div></div>`;
 };
 
@@ -8513,6 +9062,620 @@ if(_origDrawCards){
     return result;
   };
 }
+
+// === Card Acquire Animation — ZZZ Style ===
+function playCardAcquireAnimation(def, callback){
+  if(!def){if(callback)callback();return}
+  const overlay=document.createElement('div');
+  overlay.className='card-acquire-overlay';
+  const typeLabel=def.type==='creature'?'CREATURE':'SPELL';
+  const statsText=def.type==='creature'?`基础:${def.base}  槽位:${def.slots}`:'';
+  overlay.innerHTML=`
+    <div class="acq-card">
+      <div class="acq-tag">CARD ACQUIRED</div>
+      <div class="acq-row">
+        <div class="acq-emoji">${def.emoji||'🃏'}</div>
+        <div class="acq-info">
+          <div class="acq-name">${def.name}</div>
+          <div class="acq-type">${typeLabel}</div>
+          ${statsText?`<div class="acq-stats">${statsText}</div>`:''}
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  try{SFX.play('coin')}catch(e){}
+  // Fly out after display
+  setTimeout(()=>{
+    const card=overlay.querySelector('.acq-card');
+    if(card)card.classList.add('fly-out');
+  },800);
+  // Deck pulse indicator
+  setTimeout(()=>{
+    const pulse=document.createElement('div');
+    pulse.className='acq-deck-pulse';
+    pulse.innerHTML='<span>🃏 DECK +1</span>';
+    document.body.appendChild(pulse);
+    setTimeout(()=>pulse.remove(),600);
+  },1050);
+  // Cleanup and callback
+  setTimeout(()=>{
+    overlay.remove();
+    if(callback)callback();
+  },1400);
+}
+
+// === Card Delete Animation — ZZZ Style ===
+function playCardDeleteAnimation(def, callback){
+  if(!def){if(callback)callback();return}
+  const overlay=document.createElement('div');
+  overlay.className='card-delete-overlay';
+  const card=document.createElement('div');
+  card.className='del-card';
+  card.innerHTML=`
+    <div class="del-content">
+      <div class="del-tag">CARD DESTROYED</div>
+      <div class="del-row">
+        <div class="del-emoji">${def.emoji||'🃏'}</div>
+        <div class="del-name">${def.name}</div>
+      </div>
+    </div>
+    <div class="del-slash"></div>
+    <div class="del-half-top"></div>
+    <div class="del-half-bot"></div>`;
+  overlay.appendChild(card);
+  document.body.appendChild(overlay);
+  // Slash cut
+  setTimeout(()=>{
+    card.querySelector('.del-slash').classList.add('active');
+  },350);
+  // Split + dissolve + particles
+  setTimeout(()=>{
+    card.classList.add('dissolving');
+    card.querySelector('.del-half-top').classList.add('split');
+    card.querySelector('.del-half-bot').classList.add('split');
+    // Spawn particles
+    const rect=card.getBoundingClientRect();
+    const cx=rect.left+rect.width/2;
+    const cy=rect.top+rect.height/2;
+    for(let i=0;i<20;i++){
+      const p=document.createElement('div');
+      p.className='del-particle';
+      p.style.left=cx+'px';
+      p.style.top=cy+'px';
+      const angle=Math.random()*Math.PI*2;
+      const dist=50+Math.random()*90;
+      const dx=Math.cos(angle)*dist;
+      const dy=Math.sin(angle)*dist;
+      const dur=300+Math.random()*300;
+      const size=2+Math.random()*3;
+      p.style.width=size+'px';p.style.height=size+'px';
+      p.style.background=Math.random()>0.5?'#fff':'rgba(255,62,122,0.6)';
+      p.style.transition=`all ${dur}ms ease-out`;
+      p.style.opacity='1';
+      document.body.appendChild(p);
+      requestAnimationFrame(()=>{
+        p.style.left=(cx+dx)+'px';
+        p.style.top=(cy+dy)+'px';
+        p.style.opacity='0';
+        p.style.transform='scale(0)';
+      });
+      setTimeout(()=>p.remove(),dur+50);
+    }
+  },550);
+  // Cleanup
+  setTimeout(()=>{
+    overlay.remove();
+    if(callback)callback();
+  },1100);
+}
+
+// === Settlement/Results Screen ===
+function showSettlementScreen(isVictory){
+  const stats=Adventure._stats||{};
+  const categories=[
+    {label:'获得卡牌',key:'cardsGained',pts:10},
+    {label:'遗物',key:'relicsGained',pts:15},
+    {label:'战胜普通对手',key:'battlesWon',pts:10},
+    {label:'战胜精英对手',key:'elitesWon',pts:15},
+    {label:'升级卡牌',key:'cardsUpgraded',pts:5},
+    {label:'经历事件',key:'eventsCompleted',pts:5},
+    {label:'击败BOSS',key:'bossDefeated',pts:30},
+    {label:'通过层数',key:'floorsCleared',pts:30}
+  ];
+  let totalScore=0;
+  const rowData=categories.map(c=>{
+    const count=stats[c.key]||0;
+    const score=count*c.pts;
+    totalScore+=score;
+    return{label:c.label,count,score};
+  });
+  const titleTag=isVictory?'MISSION COMPLETE':'MISSION FAILED';
+  const titleIcon=isVictory?'👑':'💀';
+  const titleName=isVictory?'冒险胜利':'冒险失败';
+
+  const overlay=document.createElement('div');
+  overlay.className='settlement-overlay';
+
+  let rowsHtml=rowData.map((r,i)=>`
+    <div class="settlement-row" style="animation-delay:${0.3+i*0.12}s">
+      <span class="sr-label">${r.label}</span>
+      <span class="sr-count">x${r.count}</span>
+      <span class="sr-score" data-target="${r.score}">0</span>
+    </div>`).join('');
+
+  overlay.innerHTML=`
+    <div class="settlement-strip">
+      <span class="ss-icon">⚔</span>
+      <span class="ss-text big">RESULT</span>
+      <div class="ss-divider"></div>
+      <span class="ss-text">SCORE</span>
+      <div class="ss-dots"><span class="active"></span><span></span><span></span></div>
+      <div class="ss-divider"></div>
+      <span class="ss-icon">${isVictory?'👑':'💀'}</span>
+      <span class="ss-text">${isVictory?'VICTORY':'DEFEAT'}</span>
+    </div>
+    <div class="settlement-label">
+      <div class="sl-en">${titleTag}</div>
+      <div class="sl-num">00</div>
+    </div>
+    <div class="settlement-main">
+      <div class="settlement-title">
+        <div class="st-tag">${titleTag}</div>
+        <div class="st-icon">${titleIcon}</div>
+        <div class="st-name">${titleName}</div>
+      </div>
+      <div class="settlement-divider"></div>
+      <div class="settlement-rows">${rowsHtml}</div>
+      <div class="settlement-total" style="opacity:0">
+        <div><span class="st-total-label">TOTAL SCORE</span></div>
+        <span class="st-total-score" data-target="${totalScore}">0</span>
+      </div>
+      <button class="settlement-btn" onclick="this.closest('.settlement-overlay').remove();Adventure.closeOverlay();Adventure.active=false;showScreen('screen-menu')">返回主菜单</button>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  // Animate score count-up after rows appear
+  const lastDelay=300+(rowData.length)*120;
+  setTimeout(()=>{
+    overlay.querySelectorAll('.sr-score').forEach(el=>{
+      const target=parseInt(el.dataset.target)||0;
+      _animateCount(el,0,target,400);
+    });
+  },lastDelay+200);
+
+  // Show total after individual scores
+  setTimeout(()=>{
+    const totalEl=overlay.querySelector('.settlement-total');
+    if(totalEl)totalEl.style.opacity='1';
+    const scoreEl=overlay.querySelector('.st-total-score');
+    if(scoreEl)_animateCount(scoreEl,0,totalScore,600);
+  },lastDelay+700);
+}
+
+function _animateCount(el,from,to,duration){
+  const start=performance.now();
+  function tick(now){
+    const t=Math.min((now-start)/duration,1);
+    const ease=1-Math.pow(1-t,3);
+    el.textContent=Math.round(from+(to-from)*ease);
+    if(t<1)requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+/* ===== TASK SYSTEM (泰拉终端) ===== */
+const TaskSystem={
+  _key:'dd_tasks',
+  currentCat:'tutorial',
+  data:{completed:{},claimed:{}},
+  /* NPC lines */
+  npcLines:{
+    idle:["又有任务啦？这次可别再烤糊了~","任务已接收。放心，我不会让你去送死的……大概吧。","今天的日常刷新了，要看看吗？"],
+    done:["任务完成！你终于没让我失望（擦泪）","好棒！这是你的奖励……别问为什么是虚拟的，问就是泰拉特色。","恭喜！你的任务记录又添一笔","奖励已发放。你的表现……勉强及格。","叮！奖励到账，请查收~","任务完成！你的钱包鼓了一点点。"],
+    unclaimed:["点我点我！有奖励哦~"],
+    allDone:["全任务达成记录。"]
+  },
+  categories:[
+    {id:'tutorial',name:'教程',icon:'📘'},
+    {id:'duel',name:'对决',icon:'⚔'},
+    {id:'adventure',name:'冒险',icon:'🗺'},
+    {id:'milestone',name:'成就',icon:'🏆'},
+    {id:'boss',name:'讨伐',icon:'🤖'}
+  ],
+  /* All task definitions */
+  defs:[
+    // === TUTORIAL ===
+    {id:'tut_first',cat:'tutorial',name:'初次见面',desc:'完成新手UI教程',icon:'👋',
+      reward:{type:'gold',amount:100},quote:'"欢迎来到泰拉！先学会走路，再学跑步……哦不对，先学会抽牌。"',
+      check:()=>(StatsTracker.data.taskFlags||{}).tut_ui,
+      goto:()=>{TutorialGuide._pendingTab='ui';showScreen('screen-tutorial')}},
+    {id:'tut_duel',cat:'tutorial',name:'对决入门',desc:'完成新手战斗教程',icon:'⚔',
+      reward:{type:'gold',amount:100},quote:'',
+      check:()=>(StatsTracker.data.taskFlags||{}).tut_battle,
+      goto:()=>{TutorialGuide._pendingTab='battle';showScreen('screen-tutorial')}},
+    {id:'tut_adventure',cat:'tutorial',name:'冒险入门',desc:'完成新手冒险教程',icon:'🗺',
+      reward:{type:'gold',amount:100},quote:'',
+      check:()=>(StatsTracker.data.taskFlags||{}).tut_adventure,
+      goto:()=>{TutorialGuide._pendingTab='adventure';showScreen('screen-tutorial')}},
+    {id:'tut_keywords',cat:'tutorial',name:'关键词入门',desc:'完成新手关键词教程',icon:'🔑',
+      reward:{type:'gold',amount:100},quote:'',
+      check:()=>(StatsTracker.data.taskFlags||{}).tut_keywords,
+      goto:()=>{TutorialGuide._pendingTab='keywords';showScreen('screen-tutorial')}},
+    // === DUEL ===
+    {id:'duel_blood',cat:'duel',name:'第一滴血',desc:'在一局对战中造成伤害',icon:'🩸',
+      reward:{type:'gold',amount:50},quote:'"打人是不对的……但打AI可以！"',
+      check:()=>StatsTracker.data.maxDmg>=1},
+    {id:'duel_six',cat:'duel',name:'掷骰高手',desc:'掷出一次6点',icon:'🎲',
+      reward:{type:'gold',amount:50},quote:'"6点！你今天是不是踩到数据狗屎了？"',
+      check:()=>(StatsTracker.data.totalSixes||0)>=1},
+    {id:'duel_creature',cat:'duel',name:'生物召唤',desc:'打出一张生物卡',icon:'🐾',
+      reward:{type:'gold',amount:50},quote:'"出来吧！……虽然它可能不太厉害。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).creaturesPlayed>=1},
+    {id:'duel_spell',cat:'duel',name:'法术初体验',desc:'使用一张法术卡',icon:'✨',
+      reward:{type:'gold',amount:50},quote:'"法术！花里胡哨的东西我最喜欢了。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).spellsUsed>=1},
+    {id:'duel_fill',cat:'duel',name:'分配大师',desc:'将一个生物的所有槽位填满骰子',icon:'🎯',
+      reward:{type:'gold',amount:50},quote:'"塞得满满的，它都快撑死了。"',
+      check:()=>(StatsTracker.data.taskFlags||{}).filled_slots},
+    {id:'duel_first_win',cat:'duel',name:'首次胜利',desc:'赢得一局对战',icon:'🏆',
+      reward:{type:'gold',amount:100},quote:'"赢了！虽然对手可能是个新手AI。"',
+      check:()=>StatsTracker.data.wins>=1},
+    {id:'duel_combo',cat:'duel',name:'组合拳',desc:'在一回合内使用2张法术',icon:'💫',
+      reward:{type:'gold',amount:100},quote:'"连招！"',
+      check:()=>(StatsTracker.data.taskFlags||{}).spell_combo},
+    {id:'duel_dragon',cat:'duel',name:'巨龙召唤师',desc:'打出一张巨龙卡',icon:'🐉',
+      reward:{type:'gold',amount:200},quote:'"龙！快跑……哦不对，快打！"',
+      check:()=>(StatsTracker.data.taskCounters||{}).dragonsPlayed>=1},
+    {id:'duel_perfect',cat:'duel',name:'完美对拼',desc:'在一次对拼中造成20点以上伤害',icon:'💥',
+      reward:{type:'card_pack',amount:2},quote:'"你把人打残了……。"',
+      check:()=>(StatsTracker.data.taskFlags||{}).perfect_duel},
+    {id:'duel_terra_star',cat:'duel',name:'泰拉新星',desc:'完成所有新手教程',icon:'⭐',
+      reward:{type:'title',title:'泰拉新星'},quote:'"恭喜毕业！现在你是一个合格的……打牌人了。"',
+      check:()=>{const f=StatsTracker.data.taskFlags||{};return f.tut_ui&&f.tut_battle&&f.tut_adventure&&f.tut_keywords}},
+    // === ADVENTURE ===
+    {id:'adv_relic',cat:'adventure',name:'遗物收集者',desc:'获得第一个遗物',icon:'🏺',
+      reward:{type:'gold',amount:100},quote:'"遗物？捡到宝了！虽然可能是个破烂。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).relicsGained>=1},
+    {id:'adv_spells20',cat:'adventure',name:'法术机关枪',desc:'使用20张法术',icon:'🔫',
+      reward:{type:'gold',amount:200},quote:'',
+      check:()=>(StatsTracker.data.taskCounters||{}).spellsUsed>=20},
+    {id:'adv_creatures30',cat:'adventure',name:'生物狂魔',desc:'打出30张生物',icon:'🐺',
+      reward:{type:'gold',amount:200},quote:'',
+      check:()=>(StatsTracker.data.taskCounters||{}).creaturesPlayed>=30},
+    {id:'adv_dmg500',cat:'adventure',name:'伤害爆炸',desc:'累计造成500点伤害',icon:'💣',
+      reward:{type:'gold',amount:100},quote:'',
+      check:()=>(StatsTracker.data.taskCounters||{}).totalDmgDealt>=500},
+    {id:'adv_cards50',cat:'adventure',name:'卡牌收藏家',desc:'抽50张牌',icon:'🃏',
+      reward:{type:'card_pack',amount:2},quote:'',
+      check:()=>(StatsTracker.data.taskCounters||{}).totalCardsDrawn>=50},
+    {id:'adv_warrior',cat:'adventure',name:'周常战士',desc:'完成15局对战',icon:'⚔',
+      reward:{type:'card_pack',amount:1},quote:'"一周打15局？你是住在泰拉了吗？"',
+      check:()=>StatsTracker.data.totalGames>=15},
+    {id:'adv_dice30',cat:'adventure',name:'骰子大师',desc:'累计掷出30个6点',icon:'🎲',
+      reward:{type:'gold',amount:500},quote:'"30个6点……你是不是偷偷改骰子了？"',
+      check:()=>(StatsTracker.data.totalSixes||0)>=30},
+    // === MILESTONE (成就) ===
+    {id:'mile_10wins',cat:'milestone',name:'初出茅庐',desc:'累计10胜',icon:'⭐',
+      reward:{type:'gold',amount:500},quote:'"10胜！你已经不是菜鸟了……是菜鸟中的老鸟。"',
+      check:()=>StatsTracker.data.wins>=10},
+    {id:'mile_100wins',cat:'milestone',name:'百胜将军',desc:'累计100胜',icon:'👑',
+      reward:{type:'title',title:'百胜将军'},quote:'"100胜！你可以出师了……虽然早就出师了。"',
+      check:()=>StatsTracker.data.wins>=100},
+    {id:'mile_1000wins',cat:'milestone',name:'千胜传说',desc:'累计1000胜',icon:'🌟',
+      reward:{type:'title_cardback',title:'千胜传说',cardback:'legend'},quote:'"1000胜！你就是泰拉的传奇！"',
+      check:()=>StatsTracker.data.wins>=1000},
+    {id:'mile_leopard',cat:'milestone',name:'豹子之王',desc:'触发一次豹子（4个相同点数）',icon:'🐆',
+      reward:{type:'gold',amount:300},quote:'"豹子！你今天运气爆棚！"',
+      check:()=>!!StatsTracker.data.achievements.leopard_trigger},
+    {id:'mile_straight',cat:'milestone',name:'顺子大师',desc:'触发一次顺子',icon:'📊',
+      reward:{type:'gold',amount:200},quote:'"顺子！虽然不如豹子，但也挺帅。"',
+      check:()=>(StatsTracker.data.taskFlags||{}).straight_trigger},
+    {id:'mile_dragon50',cat:'milestone',name:'龙族之友',desc:'打出50张巨龙卡',icon:'🐲',
+      reward:{type:'title',title:'龙骑士'},quote:'"50条龙！你是龙族之友还是龙族之敌？"',
+      check:()=>(StatsTracker.data.taskCounters||{}).dragonsPlayed>=50},
+    {id:'mile_spell100',cat:'milestone',name:'法术之巅',desc:'使用100张法术',icon:'🔮',
+      reward:{type:'title',title:'大法师'},quote:'"100张法术！你比法师还会放魔法。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).spellsUsed>=100},
+    {id:'mile_relic30',cat:'milestone',name:'遗物痴汉',desc:'获得30个遗物',icon:'🏛',
+      reward:{type:'title',title:'收藏家'},quote:'"30个遗物！你家是开博物馆的吗？"',
+      check:()=>(StatsTracker.data.taskCounters||{}).relicsGained>=30},
+    {id:'mile_allcards',cat:'milestone',name:'全卡收藏',desc:'收集所有卡牌',icon:'📚',
+      reward:{type:'title',title:'卡牌大师'},quote:'"全卡！你是真正的收藏家……虽然可能破产了。"',
+      check:()=>typeof ALL_CARDS!=='undefined'&&PlayerData.unlockedCards.length>=ALL_CARDS.length},
+    {id:'mile_big_hit',cat:'milestone',name:'一击必杀',desc:'单次造成10点以上伤害',icon:'💥',
+      reward:{type:'gold',amount:200},quote:'',
+      check:()=>StatsTracker.data.maxDmg>=10},
+    {id:'mile_dice100',cat:'milestone',name:'骰子之神',desc:'累计掷出100次6点',icon:'🎯',
+      reward:{type:'gold',amount:500},quote:'',
+      check:()=>(StatsTracker.data.totalSixes||0)>=100},
+    // Previous achievements mapped to tasks
+    {id:'ach_first_win',cat:'milestone',name:'初露锋芒',desc:'赢得第一场对局',icon:'🏆',
+      reward:{type:'gold',amount:50},quote:'',
+      check:()=>StatsTracker.data.wins>=1},
+    {id:'ach_triple_six',cat:'milestone',name:'骰运亨通',desc:'单回合掷出3个6',icon:'🎲',
+      reward:{type:'gold',amount:100},quote:'',
+      check:()=>!!StatsTracker.data.achievements.triple_six},
+    {id:'ach_survivor',cat:'milestone',name:'不死传说',desc:'生命1点时获胜',icon:'💪',
+      reward:{type:'gold',amount:150},quote:'',
+      check:()=>!!StatsTracker.data.achievements.survivor},
+    {id:'ach_spell_master',cat:'milestone',name:'法术大师(成就)',desc:'单局使用5张法术',icon:'📜',
+      reward:{type:'gold',amount:150},quote:'',
+      check:()=>!!StatsTracker.data.achievements.spell_master},
+    {id:'ach_relic_collector',cat:'milestone',name:'遗物收藏家(成就)',desc:'单局获得3个遗物',icon:'🏺',
+      reward:{type:'gold',amount:200},quote:'',
+      check:()=>!!StatsTracker.data.achievements.relic_collector},
+    {id:'ach_triple_duel',cat:'milestone',name:'时间主宰',desc:'在一回合内进行3次对拼',icon:'⏳',
+      reward:{type:'gold',amount:200},quote:'',
+      check:()=>!!StatsTracker.data.achievements.triple_duel},
+    {id:'ach_clutch_win',cat:'milestone',name:'绝境翻盘',desc:'在生命低于5点时逆转获胜',icon:'🔥',
+      reward:{type:'gold',amount:250},quote:'',
+      check:()=>!!StatsTracker.data.achievements.clutch_win},
+    // === BOSS ===
+    {id:'boss_iron10',cat:'boss',name:'铁面克星',desc:'击败铁面10次',icon:'🤖',
+      reward:{type:'avatar',avatar:'iron_slayer'},quote:'"铁面见到你都要绕道走。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).boss_iron_wins>=10,
+      progress:()=>Math.min((StatsTracker.data.taskCounters||{}).boss_iron_wins||0,10),max:10},
+    {id:'boss_victor10',cat:'boss',name:'笑面终结者',desc:'击败维克多10次',icon:'🎲',
+      reward:{type:'avatar',avatar:'victor_slayer'},quote:'"笑面笑不出来了。"',
+      check:()=>(StatsTracker.data.taskCounters||{}).boss_victor_wins>=10,
+      progress:()=>Math.min((StatsTracker.data.taskCounters||{}).boss_victor_wins||0,10),max:10}
+  ],
+
+  init(){
+    try{const s=localStorage.getItem(this._key);if(s)this.data=JSON.parse(s)}catch(e){}
+    if(!this.data.completed)this.data.completed={};
+    if(!this.data.claimed)this.data.claimed={};
+    if(!this.data.titles)this.data.titles=[];
+    if(!this.data.avatars)this.data.avatars=[];
+    if(!this.data.cardbacks)this.data.cardbacks=[];
+  },
+  save(){try{localStorage.setItem(this._key,JSON.stringify(this.data))}catch(e){}},
+
+  /* Check all tasks and mark newly completed */
+  checkAll(){
+    let newlyDone=false;
+    this.defs.forEach(d=>{
+      if(!this.data.completed[d.id]&&d.check()){
+        this.data.completed[d.id]=Date.now();
+        newlyDone=true;
+      }
+    });
+    if(newlyDone)this.save();
+    return newlyDone;
+  },
+
+  /* Get count of claimable tasks */
+  getClaimableCount(){
+    return this.defs.filter(d=>this.data.completed[d.id]&&!this.data.claimed[d.id]).length;
+  },
+
+  /* Claim a single task reward */
+  claim(taskId){
+    const def=this.defs.find(d=>d.id===taskId);
+    if(!def||!this.data.completed[taskId]||this.data.claimed[taskId])return;
+    this.data.claimed[taskId]=Date.now();
+    const r=def.reward;
+    let msg='';
+    if(r.type==='gold'){PlayerData.gold+=r.amount;PlayerData.save();msg=`+${r.amount} 金币`}
+    else if(r.type==='card_pack'){
+      for(let i=0;i<r.amount;i++)this._giveCardPack();
+      msg=`+${r.amount} 卡包`}
+    else if(r.type==='title'){
+      if(!this.data.titles.includes(r.title))this.data.titles.push(r.title);
+      msg=`称号: ${r.title}`}
+    else if(r.type==='title_cardback'){
+      if(!this.data.titles.includes(r.title))this.data.titles.push(r.title);
+      if(!this.data.cardbacks.includes(r.cardback))this.data.cardbacks.push(r.cardback);
+      msg=`称号: ${r.title} + 限定卡背`}
+    else if(r.type==='avatar'){
+      if(!this.data.avatars.includes(r.avatar))this.data.avatars.push(r.avatar);
+      msg=`特殊头像`}
+    this.save();
+    const lines=this.npcLines.done;
+    showGameToast(`📋 ${def.name}: ${msg}`,3000);
+    const bubble=document.getElementById('task-npc-line');
+    if(bubble)bubble.textContent=def.quote||lines[Math.floor(Math.random()*lines.length)];
+    SFX.play('click');
+    this.render();
+  },
+
+  /* Claim all claimable */
+  claimAll(){
+    const claimable=this.defs.filter(d=>this.data.completed[d.id]&&!this.data.claimed[d.id]);
+    if(!claimable.length)return;
+    let totalGold=0,totalPacks=0,titles=[];
+    claimable.forEach(d=>{
+      this.data.claimed[d.id]=Date.now();
+      const r=d.reward;
+      if(r.type==='gold'){totalGold+=r.amount}
+      else if(r.type==='card_pack'){totalPacks+=r.amount;for(let i=0;i<r.amount;i++)this._giveCardPack()}
+      else if(r.type==='title'){if(!this.data.titles.includes(r.title))this.data.titles.push(r.title);titles.push(r.title)}
+      else if(r.type==='title_cardback'){
+        if(!this.data.titles.includes(r.title))this.data.titles.push(r.title);
+        if(!this.data.cardbacks.includes(r.cardback))this.data.cardbacks.push(r.cardback);titles.push(r.title)}
+      else if(r.type==='avatar'){if(!this.data.avatars.includes(r.avatar))this.data.avatars.push(r.avatar)}
+    });
+    if(totalGold>0){PlayerData.gold+=totalGold;PlayerData.save()}
+    this.save();
+    let msg=[];
+    if(totalGold>0)msg.push(`+${totalGold}金币`);
+    if(totalPacks>0)msg.push(`+${totalPacks}卡包`);
+    if(titles.length)msg.push(titles.map(t=>`称号:${t}`).join(', '));
+    showGameToast(`📋 一键领取: ${msg.join(' ')}`,4000);
+    const lines=this.npcLines.done;
+    const bubble=document.getElementById('task-npc-line');
+    if(bubble)bubble.textContent=lines[Math.floor(Math.random()*lines.length)];
+    SFX.play('click');
+    this.render();
+  },
+
+  _giveCardPack(){
+    if(typeof ALL_CARDS==='undefined')return;
+    const pool=[...ALL_CARDS];
+    for(let i=0;i<10;i++){
+      const c=pool[Math.floor(Math.random()*pool.length)];
+      PlayerData.addCard(c.id);
+    }
+  },
+
+  /* Get progress info for a task */
+  getProgress(def){
+    if(def.progress&&def.max)return{cur:def.progress(),max:def.max};
+    /* Auto-detect progress for counter-based tasks */
+    const tc=StatsTracker.data.taskCounters||{};
+    if(def.id==='adv_spells20')return{cur:Math.min(tc.spellsUsed||0,20),max:20};
+    if(def.id==='adv_creatures30')return{cur:Math.min(tc.creaturesPlayed||0,30),max:30};
+    if(def.id==='adv_dmg500')return{cur:Math.min(tc.totalDmgDealt||0,500),max:500};
+    if(def.id==='adv_cards50')return{cur:Math.min(tc.totalCardsDrawn||0,50),max:50};
+    if(def.id==='adv_warrior')return{cur:Math.min(StatsTracker.data.totalGames,15),max:15};
+    if(def.id==='adv_dice30')return{cur:Math.min(StatsTracker.data.totalSixes||0,30),max:30};
+    if(def.id==='mile_10wins')return{cur:Math.min(StatsTracker.data.wins,10),max:10};
+    if(def.id==='mile_100wins')return{cur:Math.min(StatsTracker.data.wins,100),max:100};
+    if(def.id==='mile_1000wins')return{cur:Math.min(StatsTracker.data.wins,1000),max:1000};
+    if(def.id==='mile_dragon50')return{cur:Math.min(tc.dragonsPlayed||0,50),max:50};
+    if(def.id==='mile_spell100')return{cur:Math.min(tc.spellsUsed||0,100),max:100};
+    if(def.id==='mile_relic30')return{cur:Math.min(tc.relicsGained||0,30),max:30};
+    if(def.id==='mile_dice100')return{cur:Math.min(StatsTracker.data.totalSixes||0,100),max:100};
+    return null;
+  },
+
+  /* Render the task screen */
+  render(){
+    this.checkAll();
+    const catsEl=document.getElementById('task-cats');
+    const listEl=document.getElementById('task-list');
+    const summaryEl=document.getElementById('task-summary');
+    const claimBtn=document.getElementById('task-claim-all');
+    const titleEl=document.getElementById('task-cat-title');
+    if(!catsEl||!listEl)return;
+
+    /* Render category buttons */
+    catsEl.innerHTML=this.categories.map(c=>{
+      const count=this.defs.filter(d=>d.cat===c.id&&this.data.completed[d.id]&&!this.data.claimed[d.id]).length;
+      const badge=count>0?`<span class="task-cat-badge">${count}</span>`:'';
+      /* Red dot for tutorial category if any tutorial is incomplete */
+      const hasPendingInCat=(c.id==='tutorial'&&this.hasPendingTutorials());
+      const redDotCls=hasPendingInCat?' has-red-dot':'';
+      return `<button class="task-cat-btn${this.currentCat===c.id?' active':''}${redDotCls}" onclick="TaskSystem.switchCat('${c.id}')">${c.icon} ${c.name}${badge}</button>`;
+    }).join('');
+
+    /* Render task list for current category */
+    const tasks=this.defs.filter(d=>d.cat===this.currentCat);
+    const catDef=this.categories.find(c=>c.id===this.currentCat);
+    if(titleEl)titleEl.textContent=catDef?catDef.name:'任务';
+
+    listEl.innerHTML=tasks.map(d=>{
+      const done=!!this.data.completed[d.id];
+      const claimed=!!this.data.claimed[d.id];
+      const claimable=done&&!claimed;
+      let cls='task-row';
+      if(claimed)cls+=' completed';
+      else if(claimable)cls+=' claimable';
+
+      /* Reward text */
+      let rText='';
+      const r=d.reward;
+      if(r.type==='gold')rText=`💰 ${r.amount}金币`;
+      else if(r.type==='card_pack')rText=`📦 ${r.amount}卡包`;
+      else if(r.type==='title')rText=`🏷 称号「${r.title}」`;
+      else if(r.type==='title_cardback')rText=`🏷 称号「${r.title}」+ 限定卡背`;
+      else if(r.type==='avatar')rText=`🖼 特殊头像`;
+
+      /* Progress */
+      const prog=this.getProgress(d);
+      let progHtml='';
+      if(prog&&!claimed){
+        const pct=Math.min(100,Math.round(prog.cur/prog.max*100));
+        progHtml=`<div class="task-progress"><div class="task-prog-bar"><div class="task-prog-fill" style="width:${pct}%"></div></div><div class="task-prog-text">${prog.cur}/${prog.max}</div></div>`;
+      }
+
+      /* Action button */
+      let actionHtml='';
+      if(claimed&&d.goto){
+        /* Tutorial tasks: show "已领取" + "前往" so they can be re-entered */
+        actionHtml=`<span class="task-claimed-tag">已领取</span><button class="task-goto-btn" onclick="event.stopPropagation();TaskSystem.gotoTask('${d.id}')" style="margin-left:6px">前往</button>`;
+      } else if(claimed){
+        actionHtml='<span class="task-claimed-tag">已领取</span>';
+      } else if(claimable){
+        actionHtml=`<button class="task-claim-btn" onclick="event.stopPropagation();TaskSystem.claim('${d.id}')">领取</button>`;
+      } else if(d.goto&&!done){
+        actionHtml=`<button class="task-goto-btn" onclick="event.stopPropagation();TaskSystem.gotoTask('${d.id}')">前往</button>`;
+      }
+
+      return `<div class="${cls}" onclick="TaskSystem.showDetail('${d.id}')">
+        <div class="task-row-icon">${d.icon}</div>
+        <div class="task-row-info">
+          <div class="task-row-name">${d.name}</div>
+          <div class="task-row-desc">${d.desc}</div>
+          <div class="task-row-reward">${rText}</div>
+        </div>
+        ${progHtml}${actionHtml}
+      </div>`;
+    }).join('');
+
+    /* Update summary */
+    const claimableCount=this.getClaimableCount();
+    if(summaryEl)summaryEl.textContent=`${claimableCount} 个任务可领取`;
+    if(claimBtn)claimBtn.disabled=claimableCount===0;
+
+    /* NPC line */
+    this._updateNpcLine();
+  },
+
+  switchCat(catId){
+    this.currentCat=catId;
+    this.render();
+  },
+
+  showDetail(taskId){
+    const def=this.defs.find(d=>d.id===taskId);
+    if(!def)return;
+    const bubble=document.getElementById('task-npc-line');
+    if(bubble&&def.quote)bubble.textContent=def.quote;
+  },
+
+  gotoTask(taskId){
+    const def=this.defs.find(d=>d.id===taskId);
+    if(def&&def.goto)def.goto();
+  },
+
+  /* Check if any tutorial tasks are incomplete (not yet completed) */
+  hasPendingTutorials(){
+    return this.defs.some(d=>d.cat==='tutorial'&&!this.data.completed[d.id]);
+  },
+
+  /* Update red dot on main menu task button */
+  updateRedDot(){
+    const btn=document.getElementById('menu-task-btn');
+    if(!btn)return;
+    this.checkAll();
+    const show=this.hasPendingTutorials()||this.getClaimableCount()>0;
+    const existing=btn.querySelector('.red-dot-badge');
+    if(show&&!existing){
+      const dot=document.createElement('span');
+      dot.className='red-dot-badge';
+      btn.appendChild(dot);
+    }else if(!show&&existing){
+      existing.remove();
+    }
+  },
+
+  _updateNpcLine(){
+    const bubble=document.getElementById('task-npc-line');
+    if(!bubble)return;
+    const claimable=this.getClaimableCount();
+    if(claimable>0){
+      bubble.textContent=this.npcLines.unclaimed[0];
+    }else if(this.hasPendingTutorials()){
+      bubble.textContent='还有教程没完成哦，快去看看吧！';
+    }else{
+      const lines=this.npcLines.idle;
+      bubble.textContent=lines[Math.floor(Math.random()*lines.length)];
+    }
+  }
+};
+TaskSystem.init();
+/* Update red dot on menu after page load */
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>TaskSystem.updateRedDot(),500)});
 
 </script>
 </body>
