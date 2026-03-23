@@ -2298,11 +2298,18 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   font-family:'Share Tech Mono',monospace;letter-spacing:0.5px}
 .task-row-reward{font-size:10px;color:var(--gold);margin-top:2px}
 /* "Go to tutorial" button */
-.task-goto-btn{padding:5px 12px;background:rgba(255,255,255,0.08);
-  color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:3px;
-  font-size:10px;font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;
-  letter-spacing:1px;transition:all 0.2s;white-space:nowrap}
-.task-goto-btn:hover{background:rgba(255,62,122,0.15);border-color:rgba(255,62,122,0.4);color:#fff}
+.task-goto-btn{padding:8px 16px 8px 22px;background:#1a1a2e;
+  color:#fff;border:none;border-radius:4px;
+  font-size:11px;font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;
+  letter-spacing:1.5px;transition:all 0.25s;white-space:nowrap;position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);transform:skewX(-5deg)}
+.task-goto-btn::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 8px rgba(255,62,122,0.5);transition:all 0.25s}
+.task-goto-btn:hover{background:#22223a;transform:skewX(-5deg) translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5),0 0 12px rgba(255,62,122,0.15);
+  text-shadow:0 0 8px rgba(255,107,157,0.4)}
+.task-goto-btn:hover::before{width:4px;top:3px;bottom:3px;box-shadow:0 0 12px rgba(255,62,122,0.7)}
+.task-goto-btn:active{transform:skewX(-5deg) scale(0.97)}
 /* Red dot badge — inline span approach (menu-btn has overflow:hidden) */
 .red-dot-badge{display:inline-block;width:8px;height:8px;border-radius:50%;
   background:#ff3e7a;box-shadow:0 0 6px rgba(255,62,122,0.8);
@@ -2323,11 +2330,18 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .task-prog-text{font-size:9px;color:rgba(255,255,255,0.4);text-align:right;margin-top:2px;
   font-family:'Share Tech Mono',monospace}
 /* Claim button */
-.task-claim-btn{padding:5px 12px;background:linear-gradient(135deg,#ff3e7a,#e0245e);
-  color:#fff;border:none;border-radius:3px;font-size:10px;font-weight:700;
-  font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;letter-spacing:1px;
-  transition:all 0.2s;white-space:nowrap}
-.task-claim-btn:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(255,62,122,0.4)}
+.task-claim-btn{padding:8px 16px 8px 22px;background:#1a1a2e;
+  color:#fff;border:none;border-radius:4px;font-size:11px;font-weight:700;
+  font-family:'Baloo 2','Fredoka',sans-serif;cursor:pointer;letter-spacing:1.5px;
+  transition:all 0.25s;white-space:nowrap;position:relative;overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.4);transform:skewX(-5deg)}
+.task-claim-btn::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;
+  background:#ff3e7a;border-radius:0 2px 2px 0;box-shadow:0 0 8px rgba(255,62,122,0.5);transition:all 0.25s}
+.task-claim-btn:hover{background:#22223a;transform:skewX(-5deg) translateY(-2px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5),0 0 12px rgba(255,62,122,0.15);
+  text-shadow:0 0 8px rgba(255,107,157,0.4)}
+.task-claim-btn:hover::before{width:4px;top:3px;bottom:3px;box-shadow:0 0 12px rgba(255,62,122,0.7)}
+.task-claim-btn:active{transform:skewX(-5deg) scale(0.97)}
 .task-claimed-tag{font-size:9px;color:rgba(255,255,255,0.3);letter-spacing:1px;
   font-family:'Share Tech Mono',monospace}
 /* Bottom claim-all bar */
