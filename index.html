@@ -3787,10 +3787,10 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-icon">🎴</div>
     <div class="zzz-strip-text">PLAY</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">📖</div>
-    <div class="zzz-strip-settings">🃏</div>
-    <div class="zzz-strip-settings">📜</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-story')">📜</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label">
@@ -3810,21 +3810,21 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
           <p class="subtitle">DICE DUEL</p>
         </div>
         <div class="zzz-menu-btns">
-          <div class="zbtn-row"><button class="menu-btn">⚔ 开始对决</button></div>
-          <div class="zbtn-row"><button class="menu-btn">🗺 开始冒险</button></div>
-          <div class="zbtn-row"><button class="menu-btn">🏰 数据巢穴</button></div>
-          <div class="zbtn-row"><button class="menu-btn" id="menu-task-btn">📋 任务</button></div>
-          <div class="zbtn-row"><button class="menu-btn">📖 百科</button></div>
+          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-levels')">⚔ 开始对决</button></div>
+          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-adventure')">🗺 开始冒险</button></div>
+          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-nest')">🏰 数据巢穴</button></div>
+          <div class="zbtn-row"><button class="menu-btn" id="menu-task-btn" onclick="showScreen('screen-task')">📋 任务</button></div>
+          <div class="zbtn-row"><button class="menu-btn" onclick="showScreen('screen-wiki')">📖 百科</button></div>
         </div>
       </div>
     </div>
     <!-- Bottom bar -->
     <div class="zzz-menu-bottom">
       <div class="zzz-nav-row">
-        <div class="zzz-nav-icon">⚙</div>
-        <div class="zzz-nav-icon">📖</div>
-        <div class="zzz-nav-icon">🃏</div>
-        <div class="zzz-nav-icon">📜</div>
+        <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+        <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-wiki')">📖</div>
+        <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-deck')">🃏</div>
+        <div class="zzz-nav-icon" onclick="event.stopPropagation();showScreen('screen-story')">📜</div>
       </div>
       <div class="zzz-bottom-accent">
         <div class="ba-icon">🎰</div>
@@ -3867,11 +3867,11 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">SELECT</div>
     <div class="zzz-strip-icon">🎯</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings" id="btn-boss-challenge" title="挑战Boss: 铁面">🤖</div>
-    <div class="zzz-strip-settings" id="btn-boss2-challenge" title="挑战Boss: 维克多">🎲</div>
+    <div class="zzz-strip-settings" id="btn-boss-challenge" onclick="LevelMgr.startBossChallenge()" title="挑战Boss: 铁面" title="挑战Boss: 铁面">🤖</div>
+    <div class="zzz-strip-settings" id="btn-boss2-challenge" onclick="LevelMgr.startBoss2Challenge()" title="挑战Boss: 维克多" title="挑战Boss: 维克多">🎲</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label">
@@ -3887,9 +3887,9 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
         <div class="divider" style="margin:12px 0;background:linear-gradient(90deg,rgba(163,230,53,0.4),transparent)"></div>
         <div id="level-buttons" class="zzz-levels-btns"></div>
         <div class="zzz-levels-bottom-btns zzz-menu-btns" style="max-width:320px">
-          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn">🛒 商店</button></div>
-          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn">🃏 构筑牌组</button></div>
-          <div class="zbtn-row" style="margin-left:48px"><button class="menu-btn">↩ 返回</button></div>
+          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="showScreen('screen-shop')">🛒 商店</button></div>
+          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn" onclick="showScreen('screen-deck')">🃏 构筑牌组</button></div>
+          <div class="zbtn-row" style="margin-left:48px"><button class="menu-btn" onclick="goBackScreen()">↩ 返回</button></div>
         </div>
       </div>
     </div>
@@ -3935,8 +3935,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">MAP</div>
     <div class="zzz-strip-icon">⚔</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label" style="top:56px">
@@ -3950,7 +3950,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
         <h2 class="title" style="font-size:28px">选择地图</h2>
         <p class="subtitle" style="color:#9f7aea">MAP SELECT</p>
         <div class="divider" style="margin:10px 0;background:linear-gradient(90deg,rgba(122,90,205,0.4),transparent)"></div>
-        <div class="adventure-map-card" style="border-color:rgba(122,90,205,0.35)">
+        <div class="adventure-map-card" onclick="Adventure.selectMap('rusty_plains')" style="border-color:rgba(122,90,205,0.35)">
           <h3>🏚️ 锈蚀平原训练场</h3>
           <p style="font-size:13px;margin-bottom:8px">穿越15层锈蚀废墟，击败锈蚀领主</p>
           <p style="display:flex;gap:10px;flex-wrap:wrap;margin:0">
@@ -3963,8 +3963,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
           </p>
         </div>
         <div class="zzz-menu-btns" style="max-width:320px;margin:18px 0 0">
-          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn">📋 查看初始卡组</button></div>
-          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn">↩ 返回</button></div>
+          <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="DeckViewer.showStarterDeck()">📋 查看初始卡组</button></div>
+          <div class="zbtn-row" style="margin-left:24px"><button class="menu-btn" onclick="goBackScreen()">↩ 返回</button></div>
         </div>
       </div>
     </div>
@@ -4006,8 +4006,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">PLAINS</div>
     <div class="zzz-strip-dots"><span></span><span class="active"></span></div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="strip-abandon" title="放弃冒险">✕</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="strip-abandon" onclick="Adventure.abandonRun()" title="放弃冒险">✕</div>
   </div>
   <!-- Top-right label -->
   <div class="zzz-menu-label" style="z-index:6">
@@ -4061,8 +4061,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">CODEX</div>
     <div class="zzz-strip-icon">🔍</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">ENCYCLOPEDIA</div>
@@ -4082,7 +4082,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
       </div>
       <div id="wiki-content"></div>
       <div class="divider"></div>
-      <button class="menu-btn">返回</button>
+      <button class="menu-btn" onclick="goBackScreen()">返回</button>
     </div>
   </div>
   <div class="zzz-screen-bottom has-left">
@@ -4104,8 +4104,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">LORE</div>
     <div class="zzz-strip-icon">✨</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">STORY</div>
@@ -4117,7 +4117,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
       <div id="story-content"></div>
       <div class="divider"></div>
       <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
-        <div class="zbtn-row" style="margin-left:0"><button class="menu-btn">↩ 返回</button></div>
+        <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="goBackScreen()">↩ 返回</button></div>
       </div>
     </div>
   </div>
@@ -4140,8 +4140,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">BUILD</div>
     <div class="zzz-strip-icon">🔧</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">DECK BUILDER</div>
@@ -4680,7 +4680,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">CONFIG</div>
     <div class="zzz-strip-icon">🔧</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">SETTINGS</div>
@@ -4790,7 +4790,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
         </div>
       </div>
       <input type="file" id="bg-file-input" accept="image/png,image/jpeg,image/webp,image/gif" style="display:none">
-      <button class="menu-btn">返回</button>
+      <button class="menu-btn" onclick="goBackScreen()">返回</button>
     </div>
   </div>
   <div class="zzz-screen-bottom has-left">
@@ -4812,8 +4812,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">STORE</div>
     <div class="zzz-strip-icon">💰</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">CARD SHOP</div>
@@ -4833,7 +4833,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
       </div>
       <button id="buy-pack-btn" class="menu-btn primary" style="font-size:18px;padding:14px">购买卡包 (500金币)</button>
       <div class="divider"></div>
-      <button class="menu-btn">返回</button>
+      <button class="menu-btn" onclick="goBackScreen()">返回</button>
     </div>
   </div>
   <div class="zzz-screen-bottom has-left">
@@ -4910,8 +4910,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-text">LEARN</div>
     <div class="zzz-strip-icon">🎓</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <div class="zzz-menu-label">
     <div class="zzz-label-en">TUTORIAL</div>
@@ -4930,7 +4930,7 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
       <div id="tg-content"></div>
       <div class="divider"></div>
       <div class="zzz-menu-btns" style="max-width:320px;margin:18px auto 0">
-        <div class="zbtn-row" style="margin-left:0"><button class="menu-btn">↩ 返回</button></div>
+        <div class="zbtn-row" style="margin-left:0"><button class="menu-btn" onclick="goBackScreen()">↩ 返回</button></div>
       </div>
     </div>
   </div>
@@ -5021,8 +5021,8 @@ body { animation: 15s steps(1) 0s infinite normal none running chromaticFlicker;
     <div class="zzz-strip-divider"></div>
     <div class="zzz-strip-settings" id="log-strip-btn">📜</div>
     <div class="zzz-strip-divider"></div>
-    <div class="zzz-strip-settings">⚙</div>
-    <div class="zzz-strip-settings">↩</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();showScreen('screen-settings')">⚙</div>
+    <div class="zzz-strip-settings" onclick="event.stopPropagation();goBackScreen()">↩</div>
   </div>
   <!-- Slide-out battle log panel -->
   <div id="game-log" class="log-collapsed">
