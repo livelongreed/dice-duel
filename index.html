@@ -3688,6 +3688,12 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
           <button class="upload-btn" onclick="AudioMgr.pickFile('story')">替换</button>
         </div>
       </div>
+      <div class="upload-row"><label>番茄钟</label>
+        <div class="upload-info">
+          <span class="upload-status" id="music-status-pomodoro">默认合成</span>
+          <button class="upload-btn" onclick="AudioMgr.pickFile('pomodoro')">替换</button>
+        </div>
+      </div>
       <input type="file" id="music-file-input" accept="audio/mp3,audio/mpeg,audio/ogg,audio/wav" style="display:none">
       <div class="setting-section">背景图片设置</div>
       <div class="setting-row"><label>自动适配横竖屏</label>
@@ -3916,7 +3922,6 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
         <div class="zbtn-row"><button class="menu-btn primary" id="pomo-toggle" onclick="Pomodoro.toggle()">▶ START</button></div>
         <div class="zbtn-row"><button class="menu-btn" onclick="Pomodoro.skipPhase()">⏭ SKIP</button></div>
         <div class="zbtn-row"><button class="menu-btn" onclick="Pomodoro.reset()">↺ RESET</button></div>
-        <div class="zbtn-row"><button class="menu-btn" onclick="goBackScreen()">↩ BACK</button></div>
       </div>
     </div>
   </div>
@@ -4252,7 +4257,8 @@ const AudioMgr={
     'screen-game':'battle','screen-levels':'menu',
     'screen-shop':'shop','screen-wiki':'shop',
     'screen-adventure':'event','screen-map':'event',
-    'screen-story':'story','screen-nest':'event'
+    'screen-story':'story','screen-nest':'event',
+    'screen-pomodoro':'pomodoro'
   },
   async _openDB(){
     if(this._db)return this._db;
@@ -4309,7 +4315,7 @@ const AudioMgr={
     }
   },
   async _loadUserSaved(){
-    const allSlots=['menu','deck','battle','battle_elite','battle_boss','shop','event','story'];
+    const allSlots=['menu','deck','battle','battle_elite','battle_boss','shop','event','story','pomodoro'];
     for(const slot of allSlots){
       const data=await this._loadBlob(slot);
       if(data&&data.blob){
@@ -4440,6 +4446,40 @@ const _screenParent={
   'screen-shop':'screen-levels','screen-game':'screen-levels','screen-map':'screen-adventure',
   'screen-nest':'screen-menu'
 };
+/* ZZZ transition sound effect — synthesized whoosh */
+function _zzzTransitionSFX(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    const ctx=new AC();
+    /* Whoosh: filtered noise sweep */
+    const dur=0.35;
+    const buf=ctx.createBuffer(1,ctx.sampleRate*dur,ctx.sampleRate);
+    const d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++){d[i]=(Math.random()*2-1)*0.4}
+    const src=ctx.createBufferSource();src.buffer=buf;
+    const filt=ctx.createBiquadFilter();filt.type='bandpass';filt.Q.value=2;
+    filt.frequency.setValueAtTime(200,ctx.currentTime);
+    filt.frequency.exponentialRampToValueAtTime(3000,ctx.currentTime+dur*0.4);
+    filt.frequency.exponentialRampToValueAtTime(400,ctx.currentTime+dur);
+    const gain=ctx.createGain();
+    gain.gain.setValueAtTime(0,ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.18,ctx.currentTime+0.04);
+    gain.gain.linearRampToValueAtTime(0.22,ctx.currentTime+dur*0.3);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    src.connect(filt);filt.connect(gain);gain.connect(ctx.destination);
+    src.start();src.stop(ctx.currentTime+dur);
+    /* Tonal accent: quick pitch sweep */
+    const osc=ctx.createOscillator();osc.type='sine';
+    osc.frequency.setValueAtTime(600,ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1800,ctx.currentTime+0.08);
+    osc.frequency.exponentialRampToValueAtTime(300,ctx.currentTime+0.2);
+    const og=ctx.createGain();
+    og.gain.setValueAtTime(0.06,ctx.currentTime);
+    og.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.2);
+    osc.connect(og);og.connect(ctx.destination);
+    osc.start();osc.stop(ctx.currentTime+0.25);
+  }catch(e){}
+}
 function goBackScreen(){
   if(_zzzBusy)return;
   if(_screenHistory.length>0){
@@ -4450,6 +4490,7 @@ function showScreen(id,isBack){
   if(_zzzBusy)return;
   const cur=document.querySelector('.screen.active');
   if(cur&&cur.id===id)return;
+  _zzzTransitionSFX();
   if(!isBack&&cur){_screenHistory.push(cur.id)}
   _zzzBusy=true;
   const slide=document.querySelector('#zzz-transition .zzz-slide');
@@ -12015,7 +12056,25 @@ const Pomodoro={
     setTimeout(()=>{this._initRuler();this.render()},200);
   },
   toggle(){this.running?this.pause():this.start()},
+  _flashTransition(){
+    _zzzTransitionSFX();
+    const slide=document.querySelector('#zzz-transition .zzz-slide');
+    if(!slide)return;
+    slide.className='zzz-slide';
+    void slide.offsetWidth;
+    const isV=Math.random()>0.5;
+    slide.style.transform=isV?'translateY(110%) skewY(5deg) skewX(0deg)':'translateX(-110%) skewX(-8deg)';
+    void slide.offsetWidth;
+    slide.classList.add(isV?'v-slide-in':'h-slide-in');
+    setTimeout(()=>{
+      slide.classList.remove(isV?'v-slide-in':'h-slide-in');
+      void slide.offsetWidth;
+      slide.classList.add(isV?'v-slide-out':'h-slide-out');
+      setTimeout(()=>{slide.className='zzz-slide';slide.style.transform=''},340);
+    },380);
+  },
   start(){
+    this._flashTransition();
     this.running=true;
     const btn=document.getElementById('pomo-toggle');
     const tag=document.getElementById('pomo-status');
@@ -12035,6 +12094,7 @@ const Pomodoro={
     if(tag){tag.textContent='PAUSED';tag.className='pomo-phase-tag'}
   },
   reset(){
+    this._flashTransition();
     this.pause();this.step=0;this.current=this.pipeline[0].time;
     const btn=document.getElementById('pomo-toggle');if(btn)btn.textContent='▶ START';
     const tag=document.getElementById('pomo-status');
@@ -12042,6 +12102,7 @@ const Pomodoro={
     this._initRuler();this.render();
   },
   skipPhase(){
+    this._flashTransition();
     this.pause();this._advance();
     const btn=document.getElementById('pomo-toggle');if(btn)btn.textContent='▶ START';
     const tag=document.getElementById('pomo-status');
