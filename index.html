@@ -4739,7 +4739,7 @@ const ALL_CARDS=[
 {id:'clockwork_assassin',type:'creature',name:'发条刺客',emoji:'🗡️',base:4,slots:3,
   effectDesc:'胜出:本次伤害直接扣除生命及上限',timing:'win',
   effect(ctx){ctx.directHpMax=true;log('刺客效果:伤害将扣除生命和上限!','effect')}},
-{id:'chimney_golem',type:'creature',name:'烟囱魔像',emoji:'🗿',base:3,slots:2,
+{id:'chimney_golem',type:'creature',name:'烟囱魔像',emoji:'🗿',base:4,slots:2,
   effectDesc:'胜出:回复3生命',timing:'win',
   effect(ctx){ctx.owner.hp=Math.min(ctx.owner.maxHp||30,ctx.owner.hp+3);log('魔像效果:回复3HP','effect')}},
 {id:'furnace_phoenix',type:'creature',name:'熔炉凤凰',emoji:'🦅',base:5,slots:3,
@@ -5866,7 +5866,7 @@ function renderCardDetail(c,onclick,isRare){
 const Adventure={
   active:false, map:null, currentFloor:-1, visitedNode:null, currentLayer:1,
   hp:30, maxHp:30, gold:0, deck:[], upgradedCards:new Set(),
-  bonusDiceNextBattle:0, mapId:null, relics:[],
+  bonusDiceNextBattle:0, mapId:null, relics:[], _difficulty:'normal',
 
   hasRelic(id){return this.relics.includes(id)},
   addRelic(id){if(!this.hasRelic(id)){this.relics.push(id);if(this._stats)this._stats.relicsGained++;StatsTracker.recordRelic();if(this.relics.length>=3)Achievements.unlock('relic_collector');
@@ -5877,12 +5877,42 @@ const Adventure={
   // --- MAP GENERATION ---
   selectMap(id){
     this._pendingMapId=id;
-    // If deck2 is unlocked, show deck selection; otherwise use default deck1
-    if(PlayerData.deck2Unlocked){
-      this.showDeckSelection(id);
-    } else {
-      this._startWithDeck(id,ADVENTURE_STARTER_DECK);
-    }
+    this.showDifficultySelection(id);
+  },
+
+  showDifficultySelection(mapId){
+    this._pendingMapId=mapId;
+    const p=$('adv-panel');
+    let html='<h3>\u2699 选择难度</h3><p>选择本次冒险的难度:</p><div class="zzz-reward-picks" style="margin:16px 0">';
+    const diffs=[
+      {id:'easy',name:'简单模式',emoji:'\uD83C\uDF31',desc:'初始生命+10，适合新手探索',tag:'EASY'},
+      {id:'normal',name:'标准模式',emoji:'\u2694',desc:'标准冒险体验，考验你的策略',tag:'NORMAL'}
+    ];
+    diffs.forEach(function(d){
+      html+='<div class="reward-card-detail" style="cursor:pointer;padding:14px 12px" onclick="Adventure._pickDifficulty(\''+d.id+'\')">'
+        +'<div class="rcd-emoji" style="font-size:36px">'+d.emoji+'</div>'
+        +'<div class="rcd-body" style="text-align:center">'
+        +'<div class="rcd-name" style="font-size:16px;margin-bottom:4px">'+d.name+'</div>'
+        +'<div class="rcd-type" style="font-size:9px;margin-bottom:6px">'+d.tag+'</div>'
+        +'<div class="rcd-effect" style="font-size:11px;text-align:center;border-left:none">'+d.desc+'</div>'
+        +'</div></div>';
+    });
+    html+='</div>';
+    p.innerHTML=html;
+    advShowOverlay();
+  },
+
+  _pickDifficulty(diff){
+    this._difficulty=diff;
+    advHideOverlay();
+    var mapId=this._pendingMapId;
+    setTimeout(function(){
+      if(PlayerData.deck2Unlocked){
+        Adventure.showDeckSelection(mapId);
+      } else {
+        Adventure._startWithDeck(mapId,ADVENTURE_STARTER_DECK);
+      }
+    },400);
   },
 
   showDeckSelection(mapId){
@@ -5912,7 +5942,8 @@ const Adventure={
     advHideOverlay();
     this.mapId=mapId;
     this.active=true;
-    this.hp=30;this.maxHp=30;this.gold=50;
+    const easyBonus=(this._difficulty==='easy')?10:0;
+    this.hp=30+easyBonus;this.maxHp=30+easyBonus;this.gold=50;
     this.deck=[...deckCards];
     this.upgradedCards=new Set();
     this.relics=[];
