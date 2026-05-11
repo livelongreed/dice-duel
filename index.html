@@ -2479,6 +2479,8 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .nest-cell.cell-empty::before { background:rgba(255,255,255,0.1); }
 .nest-cell.cell-empty:hover { transform:skewX(-4deg); box-shadow:none; opacity:0.7; }
 .nest-cell.cell-selected { border-color:rgba(196,181,253,0.7); box-shadow:0 0 16px rgba(122,90,205,0.35),0 2px 8px rgba(0,0,0,0.4); }
+.nest-cell.cell-entrance { border-color:rgba(249,115,22,0.5); }
+.nest-cell.cell-entrance::after { content:'→'; position:absolute; top:50%; left:-14px; transform:translateY(-50%); font-size:10px; color:#f97316; }
 
 .nest-cell .nc-icon { font-size:24px; margin-bottom:2px; }
 .nest-cell .nc-name { font-size:9px; font-family:'Share Tech Mono',monospace; color:rgba(255,255,255,0.6); letter-spacing:1px; text-align:center; }
@@ -7377,6 +7379,10 @@ const G={
     // Return dice
     card.assignedDice.forEach(d=>{const fi=this.p.dice.indexOf(-1);if(fi>=0)this.p.dice[fi]=d;else this.p.dice.push(d)});
     card.assignedDice=[];
+    // If recalling a spell, undo hand_spell_use triggers (e.g. Fear Chimera growth)
+    if(card.type==='spell'){
+      this.p.hand.forEach(c=>{if(c.timing==='hand_spell_use'&&c.growth>0){c.growth--;log(`${c.name}:收回法术,基础值-1 (当前${c.base+(c.growth||0)})`,'effect')}});
+    }
     this.p.hand.push(card);
     log(`收回 ${card.name}`);
     render();
@@ -7575,14 +7581,8 @@ const G={
     this.triggerEffects('deploy_end',this.ai);
     render();
     // Check if self-damage from deploy killed anyone
-    if(this.p.hp<=0){
-      setPhase('战斗失败!');SFX.play('clash_lose');StatsTracker.recordGame(false);
-      if(this.adventureMode){Adventure.hasRelic('rebirth_rune')&&this.p.hp<=0?(this.p.hp=1,Adventure.removeRelic('rebirth_rune'),log('♻️ 重生符文:免于死亡,HP恢复到1!','effect')):(this.onBattleLose());return}
-      else{this.onBattleLose();return}
-    }
-    if(this.ai.hp<=0){
-      setPhase('战斗胜利!');SFX.play('clash_win');StatsTracker.recordGame(true);spawnVictoryParticles();
-      if(this.adventureMode){this.onBattleWin()}else{this.onBattleWin()}return;
+    if(this.p.hp<=0||this.ai.hp<=0){
+      if(this.checkGameOver())return;
     }
     // Boss dialogue: card reactions
     if(this.isBossFight()){
@@ -10738,7 +10738,7 @@ document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>TaskSystem.upda
 const DataNest=(()=>{
 /* --- CONSTANTS --- */
 const PHASES=['morning','day','night','settle'];
-const PHASE_NAMES={morning:'☀ 早晨',day:'☀ 白天',night:'🌙 夜晚',settle:'📊 结算'};
+const PHASE_NAMES={morning:'☀ 早晨',deploy_prep:'⚔ 战前部署',day:'☀ 白天',night:'🌙 夜晚',settle:'📊 结算'};
 const ROOM_TYPES={
   core:{name:'魔王室',icon:'🏰',desc:'铸炉师坐镇，核心房间'},
   lair:{name:'生物巢穴',icon:'🐉',desc:'安置生物，每骰子+1%经验'},
@@ -10801,8 +10801,8 @@ const HARUKO_LINES={
 };
 const SKILL_TREE={
   furnaceBurst:{name:'熔炉爆发',branch:'aggressive',type:'active',cost:5,desc:'本回合所有生物基础值+2',lordEssence:3,prereq:[]},
-  dataReforge:{name:'数据重铸',branch:'aggressive',type:'active',cost:3,desc:'重掷一个骰子',lordEssence:5,prereq:['furnaceBurst']},
-  terraAvatar:{name:'泰拉化身',branch:'aggressive',type:'active',cost:10,desc:'铸炉师亲自参战(攻击力=能量×2)',lordEssence:15,prereq:['dataReforge']},
+  dataReforge:{name:'数据重铸',branch:'aggressive',type:'active',cost:3,desc:'随机强化一只已部署生物的基础值',lordEssence:5,prereq:['furnaceBurst']},
+  terraAvatar:{name:'泰拉化身',branch:'aggressive',type:'active',cost:10,desc:'蓄力:下次战斗铸炉师亲自造成(能量×2+10)伤害',lordEssence:15,prereq:['dataReforge']},
   infamyAura:{name:'恶名光环',branch:'control',type:'passive',desc:'恶名值对奖励加成提高50%',lordEssence:4,prereq:[]},
   bondMaster:{name:'羁绊大师',branch:'control',type:'passive',desc:'可激活额外一组羁绊',lordEssence:8,prereq:['infamyAura']},
   econBoost:{name:'数据通货',branch:'economy',type:'passive',desc:'每日碎片收入+20%',lordEssence:3,prereq:[]},
@@ -10819,7 +10819,7 @@ const INVEST_REGIONS={
 let S={
   day:1,phase:'morning',gridSize:3,
   shards:100,gold:50,energy:4,infamy:0,bioEssence:0,lordEssence:0,
-  researchPoints:0,trapDmgBonus:0,
+  researchPoints:0,permTrapBonus:0,tempTrapBonus:0,
   rooms:[],pool:[],events:[],selectedEvent:-1,
   creatures:[],factions:{hunters:0,church:0,chaos:0},
   alliance:null,log:[],started:false,
@@ -10827,8 +10827,24 @@ let S={
   investments:{sumida:0,chiyoda:0,uogashi:0,manhattan:0,akihabara:0},
   unlockedSkills:[],selectedRoom:-1,
   activeBonds:[],
+  heroesDefeated:0,heroesBreached:0,terraAvatarDmg:0,
   viewMode:null /* null, 'creatures', 'skills', 'invest', 'synth' */
 };
+/* --- SPATIAL: compute room traversal order from entrance (index 0) --- */
+function getRoomDistance(idx,gridSize){
+  const x=idx%gridSize,y=Math.floor(idx/gridSize);
+  return x+y; /* Manhattan distance from top-left entrance */
+}
+function getTraversalOrder(gridSize,rooms){
+  /* Returns indices sorted by distance from entrance (top-left), same distance by index */
+  const indices=[];
+  for(let i=0;i<rooms.length;i++)indices.push(i);
+  indices.sort((a,b)=>{
+    const da=getRoomDistance(a,gridSize),db=getRoomDistance(b,gridSize);
+    return da-db||(a-b);
+  });
+  return indices;
+}
 /* --- HELPERS --- */
 function rand(n){return Math.floor(Math.random()*n)}
 function pick(arr){return arr[rand(arr.length)]}
@@ -10836,11 +10852,61 @@ function rollDice(){return rand(6)+1}
 function $(id){return document.getElementById(id)}
 function sumDice(arr){return(arr||[]).reduce((a,b)=>a+b,0)}
 function roomBonus(room){return (room.level||0)*3;}
-function say(phase){
+function say(phase,ev){
   const ht=$('nest-haruko-text');
   if(!ht)return;
+  /* Context-aware Haruko lines based on current event + game state */
+  if(ev){
+    const line=buildHarukoLine(phase,ev);
+    if(line){ht.textContent=line;return}
+  }
   const lines=HARUKO_LINES[phase]||HARUKO_LINES.idle;
   ht.textContent=pick(lines);
+}
+function buildHarukoLine(phase,ev){
+  const core=S.rooms.find(r=>r.type==='core');
+  const coreHp=core?core.hp:0;
+  const maxHp=30;
+  const hpRatio=coreHp/maxHp;
+  const trapCount=S.rooms.filter(r=>r.type==='trap').length;
+  const lairCount=S.rooms.filter(r=>r.type==='lair').length;
+  const creatureCount=S.creatures.length;
+  const totalPower=S.creatures.reduce((a,c)=>a+c.base+(c.lvl||1),0);
+  if(phase==='day'&&ev){
+    if(ev.type==='battle'){
+      if(hpRatio<0.3)return '铸炉师大人...核心只剩'+coreHp+'点生命了，这一战可不能再输了。';
+      if(trapCount===0&&lairCount===0)return '我们既没有陷阱也没有布防的生物...这仗很难打。';
+      if(trapCount===0)return '没有陷阱房的话，只能靠生物硬扛了...要小心。';
+      if(creatureCount===0)return '巢穴里一个生物都没有！铸炉师大人，这是送死啊！';
+      if(totalPower>=20)return '我们的战力还不错，应该能应付这次入侵。';
+      return '做好准备了吗？勇者已经在路上了。';
+    }
+    if(ev.type==='economy'){
+      if(S.shards<30)return '铸炉师大人……咱们现在的碎片存货快见底了，这个机会不能错过。';
+      if(S.shards>200)return '碎片储备很充裕呢，铸炉师大人可以从容考虑。';
+      return '有意思的经济事件，让我算算收益...';
+    }
+    if(ev.type==='diplomacy'){
+      if(S.alliance)return '我们已经有同盟了，不过多交几个朋友也没坏处。';
+      const maxFac=Math.max(S.factions.hunters,S.factions.church,S.factions.chaos);
+      if(maxFac>=40)return '离达成同盟不远了，铸炉师大人要不要推一把？';
+      return '外交也是一种力量，铸炉师大人。';
+    }
+    if(ev.type==='humor'){
+      if(hpRatio<0.5)return '虽然是泰拉异常，但说不定能回点血...核心状况不太好。';
+      return '又是泰拉异常...希望这次不是什么坑。';
+    }
+  }
+  if(phase==='victory'){
+    if(hpRatio<0.3)return '赢是赢了...但核心已经快撑不住了，铸炉师大人。';
+    if(totalPower>=25)return '漂亮！我们的防线越来越强了！';
+  }
+  if(phase==='defeat'){
+    if(coreHp<=5)return '不好了...核心快被打穿了！铸炉师大人，一定要加强防御！';
+    if(trapCount===0)return '如果有陷阱房的话，结果可能会不一样...';
+    if(creatureCount<=1)return '生物太少了，铸炉师大人。得赶紧补充战力。';
+  }
+  return null;
 }
 
 /* --- BONDS --- */
@@ -10854,12 +10920,13 @@ function checkBonds(){
 /* --- INIT --- */
 function newGame(){
   S={day:1,phase:'morning',gridSize:3,shards:100,gold:50,energy:4,infamy:0,bioEssence:0,lordEssence:0,
-    researchPoints:0,trapDmgBonus:0,
+    researchPoints:0,permTrapBonus:0,tempTrapBonus:0,
     rooms:[],pool:[],events:[],selectedEvent:-1,
     creatures:[],factions:{hunters:0,church:0,chaos:0},alliance:null,log:[],started:true,
     bossDefeated:{victor:false,tetsu:false,warai:false},
     investments:{sumida:0,chiyoda:0,uogashi:0,manhattan:0,akihabara:0},
-    unlockedSkills:[],selectedRoom:-1,activeBonds:[],viewMode:null};
+    unlockedSkills:[],selectedRoom:-1,activeBonds:[],
+    heroesDefeated:0,heroesBreached:0,terraAvatarDmg:0,viewMode:null};
   for(let i=0;i<9;i++){
     if(i===4)S.rooms.push({type:'core',level:1,creatures:[],dice:[],hp:30});
     else if(i===1)S.rooms.push({type:'lair',level:1,creatures:[{...CREATURES[0],exp:0,lvl:1}],dice:[],hp:0});
@@ -10877,43 +10944,197 @@ function newGame(){
 /* --- PHASE LOGIC --- */
 function startMorning(){
   S.phase='morning';S.viewMode=null;S.selectedRoom=-1;
-  const count=1+rand(Math.min(3,Math.ceil(S.day/5)));
+  /* Late-game escalation: more events, guaranteed battles after day 25 */
+  let count=1+rand(Math.min(3,Math.ceil(S.day/5)));
+  if(S.day>=30)count=Math.max(count,3);
+  else if(S.day>=25)count=Math.max(count,2);
   S.events=[];S.selectedEvent=-1;
   const available=[...EVENT_POOL];
+  /* After day 25: force at least one battle event */
+  let forcedBattle=S.day>=25;
   for(let i=0;i<count&&available.length;i++){
-    const idx=rand(available.length);
+    let idx;
+    if(forcedBattle&&i===0){
+      const battleIdx=available.findIndex(e=>e.type==='battle');
+      idx=battleIdx>=0?battleIdx:rand(available.length);
+      forcedBattle=false;
+    }else{
+      idx=rand(available.length);
+    }
     const ev={...available.splice(idx,1)[0]};
     ev.body=ev.body.replace('%lv%',Math.ceil(S.day/3)).replace('%name%',pick(HERO_NAMES));
+    /* Late-game: stronger heroes */
+    if(S.day>=30&&ev.type==='battle'&&ev.fn==='doBattle'){
+      ev.title='精锐勇者突袭';
+      ev.body='一名精锐Lv.'+Math.ceil(S.day/2)+'勇者直取你的巢穴！';
+      ev.fn='doEliteBattle';
+      ev.reward='💎+50 ⚡+2';
+    }
     S.events.push(ev);
   }
+  /* Day 35+: infamy rises passively (desperation) */
+  if(S.day>=35){S.infamy+=2;addLog('<span style="color:#f97316">🔥 泰拉的秩序正在崩溃...恶名自动+2</span>')}
   say('morning');
   render();
 }
+function buildSituationBrief(){
+  const core=S.rooms.find(r=>r.type==='core');
+  const coreHp=core?core.hp:0;
+  const maxHp=30;
+  const trapRooms=S.rooms.filter(r=>r.type==='trap');
+  const lairRooms=S.rooms.filter(r=>r.type==='lair');
+  const vaultRooms=S.rooms.filter(r=>r.type==='vault');
+  const totalCreatures=lairRooms.reduce((a,r)=>a+r.creatures.length,0);
+  const totalPower=lairRooms.reduce((a,r)=>a+r.creatures.reduce((b,c)=>b+c.base+(c.lvl||1),0),0);
+  const totalTrapDmg=trapRooms.reduce((a,r)=>a+(3+r.level*2),0);
+  const heroLv=Math.ceil(S.day/3);
+  const heroHp=8+heroLv*4;
+  const heroAtk=2+heroLv*2;
+  let lines=[];
+  /* Threat level */
+  const defPower=totalPower+totalTrapDmg;
+  let threat;
+  if(defPower>=heroHp*1.5)threat='低';
+  else if(defPower>=heroHp)threat='中';
+  else if(defPower>=heroHp*0.6)threat='高';
+  else threat='危险';
+  lines.push('第'+S.day+'天 — 巢穴状态报告');
+  lines.push('核心生命: '+coreHp+'/'+maxHp+(coreHp<=10?' <span style="color:#ef4444">[危险]</span>':''));
+  lines.push('防御战力: '+totalCreatures+'只生物(总攻'+totalPower+') + '+trapRooms.length+'个陷阱(总伤'+totalTrapDmg+')');
+  lines.push('预估勇者: Lv.'+heroLv+' HP:'+heroHp+' ATK:'+heroAtk);
+  lines.push('威胁评估: <span style="color:'+(threat==='低'?'#22c55e':threat==='中'?'#fbbf24':threat==='高'?'#f97316':'#ef4444')+'">'+threat+'</span>');
+  /* Spatial info: first room hero encounters */
+  const traversal=getTraversalOrder(S.gridSize,S.rooms);
+  const firstDefense=traversal.find(idx=>{const r=S.rooms[idx];return r.type==='trap'||r.type==='lair'});
+  if(firstDefense!==undefined){
+    const r=S.rooms[firstDefense];const dist=getRoomDistance(firstDefense,S.gridSize);
+    lines.push('入口首道防线: '+ROOM_TYPES[r.type].icon+ROOM_TYPES[r.type].name+' (距入口'+dist+'格)');
+  }else{
+    lines.push('<span style="color:#ef4444">入口无防线！勇者将直取核心</span>');
+  }
+  /* Resource status */
+  let resNote=[];
+  if(S.shards<30)resNote.push('碎片不足');
+  if(S.gold<20)resNote.push('金币匮乏');
+  if(S.energy<=1)resNote.push('能量耗尽');
+  if(S.infamy>=15)resNote.push('恶名过高');
+  if(S.alliance)resNote.push('同盟:'+{hunters:'数据猎人',church:'机械教团',chaos:'混沌信徒'}[S.alliance]);
+  if(resNote.length)lines.push('注意: '+resNote.join(' / '));
+  /* Active bonds */
+  if(S.activeBonds.length)lines.push('激活羁绊: '+S.activeBonds.map(b=>b.name).join('、'));
+  return lines;
+}
 function startDay(){
   if(S.selectedEvent<0)return;
-  S.phase='day';S.viewMode=null;
-  say('day');
+  const ev=S.events[S.selectedEvent];
+  /* Battle events go through deployment prep first */
+  if(ev.type==='battle'||ev.fn==='doBattle'||ev.fn==='doEliteBattle'){
+    S.phase='deploy_prep';S.viewMode=null;
+    say('day',ev);
+    S._pendingBattleEvent=ev;
+    render();
+    return;
+  }
+  /* Non-battle events go directly to day phase */
+  commitDay();
+}
+function confirmDeploy(){
+  /* Player confirmed deployment, now resolve the pending battle event */
+  commitDay();
+}
+function deployPrepAssign(creatureIdx,roomIdx){
+  /* Quick assign during deploy prep — costs 1 energy */
+  if(S.energy<1){addLog('⚡ 能量不足，无法调整部署！');render();return}
+  const c=S.creatures[creatureIdx];
+  const room=S.rooms[roomIdx];
+  if(!c||!room||room.type!=='lair')return;
+  if(room.creatures.length>=3)return;
+  S.energy-=1;
+  S.rooms.forEach(r=>{if(r.creatures)r.creatures=r.creatures.filter(x=>x!==c)});
+  room.creatures.push(c);
+  checkBonds();
+  addLog('⚡ 消耗1能量，将 '+c.emoji+c.name+' 部署到 '+ROOM_TYPES[room.type].icon+ROOM_TYPES[room.type].name);
   render();
+}
+function deployPrepRemove(creatureIdx,roomIdx){
+  const room=S.rooms[roomIdx];
+  if(!room)return;
+  const c=room.creatures[creatureIdx];
+  room.creatures.splice(creatureIdx,1);
+  checkBonds();
+  if(c)addLog(c.emoji+c.name+' 从 '+ROOM_TYPES[room.type].icon+ROOM_TYPES[room.type].name+' 撤回');
+  render();
+}
+function commitDay(){
+  S.phase='day';S.viewMode=null;
+  const ev=S.events[S.selectedEvent];
+  say('day',ev);
+  /* Unhandled event consequences with narrative language */
   S.events.forEach((ev,i)=>{
     if(i!==S.selectedEvent){
-      addLog('<span style="color:#f59e0b">⚠ "'+ev.title+'" 未处理，产生了后果...</span>');
-      if(ev.type==='battle')S.infamy+=3;
-      else if(ev.type==='economy')S.shards=Math.max(0,S.shards-10);
-      else if(ev.type==='diplomacy'){const f=pick(['hunters','church','chaos']);S.factions[f]=Math.max(-100,S.factions[f]-5)}
+      if(ev.type==='battle'){
+        S.infamy+=3;
+        addLog('<span style="color:#f59e0b">⚠ 你选择无视了"'+ev.title+'"——勇者畅通无阻地穿过了你的领地，周边势力注意到了你的软弱。(🔥恶名+3)</span>');
+      }else if(ev.type==='economy'){
+        S.shards=Math.max(0,S.shards-10);
+        addLog('<span style="color:#f59e0b">⚠ 无人看管"'+ev.title+'"的矿脉，流浪者趁机盗取了一批碎片。(💎-10)</span>');
+      }else if(ev.type==='diplomacy'){
+        const f=pick(['hunters','church','chaos']);
+        const fname={hunters:'数据猎人',church:'机械教团',chaos:'混沌信徒'}[f];
+        S.factions[f]=Math.max(-100,S.factions[f]-5);
+        addLog('<span style="color:#f59e0b">⚠ '+fname+'的使者等了一天无人接待，愤然离去。他们对你的印象变差了。('+fname+'好感-5)</span>');
+      }else if(ev.type==='humor'){
+        addLog('<span style="color:#f59e0b">⚠ "'+ev.title+'"的泰拉异常自行消散了，什么也没留下。</span>');
+      }else{
+        addLog('<span style="color:#f59e0b">⚠ "'+ev.title+'" 未处理，产生了后果...</span>');
+      }
     }
   });
-  const ev=S.events[S.selectedEvent];
+  delete S._pendingBattleEvent;
   processEvent(ev);
 }
 function processEvent(ev){
-  if(ev.type==='battle'){
-    showEventChoice(ev,'正面迎战','设置伏击',
-      function(){addLog('<span style="color:#60a5fa">⚔ 选择正面迎战！</span>');doBattle()},
-      function(){addLog('<span style="color:#a78bfa">🪤 选择设置伏击！陷阱伤害本次+50%</span>');S.rooms.filter(r=>r.type==='trap').forEach(r=>{r._ambushBoost=true});doBattle();S.rooms.filter(r=>r.type==='trap').forEach(r=>{delete r._ambushBoost})}
+  const trapRooms=S.rooms.filter(r=>r.type==='trap');
+  const lairRooms=S.rooms.filter(r=>r.type==='lair');
+  const totalTrapDmg=trapRooms.reduce((a,r)=>a+(3+r.level*2),0);
+  const totalCreatures=lairRooms.reduce((a,r)=>a+r.creatures.length,0);
+  const hasMagnet=lairRooms.some(r=>r.creatures.some(c=>c.id==='magnet_golem'));
+  if(ev.type==='battle'||ev.fn==='doBattle'||ev.fn==='doEliteBattle'){
+    const isElite=ev.fn==='doEliteBattle';
+    const labelA='正面迎战';
+    let descA='生物直接与勇者交战';
+    if(totalCreatures>0)descA='派出'+totalCreatures+'只生物正面迎敌 (总战力约'+(lairRooms.reduce((a,r)=>a+r.creatures.reduce((b,c)=>b+c.base+(c.lvl||1),0),0))+')';
+    else descA='<span style="color:#ef4444">没有可战斗的生物！只能靠陷阱消耗</span>';
+    if(hasMagnet)descA+=' | 🧲磁力傀儡将优先引导勇者';
+    const labelB='设置伏击';
+    let descB='陷阱伤害本次+50%';
+    if(trapRooms.length>0)descB='强化'+trapRooms.length+'个陷阱 (预计伤害: '+totalTrapDmg+' → '+Math.floor(totalTrapDmg*1.5)+')';
+    else descB='<span style="color:#ef4444">你没有陷阱房！准备伏击会浪费时间，勇者将获得先手优势 (ATK+2)</span>';
+    showEventChoice(ev,labelA,descA,labelB,descB,
+      function(){addLog('<span style="color:#60a5fa">⚔ 选择正面迎战！</span>');isElite?doEliteBattle():doBattle()},
+      function(){
+        if(trapRooms.length>0){
+          addLog('<span style="color:#a78bfa">🪤 选择设置伏击！陷阱伤害本次+50%</span>');
+          S._ambushTrapBoost=true;
+          isElite?doEliteBattle():doBattle();
+          delete S._ambushTrapBoost;
+        }else{
+          addLog('<span style="color:#ef4444">🪤 你试图设置伏击，但没有任何陷阱可用...勇者趁你布置空气的间隙发起突袭！</span>');
+          S._heroAtkBonus=2;
+          isElite?doEliteBattle():doBattle();
+          delete S._heroAtkBonus;
+        }
+      }
     );return;
   }
-  if(ev.type==='diplomacy'){
-    showEventChoice(ev,'合作','间谍渗透',
+  if(ev.type==='diplomacy'||ev.fn==='doDiplomacy'){
+    const maxFac=Math.max(S.factions.hunters,S.factions.church,S.factions.chaos);
+    let descA='和平交涉，稳步提升好感度 (预计+10~20)';
+    if(maxFac>=40)descA+=' | 离同盟只差一步！';
+    if(S.alliance)descA+=' | 已有同盟，额外巩固关系';
+    let descB='风险更高，但金币与碎片收益更多 (🔥恶名+3)';
+    if(S.infamy>=12)descB+=' | <span style="color:#f59e0b">恶名已经很高了，再涨可能触发夜袭</span>';
+    showEventChoice(ev,'合作',descA,'间谍渗透',descB,
       function(){addLog('<span style="color:#60a5fa">🤝 选择合作！</span>');doDiplomacy()},
       function(){
         addLog('<span style="color:#a78bfa">🕵 选择间谍渗透！</span>');
@@ -10927,22 +11148,71 @@ function processEvent(ev){
       }
     );return;
   }
-  /* Dispatch by fn field */
-  if(ev.fn==='doBattle'){doBattle();return}
-  if(ev.fn==='doEliteBattle'){doEliteBattle();return}
-  if(ev.fn==='doShop'){doEconomy(ev);return}
-  if(ev.fn==='doMine'){doEconomy(ev);return}
-  if(ev.fn==='doDiplomacy'){doDiplomacy();return}
-  if(ev.fn==='doHumor'){doHumor(ev);return}
-  switch(ev.type){
-    case'economy':doEconomy(ev);break;
-    case'humor':doHumor(ev);break;
-    case'battle':doBattle();break;
-    case'diplomacy':doDiplomacy();break;
-    default:addLog('事件处理完毕。');startNight();
+  if(ev.type==='economy'||ev.fn==='doShop'||ev.fn==='doMine'){
+    if(ev.title.includes('黑市')||ev.fn==='doShop'){
+      let descA='直接购买，获得一只随机生物';
+      if(S.creatures.length>=10)descA+=' | <span style="color:#f59e0b">生物快满了('+S.creatures.length+'/12)</span>';
+      let descB='讨价还价，有机会额外获得碎片，但也可能空手而归';
+      showEventChoice(ev,'立即交易',descA,'讨价还价',descB,
+        function(){doEconomy(ev)},
+        function(){
+          addLog('<span style="color:#a78bfa">🗣 你试图压价...</span>');
+          if(rand(2)===0){
+            const c={...pick(CREATURES),exp:0,lvl:1};S.creatures.push(c);
+            const bonus=20+rand(20);S.shards+=bonus;
+            addLog('商人被你的气势说服了！获得 '+c.emoji+' '+c.name+' + 💎'+bonus+'碎片！');
+          }else{
+            S.shards+=10;
+            addLog('商人不吃这套，只甩给你💎10碎片就走了。');
+          }
+          render();setTimeout(()=>startNight(),600);
+        }
+      );
+    }else{
+      const vaultLv=S.rooms.filter(r=>r.type==='vault').reduce((a,r)=>a+r.level,0);
+      let descA='直接开采，稳定获得碎片 (💎40~70)';
+      let descB='派生物守卫后再采，产量更高但消耗能量';
+      if(S.energy<=1)descB+=' | <span style="color:#f59e0b">能量不足，可能无法执行</span>';
+      if(vaultLv>0)descA+=' | 宝库Lv.'+vaultLv+'会存储部分收入';
+      showEventChoice(ev,'直接开采',descA,'护卫开采',descB,
+        function(){doEconomy(ev)},
+        function(){
+          if(S.energy<2){addLog('⚡ 能量不足以执行护卫方案，改为普通开采。');doEconomy(ev);return}
+          S.energy-=1;
+          const amount=60+rand(40);
+          S.shards+=amount;
+          addLog('<span style="color:#a78bfa">⛏ 在生物护卫下深入开采！消耗⚡1能量，碎片+'+amount+'</span>');
+          render();setTimeout(()=>startNight(),600);
+        }
+      );
+    }
+    return;
   }
+  if(ev.type==='humor'||ev.fn==='doHumor'){
+    const core=S.rooms.find(r=>r.type==='core');
+    const coreHp=core?core.hp:0;
+    let descA='接受这个异常带来的效果 ('+ev.reward+')';
+    if(coreHp<=10&&ev.reward.includes('❤'))descA+=' | 核心需要治疗！';
+    let descB='尝试从异常中提取额外数据';
+    showEventChoice(ev,'坦然接受',descA,'深入研究',descB,
+      function(){doHumor(ev)},
+      function(){
+        addLog('<span style="color:#fbbf24">🔍 你试图研究这个泰拉异常...</span>');
+        addLog('<span style="color:rgba(255,255,255,0.6);font-style:italic">"'+ev.body+'"</span>');
+        if(rand(3)===0){
+          S.researchPoints=(S.researchPoints||0)+10;
+          addLog('研究成功！获得 🔬+10 研究点');
+        }else{
+          doHumor(ev);return;
+        }
+        render();setTimeout(()=>startNight(),600);
+      }
+    );
+    return;
+  }
+  addLog('事件处理完毕。');startNight();
 }
-function showEventChoice(ev,labelA,labelB,fnA,fnB){
+function showEventChoice(ev,labelA,descA,labelB,descB,fnA,fnB){
   S._pendingChoiceA=fnA;S._pendingChoiceB=fnB;
   const side=document.getElementById('nest-side-content');
   if(!side)return;
@@ -10955,9 +11225,11 @@ function showEventChoice(ev,labelA,labelB,fnA,fnB){
   h+='<div style="font-size:11px;color:#c4b5fd;margin-bottom:8px">选择你的策略:</div>';
   h+='<div class="nest-event" style="cursor:pointer;border-color:#60a5fa;margin-bottom:6px" onclick="DataNest.resolveChoice(\'A\')">';
   h+='<div class="ne-title" style="margin:0;color:#60a5fa">▶ '+labelA+'</div>';
+  h+='<div class="ne-body" style="margin:4px 0 0;font-size:10px;color:rgba(96,165,250,0.7)">'+descA+'</div>';
   h+='</div>';
   h+='<div class="nest-event" style="cursor:pointer;border-color:#a78bfa" onclick="DataNest.resolveChoice(\'B\')">';
   h+='<div class="ne-title" style="margin:0;color:#a78bfa">▶ '+labelB+'</div>';
+  h+='<div class="ne-body" style="margin:4px 0 0;font-size:10px;color:rgba(167,139,250,0.7)">'+descB+'</div>';
   h+='</div>';
   side.innerHTML=h;
 }
@@ -10970,41 +11242,55 @@ function resolveChoice(which){
 /* --- BATTLE --- */
 function doBattle(multiplier){
   multiplier=multiplier||1;
+  const _currentEv=S.events&&S.events[S.selectedEvent];
   const heroLv=Math.ceil(S.day/3);
   const heroHp=(8+heroLv*4)*multiplier;
   let heroAtk=(2+heroLv*2)*multiplier;
+  /* Apply hero ATK bonus from bad ambush choice */
+  if(S._heroAtkBonus){heroAtk+=S._heroAtkBonus;addLog('<span style="color:#ef4444">勇者获得先手优势！ATK+'+ S._heroAtkBonus+'</span>')}
   let hp=heroHp;
   const heroName=pick(HERO_NAMES);
   let phoenixUsed=false;
   let vineBeastEncountered=false;
   addLog('<span style="color:#ef4444">⚔ Lv.'+heroLv+' 勇者"'+heroName+'"入侵！HP:'+heroHp+' ATK:'+heroAtk+'</span>');
-  /* ice_rat skill: reduce hero ATK by 1 for each ice_rat in lair */
-  S.rooms.filter(r=>r.type==='lair').forEach(room=>{
-    room.creatures.forEach(c=>{
+  /* Terra Avatar: if active, deal pre-combat damage */
+  if(S.terraAvatarDmg>0){
+    const taDmg=S.terraAvatarDmg;
+    hp-=taDmg;
+    addLog('<span style="color:#7c3aed;font-weight:700">⚡ 泰拉化身！铸炉师亲自出击，造成 '+taDmg+' 伤害！</span> → 勇者HP:'+Math.max(0,hp));
+    S.terraAvatarDmg=0;
+  }
+  /* Spatial traversal: rooms encountered in order of distance from entrance (top-left) */
+  const traversal=getTraversalOrder(S.gridSize,S.rooms);
+  /* ice_rat skill: reduce hero ATK (pre-combat, all ice_rats across lairs) */
+  traversal.forEach(idx=>{const room=S.rooms[idx];
+    if(room.type==='lair')room.creatures.forEach(c=>{
       if(c.id==='ice_rat'){heroAtk=Math.max(1,heroAtk-1);addLog('🐀 '+c.name+'冰冻减速！勇者ATK-1 → '+heroAtk)}
     });
   });
-  /* magnet_golem skill: priority targeting - pull hero to this room first */
-  const magnetRooms=[];const normalRooms=[];
-  S.rooms.filter(r=>r.type==='lair').forEach(room=>{
-    if(room.creatures.some(c=>c.id==='magnet_golem'))magnetRooms.push(room);
-    else normalRooms.push(room);
-  });
-  const orderedLairs=[...magnetRooms,...normalRooms];
-  if(magnetRooms.length)addLog('🧲 磁力傀儡吸引勇者优先进入其巢穴！');
-  /* Traps first */
-  S.rooms.filter(r=>r.type==='trap').forEach(room=>{
+  /* Traverse rooms in spatial order: traps and lairs interleaved by position */
+  const magnetPull=S.rooms.some(r=>r.type==='lair'&&r.creatures.some(c=>c.id==='magnet_golem'));
+  let magnetPulled=false;
+  traversal.forEach(idx=>{
     if(hp<=0)return;
-    const baseDmg=3+room.level*2;
-    const bonus=Math.floor(baseDmg*roomBonus(room)*0.02);
-    let dmg=baseDmg+bonus;
-    if(S.trapDmgBonus>0){dmg+=S.trapDmgBonus;addLog('🌿 藤蔓缠绕效果: 陷阱额外+'+S.trapDmgBonus+'伤害')}
-    hp-=dmg;
-    addLog('⚙ 陷阱造成 <span style="color:#ef4444;font-weight:700">'+dmg+'</span> 伤害 → 勇者HP:'+Math.max(0,hp));
-  });
-  /* Creatures fight (ordered: magnet rooms first) */
-  orderedLairs.forEach(room=>{
-    room.creatures.forEach(c=>{
+    const room=S.rooms[idx];
+    const dist=getRoomDistance(idx,S.gridSize);
+    if(room.type==='trap'){
+      const baseDmg=3+room.level*2;
+      const bonus=Math.floor(baseDmg*roomBonus(room)*0.02);
+      let dmg=baseDmg+bonus+S.permTrapBonus;
+      if(S._ambushTrapBoost){dmg=Math.floor(dmg*1.5)}
+      if(S.tempTrapBonus>0){dmg+=S.tempTrapBonus;addLog('🌿 藤蔓缠绕效果: 陷阱额外+'+S.tempTrapBonus+'伤害')}
+      hp-=dmg;
+      addLog('⚙ 陷阱(距入口'+dist+'格) 造成 <span style="color:#ef4444;font-weight:700">'+dmg+'</span> 伤害 → 勇者HP:'+Math.max(0,hp));
+    }else if(room.type==='lair'&&room.creatures.length>0){
+      /* magnet_golem: if hero hasn't been pulled yet and this room has magnet, pull here */
+      if(magnetPull&&!magnetPulled&&room.creatures.some(c=>c.id==='magnet_golem')){
+        magnetPulled=true;
+        addLog('🧲 磁力傀儡吸引勇者进入巢穴(距入口'+dist+'格)！');
+      }
+      addLog('<span style="color:rgba(255,255,255,0.4);font-size:10px">── 巢穴(距入口'+dist+'格) ──</span>');
+      room.creatures.forEach(c=>{
       if(hp<=0)return;
       const bonusBase=S.activeBonds.reduce((a,b)=>a+b.bonus,0);
       let dmg=c.base+c.lvl+bonusBase+roomBonus(room);
@@ -11015,7 +11301,7 @@ function doBattle(multiplier){
       if(c.id==='gear_hound'&&dmg>heroAtk){hp-=2;addLog('🐺 '+c.name+'胜出！额外造成2伤害')}
       addLog(c.emoji+' '+c.name+' Lv.'+c.lvl+' 造成 <span style="color:#ef4444;font-weight:700">'+dmg+(c.id==='gear_hound'&&dmg>heroAtk?'+2':'')+'</span> 伤害 → 勇者HP:'+Math.max(0,hp));
       /* data_vine skill: hero takes 1 extra trap damage after encounter */
-      if(c.id==='vine_beast'){vineBeastEncountered=true;S.trapDmgBonus+=1;addLog('🌿 '+c.name+'缠绕！勇者此后受陷阱伤害+1')}
+      if(c.id==='vine_beast'){vineBeastEncountered=true;S.tempTrapBonus+=1;addLog('🌿 '+c.name+'缠绕！勇者此后受陷阱伤害+1')}
       /* Hero counterattack */
       if(hp>0){
         /* frost_dragon skill: 30% chance to skip hero counterattack */
@@ -11028,9 +11314,10 @@ function doBattle(multiplier){
         if(c.id==='phoenix'&&ctrDmg>=(c.base+c.lvl)&&!phoenixUsed){phoenixUsed=true;addLog('🔥 '+c.name+'死亡后复活！以50%生命继续战斗');const reviveDmg=Math.ceil((c.base+c.lvl)/2);hp-=reviveDmg;addLog('🔥 '+c.name+'复活攻击造成 '+reviveDmg+' 伤害 → 勇者HP:'+Math.max(0,hp))}
       }
     });
-  });
-  /* Reset trapDmgBonus after battle (vine effect is per-encounter) */
-  S.trapDmgBonus=0;
+    } /* end lair block */
+  }); /* end traversal */
+  /* Reset only temp trap bonus (vine beast per-battle); permTrapBonus persists */
+  S.tempTrapBonus=0;
   /* Reset steel_puppet flag */
   S.rooms.filter(r=>r.type==='lair').forEach(room=>{room.creatures.forEach(c=>{if(c._steelUsed)delete c._steelUsed})});
   if(hp<=0){
@@ -11040,13 +11327,15 @@ function doBattle(multiplier){
     const essReward=Math.ceil(heroLv/2)*multiplier;
     S.shards+=shardReward;S.infamy+=5;S.gold+=goldReward;S.bioEssence+=essReward;
     addLog('获得: 💎'+shardReward+' 🪙'+goldReward+' 🧬'+essReward+' 🔥恶名+5');
-    say('victory');
+    S.heroesDefeated=(S.heroesDefeated||0)+1;
+    say('victory',_currentEv);
   }else{
     const coreDmg=Math.min(hp,10);
     addLog('<span style="color:#ef4444;font-weight:700">❌ 勇者突破防线！核心受到 '+coreDmg+' 伤害</span>');
     const core=S.rooms.find(r=>r.type==='core');
     if(core){core.hp=Math.max(0,core.hp-coreDmg);if(core.hp<=0){addLog('<span style="color:#ef4444;font-weight:900">💀 魔王室被摧毁！游戏结束...</span>');S.phase='settle';render();return}}
-    say('defeat');
+    S.heroesBreached=(S.heroesBreached||0)+1;
+    say('defeat',_currentEv);
   }
   render();
   setTimeout(()=>{if(S.phase==='day')startNight()},800);
@@ -11285,9 +11574,9 @@ function startSettle(){
           if(lairs.length){const lr=pick(lairs);const cr=pick(lr.creatures);cr.base+=1;addLog('🔬 研究突破！'+cr.emoji+cr.name+' 基础值+1')}
           else addLog('🔬 研究突破！生物基础值+1(无生物，效果存储)');
         }else if(roll===1){
-          /* trap damage +2 */
-          S.trapDmgBonus=(S.trapDmgBonus||0)+2;
-          addLog('🔬 研究突破！陷阱伤害永久+2');
+          /* trap damage +2 permanent */
+          S.permTrapBonus=(S.permTrapBonus||0)+2;
+          addLog('🔬 研究突破！陷阱伤害永久+2 (累计:'+S.permTrapBonus+')');
         }else{
           /* vault gold +1 permanent */
           S.gold+=1;
@@ -11388,19 +11677,73 @@ function showFinalChoice(){
 }
 function makeFinalChoice(choice){
   S.viewMode=null;
+  /* Build personalized ending based on player stats */
+  const core=S.rooms.find(r=>r.type==='core');
+  const coreHp=core?core.hp:0;
+  const bossCount=(S.bossDefeated.victor?1:0)+(S.bossDefeated.tetsu?1:0)+(S.bossDefeated.warai?1:0);
+  const totalCreatures=S.creatures.length;
+  const lairCreatures=S.rooms.filter(r=>r.type==='lair').reduce((a,r)=>a+r.creatures.length,0);
+  const allianceName=S.alliance?{hunters:'数据猎人',church:'机械教团',chaos:'混沌信徒'}[S.alliance]:null;
+  const heroesDefeated=S.heroesDefeated||0;
+  const heroesBreached=S.heroesBreached||0;
+  const roomCount=S.rooms.filter(r=>r.type!=='empty'&&r.type!=='core').length;
+  function buildEnding(base){
+    let lines=[base];
+    /* Core state reflection */
+    if(coreHp>=25)lines.push('巢穴的核心几乎毫发无损——这座堡垒从未被真正撼动过。');
+    else if(coreHp>=15)lines.push('核心上留着几道裂痕，是那些险胜之夜的纪念。');
+    else if(coreHp>0)lines.push('核心已经千疮百孔，勉强维持着最后的运转。每一天都是借来的。');
+    /* Battle record */
+    if(heroesDefeated>15)lines.push('40天里你击退了'+heroesDefeated+'名勇者，你的名字已经成为冒险者公会的噩梦。');
+    else if(heroesDefeated>8)lines.push(heroesDefeated+'名勇者倒在了你的巢穴前。不多不少，刚好够让人敬畏。');
+    else lines.push('只有'+heroesDefeated+'名勇者被击败...但活下来本身就是一种胜利。');
+    if(heroesBreached>5)lines.push('有'+heroesBreached+'次勇者突破了防线。每一次都在提醒你，这个世界不会放过弱者。');
+    /* Alliance */
+    if(allianceName)lines.push('与'+allianceName+'的同盟在关键时刻提供了支援——这份盟约将被铭记。');
+    /* Boss record */
+    if(bossCount===3)lines.push('维克多、铁面、笑面——三位BOSS全部陨落。泰拉再无能与你匹敌之人。');
+    else if(bossCount>0)lines.push('你击败了'+bossCount+'位BOSS，但还有未竟的战斗留在身后。');
+    /* Dungeon */
+    if(roomCount>=7)lines.push('从最初的几间陋室到如今的'+roomCount+'间功能区——这座巢穴是你一砖一瓦建起来的。');
+    return lines;
+  }
   const endings={
-    destroy:{title:'摧毁核心',text:'你选择关闭地球终端。泰拉开始崩溃，数据世界逐渐消散。铸炉师回归现实世界，但泰拉的记忆永远留在心中。\n\n"再见了，泰拉..."\n\n— 终局: 归还者 —'},
-    preserve:{title:'保留核心',text:'你选择让泰拉继续演化。作为守护者，铸炉师将永远守护这个数据世界，确保人类与泰拉的共存。\n\n"这个世界...值得守护。"\n\n— 终局: 守护者 —'},
-    merge:{title:'融合核心',text:'你选择与泰拉之核融合。铸炉师的意识与泰拉融为一体，成为这个数据世界的新意识。晴子含泪微笑。\n\n"铸炉师大人...不，你现在是泰拉本身了。"\n\n— 隐藏终局: 新世界意识 —'}
+    destroy:{title:'摧毁核心',build:function(){
+      let lines=buildEnding('你选择关闭地球终端。泰拉开始崩溃，数据世界逐渐消散。');
+      lines.push(allianceName?'晴子和'+allianceName+'的成员目送你离开，没有人说话。':'晴子沉默地站在崩塌的数据流中，看着你走远。');
+      lines.push('"再见了，泰拉..."');
+      lines.push('— 终局: 归还者 —');
+      return lines;
+    }},
+    preserve:{title:'保留核心',build:function(){
+      let lines=buildEnding('你选择让泰拉继续演化。作为守护者，铸炉师将永远守护这个数据世界。');
+      lines.push(coreHp>=20?'"这个世界...值得守护。"你看着完好的核心，知道这个决定是对的。':'"就算它已经伤痕累累...我也要守住它。"你将手按在破损的核心上。');
+      lines.push(totalCreatures>=6?lairCreatures+'只生物围绕在你身边，它们也选择了留下。':'巢穴里很安静。但安静，不意味着孤独。');
+      lines.push('— 终局: 守护者 —');
+      return lines;
+    }},
+    merge:{title:'融合核心',build:function(){
+      let lines=buildEnding('你选择与泰拉之核融合。铸炉师的意识与泰拉融为一体。');
+      lines.push('晴子含泪微笑："铸炉师大人...不，你现在是泰拉本身了。"');
+      if(bossCount===3)lines.push('三位BOSS的力量也随你融入核心，成为新世界意识的一部分。');
+      if(S.infamy>=20)lines.push('你的恶名化为泰拉的意志——这个世界将不再容忍入侵者。');
+      lines.push('— 隐藏终局: 新世界意识 —');
+      return lines;
+    }}
   };
   const e=endings[choice];
   S.log=[];
   addLog('<span style="color:#fbbf24;font-weight:900">🌟 '+e.title+'</span>');
-  e.text.split('\n').forEach(line=>{
+  addLog('');
+  e.build().forEach(line=>{
     if(line.trim())addLog('<span style="color:rgba(255,255,255,0.8)">'+line+'</span>');
     else addLog('');
   });
-  addLog('<br><span style="color:#c4b5fd">游戏完成！总天数: 40 | 最终碎片: '+S.shards+' | 金币: '+S.gold+'</span>');
+  addLog('');
+  addLog('<span style="color:#c4b5fd;font-size:10px">── 旅程记录 ──</span>');
+  addLog('<span style="color:#c4b5fd">总天数: 40 | 击败勇者: '+heroesDefeated+' | 突破次数: '+heroesBreached+' | BOSS击杀: '+bossCount+'/3</span>');
+  addLog('<span style="color:#c4b5fd">最终碎片: '+S.shards+' | 金币: '+S.gold+' | 房间: '+roomCount+' | 生物: '+totalCreatures+'</span>');
+  if(allianceName)addLog('<span style="color:#c4b5fd">同盟: '+allianceName+'</span>');
   S.phase='settle';
   S.started=false;
   render();
@@ -11410,11 +11753,11 @@ function invest(region){
   const current=S.investments[region]||0;
   const info=INVEST_REGIONS[region];
   if(!info||current>=info.maxLv)return;
-  const cost=100+current*50;
-  if(S.shards<cost)return;
-  S.shards-=cost;
+  const goldCost=50+current*30;
+  if(S.gold<goldCost){addLog('🪙 金币不足！投资需要'+goldCost+'金币');render();return}
+  S.gold-=goldCost;
   S.investments[region]=current+1;
-  addLog('📈 投资'+info.name+' → Lv.'+(current+1)+'！');
+  addLog('📈 投资'+info.name+' → Lv.'+(current+1)+'！(🪙-'+goldCost+')');
   render();
 }
 /* --- SKILL --- */
@@ -11438,10 +11781,17 @@ function useActiveSkill(skillId){
     S.rooms.filter(r=>r.type==='lair').forEach(r=>r.creatures.forEach(c=>{c.base+=2}));
     addLog('🔥 熔炉爆发！所有生物基础值+2');
   }else if(skillId==='dataReforge'){
-    if(S.pool.length){const i=rand(S.pool.length);const old=S.pool[i];S.pool[i]=rollDice();addLog('🔄 数据重铸！骰子'+old+'→'+S.pool[i])}
+    /* Pick a random creature in a lair and reroll its base (re-randomize between base and base+3) */
+    const lairs=S.rooms.filter(r=>r.type==='lair'&&r.creatures.length>0);
+    if(lairs.length){
+      const room=pick(lairs);const c=pick(room.creatures);
+      const oldBase=c.base;c.base=Math.max(oldBase,oldBase+rand(4));
+      addLog('🔄 数据重铸！'+c.emoji+c.name+' 基础值 '+oldBase+' → '+c.base);
+    }else{addLog('🔄 没有可重铸的生物！')}
   }else if(skillId==='terraAvatar'){
     const atk=S.energy*2+10;
-    addLog('⚡ 泰拉化身！铸炉师亲自参战！攻击力:'+atk);
+    S.terraAvatarDmg=atk;
+    addLog('⚡ 泰拉化身蓄力！下次战斗铸炉师将亲自造成 '+atk+' 伤害');
   }
   render();
 }
@@ -11470,9 +11820,13 @@ function assignCreature(creatureIdx,roomIdx){
   const room=S.rooms[roomIdx];
   if(!c||!room||room.type!=='lair')return;
   if(room.creatures.length>=3)return;
+  /* All creature assignments cost 1 energy */
+  if(S.energy<1){addLog('⚡ 能量不足，无法调整部署！');render();return}
+  S.energy-=1;
   /* Remove from previous room */
   S.rooms.forEach(r=>{if(r.creatures)r.creatures=r.creatures.filter(x=>x!==c)});
   room.creatures.push(c);
+  addLog('⚡ 消耗1能量，将 '+c.emoji+c.name+' 部署到 '+ROOM_TYPES[room.type].icon+ROOM_TYPES[room.type].name);
   checkBonds();
   render();
 }
@@ -11491,23 +11845,28 @@ function selectEvent(idx){
 }
 function buildRoom(idx,type){
   if(S.rooms[idx].type!=='empty')return;
-  const cost={lair:30,trap:25,vault:40,hatch:35,lab:50,synth:60,embassy:70};
-  const c=cost[type]||30;
-  if(S.shards<c)return;
-  S.shards-=c;
+  const shardCost={lair:30,trap:25,vault:40,hatch:35,lab:50,synth:60,embassy:70};
+  const goldCost={lair:10,trap:10,vault:15,hatch:10,lab:20,synth:25,embassy:30};
+  const sc=shardCost[type]||30;
+  const gc=goldCost[type]||10;
+  if(S.shards<sc){addLog('💎 碎片不足！');render();return}
+  if(S.gold<gc){addLog('🪙 金币不足！建造需要'+gc+'金币');render();return}
+  S.shards-=sc;S.gold-=gc;
   S.rooms[idx]={type,level:1,creatures:[],dice:[],hp:0};
-  addLog('🏗 建造了 '+ROOM_TYPES[type].icon+' '+ROOM_TYPES[type].name+'！');
+  addLog('🏗 建造了 '+ROOM_TYPES[type].icon+' '+ROOM_TYPES[type].name+'！(💎-'+sc+' 🪙-'+gc+')');
   render();
 }
 function upgradeRoom(idx){
   const room=S.rooms[idx];
   if(!room||room.type==='empty'||room.type==='core')return;
   if(room.level>=5)return;
-  const cost=50+room.level*30;
-  if(S.shards<cost)return;
-  S.shards-=cost;
+  const shardCost=50+room.level*30;
+  const goldCost=20+room.level*10;
+  if(S.shards<shardCost){addLog('💎 碎片不足！');render();return}
+  if(S.gold<goldCost){addLog('🪙 金币不足！升级需要'+goldCost+'金币');render();return}
+  S.shards-=shardCost;S.gold-=goldCost;
   room.level++;
-  addLog('⬆ '+ROOM_TYPES[room.type].icon+' '+ROOM_TYPES[room.type].name+' 升级到 Lv.'+room.level+'！');
+  addLog('⬆ '+ROOM_TYPES[room.type].icon+' '+ROOM_TYPES[room.type].name+' 升级到 Lv.'+room.level+'！(💎-'+shardCost+' 🪙-'+goldCost+')');
   render();
 }
 function addLog(msg){
@@ -11526,7 +11885,7 @@ function addLog(msg){
 function renderStage(){
   var stage=document.getElementById('nest-stage');
   if(!stage)return;
-  if(!S.started||S.phase==='morning'){stage.classList.remove('active');return;}
+  if(!S.started||S.phase==='morning'||S.phase==='deploy_prep'){stage.classList.remove('active');return;}
   stage.classList.add('active');
   var h='';
   var phaseLabels={day:'\u2694 \u4e8b\u4ef6\u5904\u7406',night:'\uD83C\uDF19 \u591c\u95f4\u9632\u5fa1',settle:'\uD83D\uDCCA \u6bcf\u65e5\u7ed3\u7b97'};
@@ -11726,9 +12085,14 @@ function render(){
     const isEmpty=room.type==='empty';
     const isSel=S.selectedRoom===i;
     const typeClass='cell-'+room.type;
+    const dist=getRoomDistance(i,S.gridSize);
+    const isEntrance=i===0;
     gh+='<div class="nest-cell '+typeClass+' '+
       (isSel?'cell-selected':'')+
+      (isEntrance?' cell-entrance':'')+
       '" onclick="DataNest.onCellClick('+i+')">';
+    if(isEntrance)gh+='<div style="position:absolute;top:1px;left:2px;font-size:7px;color:#f97316;font-weight:700">入口</div>';
+    if(!isEmpty&&!isCore)gh+='<div style="position:absolute;top:1px;right:2px;font-size:7px;color:rgba(255,255,255,0.3)">'+dist+'</div>';
     gh+='<div class="nc-icon">'+rt.icon+'</div>';
     gh+='<div class="nc-name">'+rt.name+(isCore?' HP:'+room.hp:'')+'</div>';
     if(room.level>0&&!isEmpty)gh+='<div class="nc-level">LV.'+room.level+'</div>';
@@ -11737,7 +12101,6 @@ function render(){
       room.creatures.forEach(c=>gh+='<span class="ncr" title="'+c.name+' Lv.'+c.lvl+'">'+c.emoji+'</span>');
       gh+='</div>';
     }
-    
     gh+='</div>';
   });
   grid.innerHTML=gh;
@@ -11793,6 +12156,11 @@ function render(){
     side.innerHTML=sh;return;
   }
   if(S.phase==='morning'){
+    /* Situation brief — visible during event selection */
+    const brief=buildSituationBrief();
+    sh+='<div style="background:rgba(124,58,237,0.1);border-left:3px solid #7c3aed;padding:6px 10px;margin:0 0 8px;border-radius:0 4px 4px 0">';
+    brief.forEach(l=>{sh+='<div style="color:#c4b5fd;font-size:10px;line-height:1.6">'+l+'</div>'});
+    sh+='</div>';
     sh+='<div class="ns-title">房间管理</div>';
     sh+='<p style="font-size:9px;color:rgba(255,255,255,0.5);margin:0 0 8px">点击房间查看详情·升级·分配生物</p>';
     /* Active bonds */
@@ -11809,6 +12177,14 @@ function render(){
       sh+='<div class="ne-title">'+ev.title+'</div>';
       sh+='<div class="ne-body">'+ev.body+'</div>';
       sh+='<div class="ne-reward">'+ev.reward+'</div>';
+      /* Per-event consequence preview for unselected events */
+      if(S.selectedEvent>=0&&S.selectedEvent!==i){
+        let penalty='';
+        if(ev.type==='battle')penalty='🔥 恶名+3';
+        else if(ev.type==='economy')penalty='💎 碎片-10';
+        else if(ev.type==='diplomacy')penalty='📉 随机派系好感-5';
+        if(penalty)sh+='<div style="font-size:9px;color:#f59e0b;margin-top:4px;opacity:0.8">忽略代价: '+penalty+'</div>';
+      }
       sh+='</div>';
     });
     sh+='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">';
@@ -11816,6 +12192,52 @@ function render(){
     sh+='<button class="nest-btn" style="flex:1" onclick="DataNest.setView(\'skills\')">⚡ 技能</button>';
     sh+='</div>';
     sh+='<button class="nest-btn nb-primary" '+(S.selectedEvent<0?'disabled':'')+' onclick="DataNest.startDay()">▶ 开始今天</button>';
+  }else if(S.phase==='deploy_prep'){
+    /* Deployment prep phase — player arranges creatures before battle */
+    sh+='<div class="ns-title">⚔ 战前部署</div>';
+    sh+='<div style="font-size:10px;color:#fbbf24;margin-bottom:8px;padding:6px 8px;background:rgba(251,191,36,0.1);border-left:3px solid #fbbf24;border-radius:0 4px 4px 0">勇者从入口(左上)入侵，按距离依次经过你的房间。<br>调整部署消耗 ⚡1能量/次 (剩余:'+S.energy+')</div>';
+    /* Show lairs in spatial traversal order */
+    const traversalIdx=getTraversalOrder(S.gridSize,S.rooms);
+    const lairs=traversalIdx.map(i=>({room:S.rooms[i],idx:i})).filter(x=>x.room.type==='lair');
+    if(lairs.length===0){
+      sh+='<div style="color:#ef4444;font-size:11px;padding:8px">⚠ 你没有生物巢穴！勇者将直取核心。</div>';
+    }else{
+      lairs.forEach(({room,idx})=>{
+        sh+='<div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:6px 8px;margin-bottom:6px">';
+        const dist=getRoomDistance(idx,S.gridSize);
+        sh+='<div style="font-size:11px;color:#60a5fa;margin-bottom:4px">🐉 巢穴 (Lv.'+room.level+' · 距入口'+dist+'格)</div>';
+        if(room.creatures.length===0){
+          sh+='<div style="font-size:10px;color:rgba(255,255,255,0.3)">空</div>';
+        }else{
+          room.creatures.forEach((c,ci)=>{
+            sh+='<div style="display:flex;align-items:center;gap:4px;font-size:10px;padding:2px 0">';
+            sh+=c.emoji+' '+c.name+' Lv.'+c.lvl+' (ATK:'+(c.base+c.lvl)+')';
+            sh+=' <span style="cursor:pointer;color:#f87171;font-size:9px" onclick="DataNest.deployPrepRemove('+ci+','+idx+')">撤回</span>';
+            sh+='</div>';
+          });
+        }
+        if(room.creatures.length<3){
+          /* Show undeployed creatures that can be assigned */
+          const undeployed=S.creatures.filter(c=>!S.rooms.some(r=>r.creatures&&r.creatures.includes(c)));
+          if(undeployed.length>0){
+            sh+='<div style="margin-top:4px;border-top:1px solid rgba(255,255,255,0.06);padding-top:4px">';
+            undeployed.forEach((c,ci)=>{
+              const globalIdx=S.creatures.indexOf(c);
+              sh+='<span style="cursor:pointer;font-size:10px;color:#a78bfa;margin-right:6px" onclick="DataNest.deployPrepAssign('+globalIdx+','+idx+')" title="消耗1⚡部署">';
+              sh+=c.emoji+'+</span>';
+            });
+            sh+='</div>';
+          }
+        }
+        sh+='</div>';
+      });
+    }
+    /* Show traps */
+    const traps=S.rooms.filter(r=>r.type==='trap');
+    if(traps.length){
+      sh+='<div style="font-size:10px;color:rgba(255,255,255,0.5);margin:6px 0 4px">陷阱: '+traps.length+'个 (总伤害:'+traps.reduce((a,r)=>a+(3+r.level*2),0)+')</div>';
+    }
+    sh+='<button class="nest-btn nb-primary" style="margin-top:8px" onclick="DataNest.confirmDeploy()">⚔ 迎战</button>';
   }else if(S.phase==='day'){
     sh+='<div class="ns-title">事件处理中</div>';
     sh+=renderLog();
@@ -11908,16 +12330,16 @@ function renderSkillTree(){
 }
 function renderInvestment(){
   let h='<div class="ns-title">区域投资 <span style="cursor:pointer;float:right" onclick="DataNest.setView(null)">✕</span></div>';
-  h+='<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px">💎 碎片: '+S.shards+'</div>';
+  h+='<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px">🪙 金币: '+S.gold+'</div>';
   Object.entries(INVEST_REGIONS).forEach(([k,r])=>{
     const lv=S.investments[k]||0;
-    const cost=100+lv*50;
-    const canInvest=lv<r.maxLv&&S.shards>=cost;
+    const goldCost=50+lv*30;
+    const canInvest=lv<r.maxLv&&S.gold>=goldCost;
     h+='<div class="nest-event" style="'+(canInvest?'cursor:pointer':'')+'" '+(canInvest?'onclick="DataNest.invest(\''+k+'\')"':'')+'>';
     h+='<div class="ne-tag">'+r.icon+' LV.'+lv+'/'+r.maxLv+'</div>';
     h+='<div class="ne-title" style="margin:0">'+r.name+'</div>';
     h+='<div class="ne-body">'+r.desc+'</div>';
-    if(lv<r.maxLv)h+='<div class="ne-reward">升级费用: 💎'+cost+'</div>';
+    if(lv<r.maxLv)h+='<div class="ne-reward">升级费用: 🪙'+goldCost+'</div>';
     else h+='<div class="ne-reward" style="color:#22c55e">✅ 满级</div>';
     h+='</div>';
   });
@@ -11950,17 +12372,18 @@ function renderSynthesis(){
 }
 function renderBuildPanel(idx){
   let h='<div class="ns-title">🏗 建造新房间 <span style="cursor:pointer;float:right" onclick="DataNest.setView(null)">✕</span></div>';
-  h+='<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px">选择要建造的房间类型 (当前碎片: 💎'+S.shards+')</div>';
+  h+='<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-bottom:8px">选择要建造的房间类型 (💎'+S.shards+' 🪙'+S.gold+')</div>';
   var buildable=['lair','trap','vault','hatch','lab','synth','embassy'];
-  var costs={lair:30,trap:25,vault:40,hatch:35,lab:50,synth:60,embassy:70};
+  var shardCosts={lair:30,trap:25,vault:40,hatch:35,lab:50,synth:60,embassy:70};
+  var goldCosts={lair:10,trap:10,vault:15,hatch:10,lab:20,synth:25,embassy:30};
   buildable.forEach(function(type){
     var rt=ROOM_TYPES[type];
-    var c=costs[type];
-    var canBuild=S.shards>=c;
+    var sc=shardCosts[type];var gc=goldCosts[type];
+    var canBuild=S.shards>=sc&&S.gold>=gc;
     h+='<div class="nest-event" style="cursor:'+(canBuild?'pointer':'not-allowed')+';opacity:'+(canBuild?'1':'0.5')+';margin-bottom:6px" '+(canBuild?'onclick="DataNest.buildRoom('+idx+',\''+type+'\')"':'')+'>';
     h+='<div style="display:flex;justify-content:space-between;align-items:center">';
-    h+='<div><span style="font-size:14px">'+rt.icon+'</span> <span style="color:'+rt.color+';font-weight:700">'+rt.name+'</span></div>';
-    h+='<span style="font-size:10px;color:'+(canBuild?'#22c55e':'#ef4444')+'">💎'+c+'</span>';
+    h+='<div><span style="font-size:14px">'+rt.icon+'</span> <span style="font-weight:700">'+rt.name+'</span></div>';
+    h+='<span style="font-size:10px;color:'+(canBuild?'#22c55e':'#ef4444')+'">💎'+sc+' 🪙'+gc+'</span>';
     h+='</div>';
     h+='<div style="font-size:9px;color:rgba(255,255,255,0.5);margin-top:3px">'+rt.desc+'</div>';
     h+='</div>';
@@ -11977,8 +12400,9 @@ function renderRoomDetail(idx){
   if(room.type!=='empty'&&room.type!=='core'){
     h+='<div style="font-size:11px;color:#c4b5fd;margin-bottom:6px">等级: Lv.'+room.level+'/5</div>';
     if(room.level<5){
-      const cost=50+room.level*30;
-      h+='<button class="nest-btn" onclick="DataNest.upgradeRoom('+idx+')">⬆ 升级 (💎'+cost+')</button>';
+      const sc=50+room.level*30;const gc=20+room.level*10;
+      const canUp=S.shards>=sc&&S.gold>=gc;
+      h+='<button class="nest-btn" '+(canUp?'':'disabled style="opacity:0.5"')+' onclick="DataNest.upgradeRoom('+idx+')">⬆ 升级 (💎'+sc+' 🪙'+gc+')</button>';
     }
   }
   if(room.type==='lair'){
@@ -11996,8 +12420,9 @@ function renderRoomDetail(idx){
         h+='<div style="font-size:9px;color:rgba(255,255,255,0.4);margin:4px 0">可分配:</div>';
         unassigned.forEach((c,i)=>{
           const realIdx=S.creatures.indexOf(c);
-          h+='<div class="nest-event" style="cursor:pointer;padding:6px" onclick="DataNest.assignCreature('+realIdx+','+idx+')">';
-          h+=c.emoji+' '+c.name+' Lv.'+c.lvl+' → 分配到此';
+          const canAssign=S.energy>=1;
+          h+='<div class="nest-event" style="cursor:'+(canAssign?'pointer':'not-allowed')+';padding:6px;opacity:'+(canAssign?'1':'0.5')+'" '+(canAssign?'onclick="DataNest.assignCreature('+realIdx+','+idx+')"':'')+'>';
+          h+=c.emoji+' '+c.name+' Lv.'+c.lvl+' → 分配到此 (⚡1)';
           h+='</div>';
         });
       }
@@ -12060,7 +12485,7 @@ function setView(v){S.viewMode=v;if(!v)S.selectedRoom=-1;render()}
 /* Public API */
 return{render,newGame,startDay,nextDay,selectEvent,onCellClick,buildRoom,
   assignCreature,removeCreatureFromRoom,setView,invest,unlockSkill,useActiveSkill,synthCreatures,
-  upgradeRoom,makeFinalChoice,resolveChoice};
+  upgradeRoom,makeFinalChoice,resolveChoice,confirmDeploy,deployPrepAssign,deployPrepRemove};
 })();
 /* ========== ZZZ POMODORO — STEP PIPELINE ========== */
 const Pomodoro={
