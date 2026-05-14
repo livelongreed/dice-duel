@@ -4705,7 +4705,7 @@ const GrowthTransition = (function(){
       var elapsed = now - startTime;
       var t = Math.min(elapsed / duration, 1);
       var progress = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-      _draw(progress);
+      try{_draw(progress)}catch(e){console.warn('GrowthTransition draw error:',e)}
       if(!covered && progress >= 0.98){
         covered = true;
         try { onCover(); } catch(e){ console.warn('GrowthTransition onCover error:', e); }
@@ -4717,7 +4717,7 @@ const GrowthTransition = (function(){
       } else {
         _animId = null;
         overlay.classList.remove('active');
-        _ctx.clearRect(0, 0, w, h);
+        try{_ctx.clearRect(0, 0, w, h)}catch(e){}
         try { onComplete(); } catch(e){ console.warn('GrowthTransition onComplete error:', e); }
       }
     }
@@ -4732,7 +4732,16 @@ const GrowthTransition = (function(){
       if(opts && opts.onComplete) try { opts.onComplete(); } catch(ex){}
       var overlay = _getOverlay();
       overlay.classList.remove('active');
+      if(_ctx && _canvas) try{_ctx.clearRect(0,0,_canvas.width,_canvas.height)}catch(ex){}
     }
+  }
+
+  /* Force-cleanup: remove overlay no matter what */
+  function forceCleanup(){
+    if(_animId){ cancelAnimationFrame(_animId); _animId = null; }
+    var overlay = _getOverlay();
+    overlay.classList.remove('active');
+    if(_ctx && _canvas) try{_ctx.clearRect(0,0,_canvas.width,_canvas.height)}catch(ex){}
   }
 
   function destroy(){
@@ -4743,7 +4752,7 @@ const GrowthTransition = (function(){
     _canvas = null; _ctx = null;
   }
 
-  return { play: safePlay, destroy: destroy };
+  return { play: safePlay, destroy: destroy, forceCleanup: forceCleanup };
 })();
 
 /* Screen → strip color mapping for GrowthTransition */
@@ -4752,6 +4761,23 @@ const _screenStripColor = {
   'screen-shop':'#eab308','screen-settings':'#64748b','screen-tutorial':'#8b5cf6',
   'screen-adventure':'#7a5acd','screen-map':'#7a5acd'
 };
+
+/* Force-cleanup all transition visuals to recover from stuck state */
+function _zzzForceCleanup(){
+  _zzzBusy=false;
+  clearTimeout(window._zzzSafetyTimer);
+  /* Clean up growth overlay canvas */
+  GrowthTransition.forceCleanup();
+  /* Clean up zzz-slide */
+  var slide=document.querySelector('#zzz-transition .zzz-slide');
+  if(slide){slide.className='zzz-slide';slide.style.transform=''}
+  /* Ensure at least one screen is active */
+  var anyActive=document.querySelector('.screen.active');
+  if(!anyActive){
+    var menu=document.getElementById('screen-menu');
+    if(menu)menu.classList.add('active');
+  }
+}
 
 function goBackScreen(){
   if(_zzzBusy)return;
@@ -4766,9 +4792,9 @@ function showScreen(id,isBack){
   _zzzTransitionSFX();
   if(!isBack&&cur){_screenHistory.push(cur.id)}
   _zzzBusy=true;
-  /* Safety timeout: unlock after 1.5s in case animations fail */
+  /* Safety timeout: force-cleanup all transition visuals after 1.5s */
   clearTimeout(window._zzzSafetyTimer);
-  window._zzzSafetyTimer=setTimeout(function(){_zzzBusy=false},1500);
+  window._zzzSafetyTimer=setTimeout(_zzzForceCleanup,1500);
   const slide=document.querySelector('#zzz-transition .zzz-slide');
   const isV=(_zzzDir%2===1);
   _zzzDir++;
@@ -4789,6 +4815,8 @@ function showScreen(id,isBack){
     growIn: true,
     color: _tColor,
     onCover: function(){
+      /* Screen switch — wrapped in try/catch so growOut ALWAYS fires */
+      try{
       document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
       AudioMgr.switchTo(id);
@@ -4804,7 +4832,8 @@ function showScreen(id,isBack){
       if(id==='screen-pomodoro'){Pomodoro._initRuler();Pomodoro.render();}
       if(id==='screen-menu'){NewsMatrix.resume();if(typeof TaskSystem!=='undefined')TaskSystem.updateRedDot()}else{NewsMatrix.stop()}
       ZZZGreeting.tryShow(id);
-      /* 生长动画退场：露出新屏幕 (duration × 2/3) */
+      }catch(e){console.warn('showScreen onCover init error:',e)}
+      /* 生长动画退场：露出新屏幕 — MUST always fire */
       GrowthTransition.play({
         duration: 213,
         growIn: false,
@@ -6125,7 +6154,7 @@ function advTransitionOverlay(contentFn){
   if(!slide){contentFn();advShowOverlay();return}
   _zzzBusy=true;
   clearTimeout(window._zzzSafetyTimer);
-  window._zzzSafetyTimer=setTimeout(function(){_zzzBusy=false},1500);
+  window._zzzSafetyTimer=setTimeout(_zzzForceCleanup,1500);
   const isV=(_zzzDir%2===1);_zzzDir++;
   slide.className='zzz-slide';void slide.offsetWidth;
   const inCls=isV?'v-slide-in':'h-slide-in';
@@ -6138,8 +6167,8 @@ function advTransitionOverlay(contentFn){
     growIn: true,
     color: '#7a5acd',
     onCover: function(){
-      contentFn();
-      advShowOverlay();
+      try{contentFn();advShowOverlay()}catch(e){console.warn('advTransitionOverlay onCover error:',e)}
+      /* growOut MUST always fire */
       GrowthTransition.play({
         duration: 180,
         growIn: false,
