@@ -12,8 +12,13 @@
 <style>
 @font-face{font-family:'KaitouYokoku';src:url('KaitouYokokuGothic.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:swap}
 @font-face{font-family:'StationBoard';src:url('StationFont.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:swap}
+@font-face{font-family:'ZihunBiantaoti';src:url('ZihunBiantaoti.ttf') format('truetype');font-weight:normal;font-style:normal;font-display:swap}
 </style>
 <style>
+#screen-task,#screen-story,#screen-wiki,
+#tut-overlay,.zzz-greeting-overlay,
+#boss-intro,#boss-end-dlg,
+.merchant-dialog,.story-map-card{font-family:'ZihunBiantaoti',sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--rust:#e0245e;--rust-light:#ff3e7a;--rust-dark:#a01040;--gold:#ff6b9d;--gold-dim:#cc4070;
   --metal:#4a5568;--metal-light:#718096;--metal-dark:#2d3748;--bg:#0c0b18;--bg2:#14122a;
@@ -433,24 +438,24 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 #boss-intro .bi-content{position:relative;z-index:1;text-align:center;max-width:380px;padding:30px;
   animation:biSlideIn 0.5s cubic-bezier(0.22,1,0.36,1) forwards}
 @keyframes biSlideIn{from{transform:translateY(30px) scale(0.95);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
-#boss-intro .bi-warning{font-family:'Share Tech Mono',monospace;font-size:14px;letter-spacing:6px;color:#ff3e7a;
+#boss-intro .bi-warning{font-family:'ZihunBiantaoti',monospace;font-size:14px;letter-spacing:6px;color:#ff3e7a;
   animation:biFlash 0.8s ease-in-out infinite alternate;margin-bottom:16px}
 @keyframes biFlash{from{opacity:0.5}to{opacity:1}}
 #boss-intro .bi-icon{font-size:72px;margin:8px 0;filter:drop-shadow(0 0 20px rgba(255,62,122,0.5))}
-#boss-intro .bi-name{font-family:'KaitouYokoku','StationBoard','Baloo 2','Fredoka',sans-serif;font-size:28px;font-weight:800;color:#fff;
+#boss-intro .bi-name{font-family:'KaitouYokoku','ZihunBiantaoti',sans-serif;font-size:28px;font-weight:800;color:#fff;
   letter-spacing:4px;text-shadow:0 0 20px rgba(255,62,122,0.4)}
-#boss-intro .bi-title{font-family:'Share Tech Mono',monospace;font-size:11px;color:rgba(255,107,157,0.7);letter-spacing:3px;margin:4px 0 12px}
+#boss-intro .bi-title{font-family:'ZihunBiantaoti',monospace;font-size:11px;color:rgba(255,107,157,0.7);letter-spacing:3px;margin:4px 0 12px}
 #boss-intro .bi-divider{width:60%;height:2px;margin:0 auto 12px;background:linear-gradient(90deg,transparent,#ff3e7a,transparent)}
 #boss-intro .bi-mechanic{font-size:13px;color:var(--text);line-height:1.6;padding:10px 16px;
   background:rgba(255,62,122,0.08);border:1px solid rgba(255,62,122,0.2);border-radius:6px;margin:8px 0}
 #boss-intro .bi-label{display:inline-block;background:#ff3e7a;color:#fff;font-size:10px;font-weight:700;
   padding:2px 8px;border-radius:3px;margin-right:8px;letter-spacing:1px}
 #boss-intro .bi-quote{font-style:italic;color:var(--text-dim);font-size:12px;margin:10px 0}
-#boss-intro .bi-deck-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:rgba(255,107,157,0.6);letter-spacing:2px;margin:8px 0 4px}
+#boss-intro .bi-deck-label{font-family:'ZihunBiantaoti',monospace;font-size:10px;color:rgba(255,107,157,0.6);letter-spacing:2px;margin:8px 0 4px}
 #boss-intro .bi-deck{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 #boss-intro .bi-card{font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,107,157,0.2);border-radius:4px}
-#boss-intro .bi-hp{font-family:'Share Tech Mono',monospace;font-size:12px;color:#ff6b9d;margin-top:12px;letter-spacing:2px}
+#boss-intro .bi-hp{font-family:'ZihunBiantaoti',monospace;font-size:12px;color:#ff6b9d;margin-top:12px;letter-spacing:2px}
 /* Boss dialogue bubble */
 .boss-bubble{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-10px);z-index:100;
   padding:10px 20px;border-radius:8px;font-size:13px;color:#e8e0f0;font-style:italic;
@@ -486,7 +491,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   animation:bedPulse 1.2s ease-in-out infinite alternate}
 @keyframes bedPulse{from{transform:scale(1);filter:drop-shadow(0 0 10px rgba(255,62,122,0.3))}
   to{transform:scale(1.08);filter:drop-shadow(0 0 24px rgba(255,62,122,0.6))}}
-#boss-end-dlg .bed-label{font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:6px;
+#boss-end-dlg .bed-label{font-family:'ZihunBiantaoti',monospace;font-size:13px;letter-spacing:6px;
   color:#ff3e7a;text-transform:uppercase;margin-bottom:10px;
   animation:biFlash 0.8s ease-in-out infinite alternate}
 #boss-end-dlg .bed-text{font-size:16px;color:#e8e0f0;font-style:italic;line-height:1.6;
@@ -494,7 +499,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   border-radius:0;margin:12px 0;opacity:0;transform:translateY(12px);
   transition:opacity 0.6s 0.3s,transform 0.6s 0.3s}
 #boss-end-dlg.show .bed-text{opacity:1;transform:translateY(0)}
-#boss-end-dlg .bed-result{font-family:'KaitouYokoku','StationBoard','Baloo 2','Fredoka',sans-serif;font-size:26px;font-weight:800;
+#boss-end-dlg .bed-result{font-family:'KaitouYokoku','ZihunBiantaoti',sans-serif;font-size:26px;font-weight:800;
   letter-spacing:4px;margin-top:16px;opacity:0;transform:scale(0.8) skewX(-3deg);
   transition:opacity 0.5s 0.8s,transform 0.5s 0.8s}
 #boss-end-dlg.show .bed-result{opacity:1;transform:scale(1) skewX(-3deg)}
@@ -1069,8 +1074,8 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 #tut-overlay .tut-drag:active{cursor:grabbing}
 #tut-overlay .tut-drag .drag-icon{width:20px;text-align:center;font-size:14px;color:var(--gold-dim);
   line-height:1;cursor:grab}
-#tut-overlay .tut-drag .tut-step{font-size:9px;color:var(--text-dim);font-family:'Share Tech Mono';flex:1}
-#tut-overlay .tut-drag h4{font-family:'Baloo 2','Fredoka',sans-serif;color:var(--gold);font-size:13px;margin:0;flex:1}
+#tut-overlay .tut-drag .tut-step{font-size:9px;color:var(--text-dim);font-family:'ZihunBiantaoti';flex:1}
+#tut-overlay .tut-drag h4{font-family:'ZihunBiantaoti',sans-serif;color:var(--gold);font-size:13px;margin:0;flex:1}
 #tut-overlay .tut-body{padding:8px 12px 10px;max-height:40vh;overflow-y:auto}
 #tut-overlay .tut-body p{font-size:11px;color:var(--text);line-height:1.5;margin-bottom:8px}
 #tut-overlay .tut-btns{display:flex;gap:6px;justify-content:flex-end;padding:0 12px 8px}
@@ -1714,7 +1719,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .story-map-card:hover{background:linear-gradient(135deg,#1e1b38,#28254a);transform:skewX(-10deg) translateX(8px) scale(1.03);
   border-color:rgba(255,62,122,0.5);box-shadow:0 0 20px rgba(255,62,122,0.3),0 4px 16px rgba(0,0,0,0.4)}
 .story-map-card:hover::before{width:5px;top:3px;bottom:3px;box-shadow:0 0 12px rgba(255,62,122,0.7)}
-.story-map-card h3{color:#fff;font-size:16px;margin:0 0 4px;font-family:'Baloo 2','Fredoka',sans-serif;transform:skewX(10deg)}
+.story-map-card h3{color:#fff;font-size:16px;margin:0 0 4px;font-family:'ZihunBiantaoti',sans-serif;transform:skewX(10deg)}
 .story-map-card p{color:var(--text-dim);font-size:12px;margin:0;transform:skewX(10deg)}
 .story-chapter{background:rgba(20,20,40,0.6);border:1px solid var(--glass-border);border-radius:12px;padding:16px 20px;margin:10px 0;cursor:pointer;transition:all .25s}
 .story-chapter:hover{border-color:var(--gold-dim);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,107,157,0.12)}
@@ -2277,7 +2282,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
   background:#ff3e7a;border-radius:0 2px 2px 0}
 .task-npc>*{transform:skewX(5deg)}
 .task-npc-avatar{font-size:40px;text-align:center;margin-bottom:6px;line-height:1}
-.task-npc-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:14px;color:#fff;
+.task-npc-name{font-family:'ZihunBiantaoti',sans-serif;font-size:14px;color:#fff;
   text-align:center;letter-spacing:2px;margin-bottom:4px}
 .task-npc-role{font-size:9px;color:rgba(255,255,255,0.4);text-align:center;
   letter-spacing:2px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
@@ -2328,7 +2333,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 @keyframes taskPulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,0.3)}50%{box-shadow:0 2px 16px rgba(255,62,122,0.3)}}
 .task-row-icon{font-size:24px;flex-shrink:0;line-height:1}
 .task-row-info{flex:1;min-width:0}
-.task-row-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:13px;color:#fff;
+.task-row-name{font-family:'ZihunBiantaoti',sans-serif;font-size:13px;color:#fff;
   letter-spacing:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .task-row-desc{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;
   font-family:'Share Tech Mono',monospace;letter-spacing:0.5px}
@@ -2401,7 +2406,7 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 .task-title>*{transform:skewX(6deg)}
 .task-title .tt-tag{font-size:8px;font-weight:700;letter-spacing:3px;
   color:rgba(255,255,255,0.35);text-transform:uppercase;font-family:'Share Tech Mono',monospace}
-.task-title .tt-name{font-family:'Baloo 2','Fredoka',sans-serif;font-size:22px;
+.task-title .tt-name{font-family:'ZihunBiantaoti',sans-serif;font-size:22px;
   color:#fff;
   filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));letter-spacing:3px}
 /* Mobile */
@@ -2740,9 +2745,9 @@ body{animation:chromaticFlicker 15s steps(1) infinite}
 @keyframes bossPulse { 0%{background:linear-gradient(90deg,transparent,rgba(220,30,30,0.1),transparent)} 100%{background:linear-gradient(90deg,transparent,rgba(220,30,30,0.25),transparent)} }
 .ns-boss-emoji { font-size:56px; display:block; margin-bottom:4px; animation:bossShake 0.5s ease-out; }
 @keyframes bossShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
-.ns-boss-name { font-size:18px; font-weight:900; color:#f87171; font-family:'Baloo 2',sans-serif;
+.ns-boss-name { font-size:18px; font-weight:900; color:#f87171; font-family:'ZihunBiantaoti',sans-serif;
   text-shadow:0 0 20px rgba(220,30,30,0.4); letter-spacing:2px; }
-.ns-boss-skill { font-size:9px; color:rgba(255,255,255,0.4); margin-top:2px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.ns-boss-skill { font-size:9px; color:rgba(255,255,255,0.4); margin-top:2px; font-family:'ZihunBiantaoti',monospace; letter-spacing:1px; }
 
 .ns-night-scene { text-align:center; padding:16px; position:relative; }
 .ns-night-scene::before { content:"\1F319"; position:absolute; top:8px; right:16px; font-size:24px; opacity:0.3; }
